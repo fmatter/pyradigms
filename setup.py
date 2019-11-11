@@ -11,7 +11,7 @@ setuptools.setup(
     description="Creates paradigms from a table of entries with parameters.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="-",
+    url="https://gitlab.com/florianmatter/pyradigms",
     packages=setuptools.find_packages("re"),
       classifiers=[
           "Programming Language :: Python :: 3",

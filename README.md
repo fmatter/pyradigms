@@ -2,6 +2,9 @@
 
 Creates paradigms from a table of entries with parameters.
 
+## Getting started
+`pip install pyradigms`
+
 ## Usage
 There are two separate methods; `create_hash` creates a three-dimensional dictionary from a `.csv` file with a list of forms with parameters, `print_paradigms` creates human-readable paradigms, also in `.csv` format, from such a dictionary.
 Both methods can be used on their own, but dictionaries produced by `create_hash` will automatically be used by `print_paradigms`.
