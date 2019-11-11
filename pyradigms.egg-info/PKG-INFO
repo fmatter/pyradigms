@@ -1,0 +1,16 @@
+Metadata-Version: 2.1
+Name: pyradigms
+Version: 0.0.1
+Summary: Creates paradigms from a table of entries with parameters.
+Home-page: -
+Author: Florian Matter
+Author-email: florianmatter@gmail.com
+License: UNKNOWN
+Description: # pyradigms
+        
+        Creates paradigms from a table of entries with parameters.
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: GNU General Public License v3 (GPLv3)
+Classifier: Operating System :: OS Independent
+Description-Content-Type: text/markdown
