@@ -3,7 +3,8 @@
 Creates paradigms from a table of entries with parameters.
 
 ## Usage
-There are two separate methods; `create_hash` creates a three-dimensional dictionary from a `.csv` file with a list of forms with parameters, `print_paradigms` creates a CSV file from such a dictionary.
+There are two separate methods; `create_hash` creates a three-dimensional dictionary from a `.csv` file with a list of forms with parameters, `print_paradigms` creates human-readable paradigms, also in `.csv` format, from such a dictionary.
+Both methods can be used on their own, but dictionaries produced by `create_hash` will automatically be used by `print_paradigms`.
 Example usage:
 
 ```
@@ -15,8 +16,8 @@ pd.print_paradigms()
 
 ### `print_paradigms`
 The `print_paradigms` method takes an argument `tables`, which is a three-dimensional dictionary, and prints them to the specified `.csv` output file.
-It can be used to create paradigm representations of dictionaryes.
-Take the following dictionary as an example.
+If no `tables` argument is passed, the dictionary created by `create_hash` will be used.
+Take the following dictionary of Bernese German verb forms as an example.
 It has three dimensions, the first being the meaning of the verb, the second being number, and the third being person.
 
 ```
@@ -48,6 +49,8 @@ With `print_paradigms(bernese_verbs)`, a `.csv` file with the following content 
 | ----- | ----- | ------ | ------
 | SG | sækə | sɛjʃ | sɛjtː
 | PL | sækə | sækətː | sækə
+
+In the `.csv` file, The first layer of the three-dimensional hash is represented in the `z` dimension, i.e. paradigm tables stacked vertically, the second layer is represented in the `y` axis of the individual tables, and the third layer is represented in the `x` axis.
 
 ### `create_hash`
 The `create_hash` method reads entries from a `.csv` file and produces a dictionary like the one above.
@@ -84,7 +87,7 @@ pd.create_hash(
 )
 ```
 
-The resulting dictionary can then be rendered to a paradigm with `pyradigms.print_paradigms()` (it is stored in the `Pyradigms` instance).
+The resulting dictionary can then be printed to a paradigm table with `pyradigms.print_paradigms()`.
 
 When multiple strings are given for one dimension, the parameters are combined in the resulting paradigm.
 This is useful when there are more than three parameters one wants to represent.
@@ -132,7 +135,7 @@ This results in the following paradigm list:
 
 It is also possible to specify a value for a given parameter, using the `filtered_parameters` argument, which takes a dictionary.
 Only forms with that value will then be represented in the resulting paradigm(s).
-For example, to only print indicative forms, the following command would be used:
+For example, to only print indicative forms of the Latin verbs, the following command would be used:
 
 ```
 pd.create_hash(
