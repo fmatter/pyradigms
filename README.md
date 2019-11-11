@@ -42,3 +42,19 @@ With `print_paradigms(bernese_verbs)`, a `.csv` file with the following content 
 
 ### create_hash
 The `create_hash` method reads entries from a `.csv` file and produces a dictionary like the one above.
+The `.csv` file should have the following format, again illustrated with the Bernese German forms:
+
+| Verb | Number | Person | Form
+| ----- | -----| ----- | -----
+| to go | SG | 1 | kɑː
+| to go | SG | 2 | kɛjʃ
+| to go | SG | 3 | kɛjtː
+| to go | PL | 1 | kœː
+| to go | PL | 2 | kœːtː
+| to go | PL | 3 | kœː
+| to say | SG | 1 | kɑː
+| to say | SG | 2 | kɛjʃ
+| to say | SG | 3 | kɛjtː
+| to say | PL | 1 | kœː
+| to say | PL | 2 | kœːtː
+| to say | PL | 3 | kœː
