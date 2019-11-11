@@ -28,17 +28,17 @@ bernese_verbs = {"to go": {
     }
 }
 ```
-With `print_paradigms(bernese_verbs)`, the following `.csv` file is produced:
+With `print_paradigms(bernese_verbs)`, a `.csv` file with the following content is produced:
 
 | to go | 1  | 2  | 3  
 | ----- | ----- | ----  | ----
 | SG | kɑː | kɛjʃ | kɛjtː
 | PL | kœː | kœːtː | kœː
 
-to say | 1 | 2 | 3
-| ----- | ----- | ------
-SG | kɑː | kɛjʃ | kɛjtː
-PL | kœː | kœːtː | kœː
+| to say | 1 | 2 | 3
+| ----- | ----- | ------ | ------
+| SG | kɑː | kɛjʃ | kɛjtː
+| PL | kœː | kœːtː | kœː
 
 ### create_hash
 The `create_hash` method takes an argument
