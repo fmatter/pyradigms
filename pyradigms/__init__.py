@@ -71,7 +71,6 @@ class Pyradigms:
     def print_paradigms(self, tables="", filtered_parameters={}):
         if tables == "":
             tables = self.tables
-        print(tables)
         if filtered_parameters == {} and hasattr(self, "filtered_parameters"):
             filtered_parameters = self.filtered_parameters
         output = []

@@ -41,4 +41,4 @@ With `print_paradigms(bernese_verbs)`, a `.csv` file with the following content 
 | PL | kœː | kœːtː | kœː
 
 ### create_hash
-The `create_hash` method takes an argument
+The `create_hash` method reads entries from a `.csv` file and produces a dictionary like the one above.
