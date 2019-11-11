@@ -3,15 +3,17 @@
 Creates paradigms from a table of entries with parameters.
 
 ## Usage
+There are two separate methods; `create_hash` creates a three-dimensional dictionary from a `.csv` file with a list of forms with parameters, `print_paradigms` creates a CSV file from such a dictionary.
+Example usage:
 
 ```
 from pyradigms import Pyradigms
 pd = Pyradigms("output.csv")
-pd.create_hash("input.csv")
+pd.create_hash("input.csv",x=["X"] ,y=["Y"] ,z=["Z"])
 pd.print_paradigms()
 ```
 
-### print_paradigms
+### `print_paradigms`
 The `print_paradigms` method takes an argument `tables`, which is a three-dimensional dictionary, and prints them to the specified `.csv` output file.
 It can be used to create paradigm representations of dictionaryes.
 Take the following dictionary as an example.
@@ -47,7 +49,7 @@ With `print_paradigms(bernese_verbs)`, a `.csv` file with the following content 
 | SG | sækə | sɛjʃ | sɛjtː
 | PL | sækə | sækətː | sækə
 
-### create_hash
+### `create_hash`
 The `create_hash` method reads entries from a `.csv` file and produces a dictionary like the one above.
 The `.csv` file should have the following format, again illustrated with the Bernese German forms:
 
