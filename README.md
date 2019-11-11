@@ -34,8 +34,9 @@ to go | 1  | 2  | 3
 | ----- | ----- | ----
 SG | kɑː | kɛjʃ | kɛjtː
 PL | kœː | kœːtː | kœː
-&nbsp; | &nbsp;  | &nbsp; |  
+
 to say | 1 | 2 | 3
+| ----- | ----- | ------
 SG | kɑː | kɛjʃ | kɛjtː
 PL | kœː | kœːtː | kœː
 
