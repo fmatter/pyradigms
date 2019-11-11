@@ -4,6 +4,13 @@ Creates paradigms from a table of entries with parameters.
 
 ## Usage
 
+```
+from pyradigms import Pyradigms
+pd = Pyradigms("output.csv")
+pd.create_hash("input.csv")
+pd.print_paradigms()
+```
+
 ### print_paradigms
 The `print_paradigms` method takes an argument `tables`, which is a three-dimensional dictionary, and prints them to the specified `.csv` output file.
 It can be used to create paradigm representations of dictionaryes.
@@ -40,8 +47,8 @@ With `print_paradigms(bernese_verbs)`, a `.csv` file with the following content 
 | SG | sækə | sɛjʃ | sɛjtː
 | PL | sækə | sækətː | sækə
 
-### create_dictionary
-The `create_dictionary` method reads entries from a `.csv` file and produces a dictionary like the one above.
+### create_hash
+The `create_hash` method reads entries from a `.csv` file and produces a dictionary like the one above.
 The `.csv` file should have the following format, again illustrated with the Bernese German forms:
 
 | Verb | Number | Person | Form
@@ -67,7 +74,7 @@ They each take a list of strings, the strings being parameters present in the `.
 The `Form` values are what is actually printed in the cells.
 Thus, with the following command, the example dictionary above is created from the example `.csv` structure above:
 ```
-pyradigms.create_dictionary(
+pd.create_hash(
     "bernese_verbs.csv",
     x = ["Verb"],
     y = ["Number"],
@@ -79,7 +86,7 @@ The resulting dictionary can then be rendered to a paradigm with `pyradigms.prin
 
 When multiple strings are given for one dimension, the parameters are combined in the resulting paradigm.
 This is useful when there are more than three parameters one wants to represent.
-For example, the file `examples/latin_verbs.csv` contains the parameters `Form	Person	Number	Tense	Verb	Mood`.
+For example, the file `examples/latin_verbs.csv` has the columns `Form	Person	Number	Tense	Verb	Mood`.
 It would make sense to combine person and number, as well as tense and mood.
 A separate paradigm should be produced for each verb.
 This is achieved with the following command:
@@ -92,6 +99,7 @@ pd.create_hash(
     y = ["Tense", "Mood"],
     z = ["Verb"]
 )
+pd.print_paradigms()
 ```
 
 This results in the following paradigm list:
@@ -119,3 +127,18 @@ This results in the following paradigm list:
 | FUT:IND | petam | peteːs | petet | peteːmus | peteːtis | petent
 | PRS:SUBJ | petam | petaːs | petat | petaːmus | petaːtis | petant
 | PST.IPFV:SUBJ | peteːbar | peteːbaːris; peteːbaːre | peteːbaːtur | peteːbaːmus | peteːbaːminiː | peteːbaːtur
+
+It is also possible to specify a value for a given parameter, using the `filtered_parameters` argument, which takes a dictionary.
+Only forms with that value will then be represented in the resulting paradigm(s).
+For example, to only print indicative forms, the following command would be used:
+
+```
+pd.create_hash(
+    "examples/latin_verbs.csv",
+    x = ["Person", "Number"],
+    y = ["Tense"],
+    z = ["Verb"],
+    filtered_parameters = {"Mood": "IND"}
+)
+pd.print_paradigms()
+```
