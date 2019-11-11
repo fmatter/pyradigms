@@ -5,9 +5,9 @@ Creates paradigms from a table of entries with parameters.
 ## Usage
 
 ### print_paradigms
-The `print_paradigms` method takes an argument `tables`, which is a three-dimensional hash, and prints them to the specified `.csv` output file.
-It can be used to create paradigm representations of hashes.
-Take the following hash as an example.
+The `print_paradigms` method takes an argument `tables`, which is a three-dimensional dictionary, and prints them to the specified `.csv` output file.
+It can be used to create paradigm representations of dictionaryes.
+Take the following dictionary as an example.
 It has three dimensions, the first being the meaning of the verb, the second being number, and the third being person.
 
 ```
@@ -40,8 +40,8 @@ With `print_paradigms(bernese_verbs)`, a `.csv` file with the following content 
 | SG | sækə | sɛjʃ | sɛjtː
 | PL | sækə | sækətː | sækə
 
-### create_hash
-The `create_hash` method reads entries from a `.csv` file and produces a dictionary like the one above.
+### create_dictionary
+The `create_dictionary` method reads entries from a `.csv` file and produces a dictionary like the one above.
 The `.csv` file should have the following format, again illustrated with the Bernese German forms:
 
 | Verb | Number | Person | Form
@@ -65,9 +65,9 @@ They each take a list of strings, the strings being parameters present in the `.
 `y` represents the rows of a single paradigm table.
 `x` represents the columns of a single paradigm table.
 The `Form` values are what is actually printed in the cells.
-Thus, with the following command, the example hash above is created from the example `.csv` structure above:
+Thus, with the following command, the example dictionary above is created from the example `.csv` structure above:
 ```
-pyradigms.create_hash(
+pyradigms.create_dictionary(
     "bernese_verbs.csv",
     x = ["Verb"],
     y = ["Number"],
@@ -75,4 +75,47 @@ pyradigms.create_hash(
 )
 ```
 
+The resulting dictionary can then be rendered to a paradigm with `pyradigms.print_paradigms()` (it is stored in the `Pyradigms` instance).
+
 When multiple strings are given for one dimension, the parameters are combined in the resulting paradigm.
+This is useful when there are more than three parameters one wants to represent.
+For example, the file `examples/latin_verbs.csv` contains the parameters `Form	Person	Number	Tense	Verb	Mood`.
+It would make sense to combine person and number, as well as tense and mood.
+A separate paradigm should be produced for each verb.
+This is achieved with the following command:
+
+
+```
+pd.create_hash(
+    "examples/latin_verbs.csv",
+    x = ["Person", "Number"],
+    y = ["Tense", "Mood"],
+    z = ["Verb"]
+)
+```
+
+This results in the following paradigm list:
+
+| portaːre | 1SG | 2SG | 3SG | 1PL | 2PL | 3PL
+| --- | --- | --- | --- | --- | --- | ---
+| PRS:IND | portoː | portaːs | portat | portaːmus | portaːtis | portant
+| PST.IPFV:IND | portaːbam | portaːbaːs | portaːbat | portaːbaːmus | portaːbaːtis | portaːbant
+| FUT:IND | portaːboː | portaːbis | portaːbit | portaːbimus | portaːbitis | portaːbunt
+| PRS:SUBJ | portem | porteːs | portet | porteːmus | porteːtis | portent
+| PST.IPFV:SUBJ | portaːrem | portaːreːs | portaːret | portaːreːmus | portaːreːtis | portaːrent
+
+| terːeːre | 1SG | 2SG | 3SG | 1PL | 2PL | 3PL
+| --- | --- | --- | --- | --- | --- | ---
+| PRS:IND | terːeoː | terːeːs | terːet | terːeːmus | terːeːtis | terːent
+| PST.IPFV:IND | terːeːbam | terːeːbaːs | terːeːbat | terːeːbaːmus | terːeːbaːtis | terːeːbant
+| FUT:IND | terːeːboː | terːeːbis | terːeːbit | terːeːbimus | terːeːbitis | terːeːbunt
+| PRS:SUBJ | terːream | terːeaːs | terːeat | terːeaːmus | terːeaːtis | terːeant
+| PST.IPFV:SUBJ | terːeːrem | terːeːres | terːeret | terːeːreːmus | terːeːreːtis | terːeːrent
+
+| petere | 1SG | 2SG | 3SG | 1PL | 2PL | 3PL
+| --- | --- | --- | --- | --- | --- | ---
+| PRS:IND | petoː | petis | petit | petimus | petitis | petunt
+| PST.IPFV:IND | peteːbam | peteːbas | peteːbat | peteːbaːmus | peteːbaːtis | peteːbant
+| FUT:IND | petam | peteːs | petet | peteːmus | peteːtis | petent
+| PRS:SUBJ | petam | petaːs | petat | petaːmus | petaːtis | petant
+| PST.IPFV:SUBJ | peteːbar | peteːbaːris; peteːbaːre | peteːbaːtur | peteːbaːmus | peteːbaːminiː | peteːbaːtur
