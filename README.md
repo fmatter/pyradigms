@@ -30,9 +30,8 @@ bernese_verbs = {"to go": {
 ```
 With `print_paradigms(bernese_verbs)`, the following `.csv` file is produced:
 
-&nbsp; | &nbsp;  | &nbsp; |  
+to go | 1  | 2  | 3  
 | ----- | -----
-to go | 1 | 2 | 3
 SG | kɑː | kɛjʃ | kɛjtː
 PL | kœː | kœːtː | kœː
 &nbsp; | &nbsp;  | &nbsp; |  
