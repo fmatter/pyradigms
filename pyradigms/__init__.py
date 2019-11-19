@@ -68,7 +68,7 @@ class Pyradigms:
         self.tables = tables
         return(tables)
         
-    def print_paradigms(self, tables="", filtered_parameters={}):
+    def print_paradigms(self, tables="", filtered_parameters={}, x_sort_order=[], y_sort_order=[]):
         if tables == "":
             tables = self.tables
         if filtered_parameters == {} and hasattr(self, "filtered_parameters"):
@@ -77,20 +77,33 @@ class Pyradigms:
         table_count = 0
         for key, table in tables.items():
             x_values = []
-            y_values = []
             output.append([])
             output[table_count].append([])
             row_count = 0
-            for y_key, y in table.items():
-                if y_key not in y_values:
-                    y_values.append(y_key)
+            
+            for y in table.values():
                 for x_key, x in y.items():
                     if x_key not in x_values:
                         x_values.append(x_key)
+                        
+            if x_sort_order:
+                x_sort = {}
+                for i, v in enumerate(x_sort_order):
+                    x_sort[v] = i
+                x_values = sorted(x_values, key=lambda val: x_sort[val])
+                
             output[table_count][row_count].append(key)
             for x in x_values:
                 output[table_count][row_count].append(x)
-            for x_key in table.keys():
+            
+            y_values = table.keys()  
+            if y_sort_order:
+                y_sort = {}
+                for i, v in enumerate(y_sort_order):
+                    y_sort[v] = i
+                y_values = sorted(y_values, key=lambda val: y_sort[val])
+
+            for x_key in y_values:
                 output[table_count].append([])
                 row_count += 1
                 output[table_count][row_count].append(x_key)
