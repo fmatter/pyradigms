@@ -90,7 +90,7 @@ class Pyradigms:
                 x_sort = {}
                 for i, v in enumerate(x_sort_order):
                     x_sort[v] = i
-                x_values = sorted(x_values, key=lambda val: x_sort[val])
+                x_values = sorted(x_values, key=lambda val: str(x_sort[val]) if val in x_sort.keys() else str(val))
                 
             output[table_count][row_count].append(key)
             for x in x_values:
@@ -101,7 +101,7 @@ class Pyradigms:
                 y_sort = {}
                 for i, v in enumerate(y_sort_order):
                     y_sort[v] = i
-                y_values = sorted(y_values, key=lambda val: y_sort[val])
+                y_values = sorted(y_values, key=lambda val: str(y_sort[val]) if val in y_sort.keys() else str(val))
 
             for x_key in y_values:
                 output[table_count].append([])
