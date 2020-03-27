@@ -18,7 +18,9 @@ class Pyradigms:
         return re.sub(r"(\d):", r"\1", ":".join(self.get_args(list, hash))).strip(":")
     
     #This reads entries from a file and creates a 3D hash with the specified parameters as dimensions
-    def create_hash(self, input_file, x, y, z, filtered_parameters={}):
+    def create_hash(self, input_file, x, y, z, filtered_parameters={}, target_string="Form"):
+        
+        self.target_string = target_string
         
         #Read file of entries
         reader = csv.DictReader(open(input_file))
@@ -64,11 +66,11 @@ class Pyradigms:
             if good:
                 #Find the appropriate column
                 x_key = self.keyify(x_dim, entry)
-                my_y[x_key] = entry["Form"]
+                my_y[x_key] = entry[self.target_string]
         self.tables = tables
         return(tables)
         
-    def print_paradigms(self, tables="", filtered_parameters={}, x_sort_order=[], y_sort_order=[]):
+    def print_paradigms(self, tables="", single_file=True, filtered_parameters={}, x_sort_order=[], y_sort_order=[]):
         if tables == "":
             tables = self.tables
         if filtered_parameters == {} and hasattr(self, "filtered_parameters"):
@@ -117,16 +119,31 @@ class Pyradigms:
                         col_count += 1
             table_count += 1
             output.append([])
-            
-        with open(self.output_file, "w") as csvfile:
-            writer = csv.writer(csvfile, delimiter=",")
-            params = []
-            if len(filtered_parameters.keys()) > 0:
-                for col, val in self.filtered_parameters.items():
-                    params.append("%s: %s" % (col, val))
-                writer.writerow([";".join(params)])
-                writer.writerow([])
+        
+        if single_file:    
+            with open(self.output_file, "w") as csvfile:
+                writer = csv.writer(csvfile, delimiter=",")
+                params = []
+                if len(filtered_parameters.keys()) > 0:
+                    for col, val in self.filtered_parameters.items():
+                        params.append("%s: %s" % (col, val))
+                    writer.writerow([";".join(params)])
+                    writer.writerow([])
+                for table in output:
+                    for row in table:
+                        writer.writerow(row)
+                    writer.writerow([])
+        else:
             for table in output:
-                for row in table:
-                    writer.writerow(row)
-                writer.writerow([])
+                if table == []: continue
+                with open("%s_" % table[0][0] + self.output_file, "w") as csvfile:
+                    writer = csv.writer(csvfile, delimiter=",")
+                    params = []
+                    if len(filtered_parameters.keys()) > 0:
+                        for col, val in self.filtered_parameters.items():
+                            params.append("%s: %s" % (col, val))
+                        writer.writerow([";".join(params)])
+                        writer.writerow([])
+                    for row in table:
+                        if row == []: continue
+                        writer.writerow(row)
