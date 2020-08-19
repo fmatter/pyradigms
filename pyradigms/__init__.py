@@ -3,8 +3,9 @@ import re
 
 class Pyradigms:
     
-    def __init__(self, output_file):
+    def __init__(self, output_file, separator = ":"):
         self.output_file = output_file
+        self.separator = separator
     
     #This takes a list of keys (in this case, of parameter names) and a hash (in this case, of an entry), and returns a list of values from the hash. Used to combine different parameters
     def get_args(self, list, hash): 
@@ -15,7 +16,7 @@ class Pyradigms:
 
     #This uses the above function to create a string like 1PL:PST (from the parameter values 1, PL, and PST)
     def keyify(self, list, hash):
-        return re.sub(r"(\d):", r"\1", ":".join(self.get_args(list, hash))).strip(":")
+        return re.sub(r"(\d)%s" % self.separator, r"\1", self.separator.join(self.get_args(list, hash))).strip(self.separator)
     
     #This reads entries from a file and creates a 3D hash with the specified parameters as dimensions
     def create_hash(self, input_file, x, y, z, filtered_parameters={}, target_string="Form"):
