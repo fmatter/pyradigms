@@ -5,6 +5,6 @@ pd.read_file(
     x = ["Person", "Number"],
     y = ["Tense"],
     z = ["Verb"],
-    filtered_parameters = {"Mood": "IND"}
+    filtered_parameters={"Mood": "IND"}
 )
 pd.print_paradigms(name="example_output", display=True, single_file=False)
