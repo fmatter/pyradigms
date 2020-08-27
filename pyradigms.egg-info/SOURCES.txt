@@ -4,4 +4,5 @@ pyradigms/__init__.py
 pyradigms.egg-info/PKG-INFO
 pyradigms.egg-info/SOURCES.txt
 pyradigms.egg-info/dependency_links.txt
+pyradigms.egg-info/requires.txt
 pyradigms.egg-info/top_level.txt

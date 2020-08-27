@@ -1,10 +1,11 @@
 import csv
 import re
+from prettytable import PrettyTable
 
 class Pyradigms:
     
-    def __init__(self, output_file):
-        self.output_file = output_file
+    def __init__(self, separator = ":"):
+        self.separator = separator
     
     #This takes a list of keys (in this case, of parameter names) and a hash (in this case, of an entry), and returns a list of values from the hash. Used to combine different parameters
     def get_args(self, list, hash): 
@@ -15,10 +16,12 @@ class Pyradigms:
 
     #This uses the above function to create a string like 1PL:PST (from the parameter values 1, PL, and PST)
     def keyify(self, list, hash):
-        return re.sub(r"(\d):", r"\1", ":".join(self.get_args(list, hash))).strip(":")
+        return re.sub(r"(\d)%s" % self.separator, r"\1", self.separator.join(self.get_args(list, hash))).strip(self.separator)
     
     #This reads entries from a file and creates a 3D hash with the specified parameters as dimensions
-    def create_hash(self, input_file, x, y, z, filtered_parameters={}):
+    def read_file(self, input_file, x, y, z, filtered_parameters={}, target_string="Form"):
+        
+        self.target_string = target_string
         
         #Read file of entries
         reader = csv.DictReader(open(input_file))
@@ -64,11 +67,11 @@ class Pyradigms:
             if good:
                 #Find the appropriate column
                 x_key = self.keyify(x_dim, entry)
-                my_y[x_key] = entry["Form"]
+                my_y[x_key] = entry[self.target_string]
         self.tables = tables
         return(tables)
         
-    def print_paradigms(self, tables="", filtered_parameters={}):
+    def print_paradigms(self, tables="", name="output", single_file=True, filtered_parameters={}, x_sort_order=[], y_sort_order=[], display=False):
         if tables == "":
             tables = self.tables
         if filtered_parameters == {} and hasattr(self, "filtered_parameters"):
@@ -77,20 +80,33 @@ class Pyradigms:
         table_count = 0
         for key, table in tables.items():
             x_values = []
-            y_values = []
             output.append([])
             output[table_count].append([])
             row_count = 0
-            for y_key, y in table.items():
-                if y_key not in y_values:
-                    y_values.append(y_key)
+            
+            for y in table.values():
                 for x_key, x in y.items():
                     if x_key not in x_values:
                         x_values.append(x_key)
+                        
+            if x_sort_order:
+                x_sort = {}
+                for i, v in enumerate(x_sort_order):
+                    x_sort[v] = i
+                x_values = sorted(x_values, key=lambda val: str(x_sort[val]) if val in x_sort.keys() else str(val))
+                
             output[table_count][row_count].append(key)
             for x in x_values:
                 output[table_count][row_count].append(x)
-            for x_key in table.keys():
+            
+            y_values = table.keys()  
+            if y_sort_order:
+                y_sort = {}
+                for i, v in enumerate(y_sort_order):
+                    y_sort[v] = i
+                y_values = sorted(y_values, key=lambda val: str(y_sort[val]) if val in y_sort.keys() else str(val))
+
+            for x_key in y_values:
                 output[table_count].append([])
                 row_count += 1
                 output[table_count][row_count].append(x_key)
@@ -104,16 +120,41 @@ class Pyradigms:
                         col_count += 1
             table_count += 1
             output.append([])
-            
-        with open(self.output_file, "w") as csvfile:
-            writer = csv.writer(csvfile, delimiter=",")
-            params = []
-            if len(filtered_parameters.keys()) > 0:
-                for col, val in self.filtered_parameters.items():
-                    params.append("%s: %s" % (col, val))
-                writer.writerow([";".join(params)])
-                writer.writerow([])
-            for table in output:
-                for row in table:
-                    writer.writerow(row)
-                writer.writerow([])
+        
+        if display:
+            for output_table in output:
+                if output_table == []: continue
+                x = PrettyTable()
+                x.field_names = output_table[0]
+                for output_row in output_table[1:]:
+                    x.add_row(output_row)
+                print(x)
+        
+        if name != None:    
+            if single_file:    
+                with open(name + ".csv", "w") as csvfile:
+                    writer = csv.writer(csvfile, delimiter=",")
+                    params = []
+                    if len(filtered_parameters.keys()) > 0:
+                        for col, val in self.filtered_parameters.items():
+                            params.append("%s: %s" % (col, val))
+                        writer.writerow([";".join(params)])
+                        writer.writerow([])
+                    for table in output:
+                        for row in table:
+                            writer.writerow(row)
+                        writer.writerow([])
+            else:
+                for table in output:
+                    if table == []: continue
+                    with open("%s_" % table[0][0] + name + ".csv", "w") as csvfile:
+                        writer = csv.writer(csvfile, delimiter=",")
+                        params = []
+                        if len(filtered_parameters.keys()) > 0:
+                            for col, val in self.filtered_parameters.items():
+                                params.append("%s: %s" % (col, val))
+                            writer.writerow([";".join(params)])
+                            writer.writerow([])
+                        for row in table:
+                            if row == []: continue
+                            writer.writerow(row)

@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pyradigms",
-    version="0.0.2",
+    version="0.0.3",
     author="Florian Matter",
     author_email="florianmatter@gmail.com",
     description="Creates paradigms from a table of entries with parameters.",
@@ -13,6 +13,9 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://gitlab.com/florianmatter/pyradigms",
     packages=setuptools.find_packages(),
+    install_requires=[
+        'prettytable',
+    ],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
