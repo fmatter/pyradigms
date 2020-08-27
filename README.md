@@ -114,25 +114,24 @@ pd.print_paradigms(
 	name="example_output",
 	display=True,
 	single_file=False,
-	x_sort_order=["1IND", "2IND", "3IND", "3IND", "2IND", "1IND"]
+	x_sort_order=["1IND", "2IND", "3IND", "3SUBJ", "2SUBJ", "1SUBJ"]
 )
 ```
 
-| portaːre |   1SUBJ   |   2SUBJ   |   3IND  |  3SUBJ  |    2IND   |    1IND   |
+| portaːre |    1IND   |    2IND   |   3IND  |  3SUBJ  |   2SUBJ   |   1SUBJ   |
 |----------|-----------|-----------|---------|---------|-----------|-----------|
-|    SG    |   portem  |  porteːs  |  portat |  portet |  portaːs  |   portoː  |
-|    PL    | porteːmus | porteːtis | portant | portent | portaːtis | portaːmus |
+|    SG    |   portoː  |  portaːs  |  portat |  portet |  porteːs  |   portem  |
+|    PL    | portaːmus | portaːtis | portant | portent | porteːtis | porteːmus |
 
-| terːeːre |   1SUBJ    |   2SUBJ    |   3IND  |  3SUBJ   |    2IND   |    1IND   |
-|----------|------------|------------|---------|----------|-----------|-----------|
-|    SG    |  terːream  |  terːeaːs  |  terːet | terːeat  |  terːeːs  |  terːeoː  |
-|    PL    | terːeaːmus | terːeaːtis | terːent | terːeant | terːeːtis | terːeːmus |
+| terːeːre |    1IND   |    2IND   |   3IND  |  3SUBJ   |   2SUBJ    |   1SUBJ    |
+|----------|-----------|-----------|---------|----------|------------|------------|
+|    SG    |  terːeoː  |  terːeːs  |  terːet | terːeat  |  terːeaːs  |  terːream  |
+|    PL    | terːeːmus | terːeːtis | terːent | terːeant | terːeaːtis | terːeaːmus |
 
-| petere |  1SUBJ   |  2SUBJ   |  3IND  | 3SUBJ  |   2IND  |   1IND  |
-|--------|----------|----------|--------|--------|---------|---------|
-|   SG   |  petam   |  petaːs  | petit  | petat  |  petis  |  petoː  |
-|   PL   | petaːmus | petaːtis | petunt | petant | petitis | petimus |
-
+| petere |   1IND  |   2IND  |  3IND  | 3SUBJ  |  2SUBJ   |  1SUBJ   |
+|--------|---------|---------|--------|--------|----------|----------|
+|   SG   |  petoː  |  petis  | petit  | petat  |  petaːs  |  petam   |
+|   PL   | petimus | petitis | petunt | petant | petaːtis | petaːmus |
 
 ### `print_paradigms`
 If you use `pyradigms` in your own application, you might have a three-dimensional dictionary already ready for it, rather than constructing it with `pyradigms`.
