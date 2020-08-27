@@ -132,7 +132,6 @@ pd.print_paradigms(
 |--------|----------|----------|--------|--------|---------|---------|
 |   SG   |  petam   |  petaːs  | petit  | petat  |  petis  |  petoː  |
 |   PL   | petaːmus | petaːtis | petunt | petant | petitis | petimus |
-|--------|----------|----------|--------|--------|---------|---------|
 
 
 ### `print_paradigms`
