@@ -45,7 +45,7 @@ portaːmus | 1 | PL | PRS | portaːre | IND
 portaːtis | 2 | PL | PRS | portaːre | IND
 portant | 3 | PL | PRS | portaːre | IND
 terːeoː | 1 | SG | PRS | terːeːre | IND
-… | … | … | … | … | 
+… | … | … | … | … | …
 
 One could for example want to combine person and number, as well as tense and mood.
 A separate paradigm should be produced for each verb.
@@ -117,6 +117,26 @@ pd.print_paradigms(
 	x_sort_order=["1IND", "2IND", "3IND", "3IND", "2IND", "1IND"]
 )
 ```
+
+|----------|-----------|-----------|---------|---------|-----------|-----------|
+| portaːre |   1SUBJ   |   2SUBJ   |   3IND  |  3SUBJ  |    2IND   |    1IND   |
+|----------|-----------|-----------|---------|---------|-----------|-----------|
+|    SG    |   portem  |  porteːs  |  portat |  portet |  portaːs  |   portoː  |
+|    PL    | porteːmus | porteːtis | portant | portent | portaːtis | portaːmus |
+|----------|-----------|-----------|---------|---------|-----------|-----------|
+|----------|------------|------------|---------|----------|-----------|-----------|
+| terːeːre |   1SUBJ    |   2SUBJ    |   3IND  |  3SUBJ   |    2IND   |    1IND   |
+|----------|------------|------------|---------|----------|-----------|-----------|
+|    SG    |  terːream  |  terːeaːs  |  terːet | terːeat  |  terːeːs  |  terːeoː  |
+|    PL    | terːeaːmus | terːeaːtis | terːent | terːeant | terːeːtis | terːeːmus |
+|----------|------------|------------|---------|----------|-----------|-----------|
+|--------|----------|----------|--------|--------|---------|---------|
+| petere |  1SUBJ   |  2SUBJ   |  3IND  | 3SUBJ  |   2IND  |   1IND  |
+|--------|----------|----------|--------|--------|---------|---------|
+|   SG   |  petam   |  petaːs  | petit  | petat  |  petis  |  petoː  |
+|   PL   | petaːmus | petaːtis | petunt | petant | petitis | petimus |
+|--------|----------|----------|--------|--------|---------|---------|
+
 
 ### `print_paradigms`
 If you use `pyradigms` in your own application, you might have a three-dimensional dictionary already ready for it, rather than constructing it with `pyradigms`.
