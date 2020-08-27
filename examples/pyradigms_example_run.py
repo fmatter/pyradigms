@@ -1,11 +1,10 @@
 import pyradigms
-
-pd = pyradigms.Pyradigms("example_output.csv")
-pd.create_hash(
+pd = pyradigms.Pyradigms()
+pd.read_file(
     "latin_verbs.csv",
-    x = ["Number","Person"],
+    x = ["Person", "Number"],
     y = ["Tense"],
-    z = [],
-    filtered_parameters = {"Verb": "portaːre", "Mood": "IND"}
+    z = ["Verb"],
+    filtered_parameters = {"Mood": "IND"}
 )
-pd.print_paradigms(single_file=True)
+pd.print_paradigms(name="example_output", display=True, single_file=False)

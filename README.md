@@ -6,20 +6,110 @@ Creates paradigms from a table of entries with parameters.
 `pip install pyradigms`
 
 ## Usage
-There are two separate methods; `create_hash` creates a three-dimensional dictionary from a `.csv` file with a list of forms with parameters, `print_paradigms` creates human-readable paradigms, also in `.csv` format, from such a dictionary.
-Both methods can be used on their own, but dictionaries produced by `create_hash` will automatically be used by `print_paradigms`.
+There are two separate methods; `read_file` creates a three-dimensional dictionary from a `.csv` file with a list of forms with parameters, `print_paradigms` creates human-readable paradigms, also in `.csv` format, from such a dictionary.
+You can either first read a file and then print the desired paradigm, or you can print a paradigm directly from a three-dimensional hash.
+
+###`read_file`
+
+In order to specify what parameter should be projected onto which dimension, the arguments `x`, `y`, and `z` must be passed.
+They each take a list of strings, the strings being column names present in the `.csv` file.
+`z` represents the multiple paradigm tables listed vertically or in multiple files in the output.
+`y` represents the rows of a single paradigm table.
+`x` represents the columns of a single paradigm table.
+Printed in the cells are the values in the column `Form`; if your `.csv` file uses a different label, specify it with `read_file(target_string=<label>)`
+
 Example usage:
 
 ```
-from pyradigms import Pyradigms
-pd = Pyradigms("output.csv")
-pd.create_hash("input.csv",x=["X"] ,y=["Y"] ,z=["Z"])
-pd.print_paradigms()
+import pyradigms
+pd = pyradigms.Pyradigms()
+pd.read_file(
+    "input.csv",
+    x = ["X1", "X2"],
+    y = ["Y"],
+    z = ["Z"],
+    filtered_parameters = {"A": "B"}
+)
+pd.print_paradigms(name="output")
+```
+
+Here is an illustration from the included examples:
+The file `examples/latin_verbs.csv` has the columns `Form	Person	Number	Tense	Verb	Mood`:
+
+Form | Person | Number | Tense | Verb | Mood
+-- | -- | -- | -- | -- | --
+portoː | 1 | SG | PRS | portaːre | IND
+portaːs | 2 | SG | PRS | portaːre | IND
+portat | 3 | SG | PRS | portaːre | IND
+portaːmus | 1 | PL | PRS | portaːre | IND
+portaːtis | 2 | PL | PRS | portaːre | IND
+portant | 3 | PL | PRS | portaːre | IND
+terːeoː | 1 | SG | PRS | terːeːre | IND
+
+One could for example want to combine person and number, as well as tense and mood.
+A separate paradigm should be produced for each verb.
+This is achieved as follows:
+
+```
+pd = pyradigms.Pyradigms()
+pd.read_file(
+    "latin_verbs.csv",
+    x = ["Person", "Number"],
+    y = ["Tense"],
+    z = ["Verb"],
+    filtered_parameters = {"Mood": "IND"}
+)
+pd.print_paradigms(name="latin_verb_paradigms")
+```
+
+This results in the following paradigm list (in "latin_verb_paradigms.csv"):
+
+| portaːre |    1SG    |    2SG     |    3SG    |     1PL      |     2PL      |    3PL     |
+|----------|-----------|------------|-----------|--------------|--------------|------------|
+|   PRS    |   portoː  |  portaːs   |   portat  |  portaːmus   |  portaːtis   |  portant   |
+| PST.IPFV | portaːbam | portaːbaːs | portaːbat | portaːbaːmus | portaːbaːtis | portaːbant |
+|   FUT    | portaːboː | portaːbis  | portaːbit | portaːbimus  | portaːbitis  | portaːbunt |
+
+| terːeːre |    1SG    |    2SG     |    3SG    |     1PL      |     2PL      |    3PL     |
+|----------|-----------|------------|-----------|--------------|--------------|------------|
+|   PRS    |  terːeoː  |  terːeːs   |   terːet  |  terːeːmus   |  terːeːtis   |  terːent   |
+| PST.IPFV | terːeːbam | terːeːbaːs | terːeːbat | terːeːbaːmus | terːeːbaːtis | terːeːbant |
+|   FUT    | terːeːboː | terːeːbis  | terːeːbit | terːeːbimus  | terːeːbitis  | terːeːbunt |
+
+|  petere  |   1SG    |   2SG    |   3SG    |     1PL     |     2PL     |    3PL    |
+|----------|----------|----------|----------|-------------|-------------|-----------|
+|   PRS    |  petoː   |  petis   |  petit   |   petimus   |   petitis   |   petunt  |
+| PST.IPFV | peteːbam | peteːbas | peteːbat | peteːbaːmus | peteːbaːtis | peteːbant |
+|   FUT    |  petam   |  peteːs  |  petet   |   peteːmus  |   peteːtis  |   petent  |
+|----------|----------|----------|----------|-------------|-------------|-----------|
+
+You can arrange and combine the parameters as you want.
+If you want to filter a certain parameter, you can add as many `filtered_parameters` as you want, and filter for a specific value.
+**If a parameter appears on none of the three axes, and not in the `filtered_parameters` list, it will be ignored completely, and `pyradigms` will simply take the first form fulfilling all criteria!** (for now)
+
+The option `multiple_files=True` distributes the output into multiple files, which represent the `z` axis.
+The option `display=True` prints a pretty table in the command line output.
+The options `x_sort_order` and `y_sort_order` take lists which will be used to sort the output.
+
+An example: the following code combines person and mood on the `x` axis and uses a very idiosyncratic sort order for that axis.
+Number is on the `y` axis, verbs on the `z` axis; only present tense forms are taken into account.
+The output is pretty printed in the terminal;  the `z` axis is distributed across three files.
+
+```
+pd.read_file(
+    "latin_verbs.csv",
+    x = ["Person", "Mood"],
+    y = ["Number"],
+    z = ["Verb"],
+    filtered_parameters = {"Tense": "PRS"}
+)
+pd.print_paradigms(name="example_output", display=True, single_file=False, x_sort_order=["1IND", "2IND", "3IND", "3IND", "2IND", "1IND"])
 ```
 
 ### `print_paradigms`
-The `print_paradigms` method takes an argument `tables`, which is a three-dimensional dictionary, and prints them to the specified `.csv` output file.
-If no `tables` argument is passed, the dictionary created by `create_hash` will be used.
+If you use `pyradigms` in your own application, you might have a three-dimensional dictionary already ready for it, rather than constructing it with `pyradigms`.
+In that case, you can pass the argument `tables` to `print_paradigms()`; the rest works identically.
+If no `tables` argument is passed, the dictionary created by `read_file()` will be used.
 Take the following dictionary of Bernese German verb forms as an example.
 It has three dimensions, the first being the meaning of the verb, the second being number, and the third being person.
 
@@ -54,99 +144,3 @@ With `print_paradigms(bernese_verbs)`, a `.csv` file with the following content 
 | PL | sækə | sækətː | sækə
 
 In the `.csv` file, The first layer of the three-dimensional hash is represented in the `z` dimension, i.e. paradigm tables stacked vertically, the second layer is represented in the `y` axis of the individual tables, and the third layer is represented in the `x` axis.
-
-### `create_hash`
-The `create_hash` method reads entries from a `.csv` file and produces a dictionary like the one above.
-The `.csv` file should have the following format, again illustrated with the Bernese German forms:
-
-| Verb | Number | Person | Form
-| ----- | -----| ----- | -----
-| to go | SG | 1 | kɑː
-| to go | SG | 2 | kɛjʃ
-| to go | SG | 3 | kɛjtː
-| to go | PL | 1 | kœː
-| to go | PL | 2 | kœːtː
-| to go | PL | 3 | kœː
-| to say | SG | 1 | sækə
-| to say | SG | 2 | sɛjʃ
-| to say | SG | 3 | sɛjtː
-| to say | PL | 1 | sækə
-| to say | PL | 2 | sækətː
-| to say | PL | 3 | sækə
-
-In order to specify what parameter should be projected onto which dimension, the arguments `x`, `y`, and `z` must be passed.
-They each take a list of strings, the strings being parameters present in the `.csv` file.
-`z` represents the multiple paradigm tables listed vertically.
-`y` represents the rows of a single paradigm table.
-`x` represents the columns of a single paradigm table.
-The `Form` values are what is actually printed in the cells.
-Thus, with the following command, the example dictionary above is created from the example `.csv` structure above:
-```
-pd.create_hash(
-    "bernese_verbs.csv",
-    x = ["Verb"],
-    y = ["Number"],
-    z = ["Person"]
-)
-```
-
-The resulting dictionary can then be printed to a paradigm table with `pyradigms.print_paradigms()`.
-
-When multiple strings are given for one dimension, the parameters are combined in the resulting paradigm.
-This is useful when there are more than three parameters one wants to represent.
-For example, the file `examples/latin_verbs.csv` has the columns `Form	Person	Number	Tense	Verb	Mood`.
-It would make sense to combine person and number, as well as tense and mood.
-A separate paradigm should be produced for each verb.
-This is achieved with the following command:
-
-
-```
-pd.create_hash(
-    "examples/latin_verbs.csv",
-    x = ["Person", "Number"],
-    y = ["Tense", "Mood"],
-    z = ["Verb"]
-)
-pd.print_paradigms()
-```
-
-This results in the following paradigm list:
-
-| portaːre | 1SG | 2SG | 3SG | 1PL | 2PL | 3PL
-| --- | --- | --- | --- | --- | --- | ---
-| PRS:IND | portoː | portaːs | portat | portaːmus | portaːtis | portant
-| PST.IPFV:IND | portaːbam | portaːbaːs | portaːbat | portaːbaːmus | portaːbaːtis | portaːbant
-| FUT:IND | portaːboː | portaːbis | portaːbit | portaːbimus | portaːbitis | portaːbunt
-| PRS:SUBJ | portem | porteːs | portet | porteːmus | porteːtis | portent
-| PST.IPFV:SUBJ | portaːrem | portaːreːs | portaːret | portaːreːmus | portaːreːtis | portaːrent
-
-| terːeːre | 1SG | 2SG | 3SG | 1PL | 2PL | 3PL
-| --- | --- | --- | --- | --- | --- | ---
-| PRS:IND | terːeoː | terːeːs | terːet | terːeːmus | terːeːtis | terːent
-| PST.IPFV:IND | terːeːbam | terːeːbaːs | terːeːbat | terːeːbaːmus | terːeːbaːtis | terːeːbant
-| FUT:IND | terːeːboː | terːeːbis | terːeːbit | terːeːbimus | terːeːbitis | terːeːbunt
-| PRS:SUBJ | terːream | terːeaːs | terːeat | terːeaːmus | terːeaːtis | terːeant
-| PST.IPFV:SUBJ | terːeːrem | terːeːres | terːeret | terːeːreːmus | terːeːreːtis | terːeːrent
-
-| petere | 1SG | 2SG | 3SG | 1PL | 2PL | 3PL
-| --- | --- | --- | --- | --- | --- | ---
-| PRS:IND | petoː | petis | petit | petimus | petitis | petunt
-| PST.IPFV:IND | peteːbam | peteːbas | peteːbat | peteːbaːmus | peteːbaːtis | peteːbant
-| FUT:IND | petam | peteːs | petet | peteːmus | peteːtis | petent
-| PRS:SUBJ | petam | petaːs | petat | petaːmus | petaːtis | petant
-| PST.IPFV:SUBJ | peteːbar | peteːbaːris; peteːbaːre | peteːbaːtur | peteːbaːmus | peteːbaːminiː | peteːbaːtur
-
-It is also possible to specify a value for a given parameter, using the `filtered_parameters` argument, which takes a dictionary.
-Only forms with that value will then be represented in the resulting paradigm(s).
-For example, to only print indicative forms of the Latin verbs, the following command would be used:
-
-```
-pd.create_hash(
-    "examples/latin_verbs.csv",
-    x = ["Person", "Number"],
-    y = ["Tense"],
-    z = ["Verb"],
-    filtered_parameters = {"Mood": "IND"}
-)
-pd.print_paradigms()
-```
