@@ -16,7 +16,7 @@ They each take a list of strings, the strings being column names present in the 
 `z` represents the multiple paradigm tables listed vertically or in multiple files in the output.
 `y` represents the rows of a single paradigm table.
 `x` represents the columns of a single paradigm table.
-These dimensions must all be lists of strings, if a list contains multiple strings, those parameteres will be combined in the resulting paradigm.
+These dimensions must all be lists of strings, if a list contains multiple strings, those parameters will be combined in the resulting paradigm.
 Printed in the cells of the paradigm are the values in the column `Form`; if your `.csv` file uses a different label, specify it with `read_file(target_string=<label>)`
 
 Schematic usage:
@@ -29,9 +29,8 @@ pd.read_file(
     x = ["X1", "X2"],
     y = ["Y"],
     z = ["Z"],
-    filtered_parameters = {"A": "B"}
 )
-pd.print_paradigms(name="output")
+pd.print_paradigms()
 ```
 
 Here is an illustration from the included examples:
@@ -93,10 +92,11 @@ This results in the following paradigm list (in "latin_verb_paradigms.csv"):
 You can arrange and combine the parameters as you want.
 If you want to filter a certain parameter, you can add as many `filtered_parameters` as you want, and filter for a specific value.
 **If a parameter appears on none of the three axes, and not in the `filtered_parameters` list, it will be ignored completely, and `pyradigms` will simply take the first form fulfilling all criteria!** (for now)
+
 Other options of `read_file()`:
-The option `multiple_files=True` distributes the output into multiple files, which represent the `z` axis.
-The option `display=True` prints a pretty table in the command line output.
-The options `x_sort_order` and `y_sort_order` take lists which will be used to sort the output along that axis.
+* The option `multiple_files=True` distributes the output into multiple files, which represent the `z` axis.
+* The option `display=True` prints a pretty table in the command line output.
+* The options `x_sort_order` and `y_sort_order` take lists which will be used to sort the output along that axis.
 
 An example: the following code combines person and mood on the `x` axis and uses a very idiosyncratic sort order for that axis.
 Number is on the `y` axis, verbs on the `z` axis; only present tense forms are taken into account.
@@ -110,7 +110,12 @@ pd.read_file(
     z = ["Verb"],
     filtered_parameters = {"Tense": "PRS"}
 )
-pd.print_paradigms(name="example_output", display=True, single_file=False, x_sort_order=["1IND", "2IND", "3IND", "3IND", "2IND", "1IND"])
+pd.print_paradigms(
+	name="example_output",
+	display=True,
+	single_file=False,
+	x_sort_order=["1IND", "2IND", "3IND", "3IND", "2IND", "1IND"]
+)
 ```
 
 ### `print_paradigms`
@@ -150,4 +155,4 @@ With `print_paradigms(bernese_verbs)`, a `.csv` file with the following content 
 | SG | sækə | sɛjʃ | sɛjtː
 | PL | sækə | sækətː | sækə
 
-In the `.csv` file, The first layer of the three-dimensional hash is represented in the `z` dimension, i.e. paradigm tables stacked vertically, the second layer is represented in the `y` axis of the individual tables, and the third layer is represented in the `x` axis.
+In the `.csv` file, the first layer of the three-dimensional hash is represented in the `z` dimension, i.e. paradigm tables stacked vertically, the second layer is represented in the `y` axis of the individual tables, and the third layer is represented in the `x` axis.
