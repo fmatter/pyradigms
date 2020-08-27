@@ -2,14 +2,9 @@ import pyradigms
 pd = pyradigms.Pyradigms()
 pd.read_file(
     "latin_verbs.csv",
-    x = ["Person", "Mood"],
-    y = ["Number"],
+    x = ["Person", "Number"],
+    y = ["Tense"],
     z = ["Verb"],
-    filtered_parameters = {"Tense": "PRS"}
+    filtered_parameters={"Mood": "IND"}
 )
-pd.print_paradigms(
-	name="example_output",
-	display=True,
-	single_file=False,
-	x_sort_order=["1IND", "2IND", "3IND", "3SUBJ", "2SUBJ", "1SUBJ"]
-)
+pd.print_paradigms(name="example_output", display=True, single_file=False)
