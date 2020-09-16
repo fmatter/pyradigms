@@ -62,7 +62,12 @@ class Pyradigms:
             my_y = my_table[y_key]
             good = True
             for col, val in filtered_parameters.items():
-                if entry[col] != val:
+                #In case a parameter is filtered according to multiple values
+                if not isinstance(val, list):
+                    test_val = [val]
+                else:
+                    test_val = val
+                if entry[col] not in test_val:
                     good = False
             if good:
                 #Find the appropriate column
@@ -130,6 +135,13 @@ class Pyradigms:
             table_count += 1
             output.append([])
         
+        temp_output = []
+        for i, output_table in enumerate(output):
+            if output_table == []: continue
+            if len(output_table[0]) > 1:
+                temp_output.append(output_table)
+        
+        output = temp_output
         if display:
             for output_table in output:
                 if output_table == []: continue
