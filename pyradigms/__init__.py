@@ -68,7 +68,9 @@ class Pyradigms:
                 #Find the appropriate column
                 x_key = self.keyify(x_dim, entry)
                 if x_key in my_y:
-                    my_y[x_key] += "; " + entry[self.target_string]
+                    #only add if an identical entry is not already present
+                    if entry[self.target_string] not in my_y[x_key].split("; "):
+                        my_y[x_key] += "; " + entry[self.target_string]
                 else:
                     my_y[x_key] = entry[self.target_string]
         self.tables = tables
