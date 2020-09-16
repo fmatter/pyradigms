@@ -4,7 +4,7 @@ from prettytable import PrettyTable
 
 class Pyradigms:
     
-    def __init__(self, separator = ":"):
+    def __init__(self, separator=":"):
         self.separator = separator
     
     #This takes a list of keys (in this case, of parameter names) and a hash (in this case, of an entry), and returns a list of values from the hash. Used to combine different parameters
@@ -67,15 +67,22 @@ class Pyradigms:
             if good:
                 #Find the appropriate column
                 x_key = self.keyify(x_dim, entry)
-                my_y[x_key] = entry[self.target_string]
+                if x_key in my_y:
+                    my_y[x_key] += "; " + entry[self.target_string]
+                else:
+                    my_y[x_key] = entry[self.target_string]
         self.tables = tables
         return(tables)
         
-    def print_paradigms(self, tables="", name="output", single_file=True, filtered_parameters={}, x_sort_order=[], y_sort_order=[], display=False):
+    def print_paradigms(self, tables="", name="output", single_file=True, filtered_parameters={}, x_sort_order=[], y_sort_order=[], display=False, fill_empty=False):
         if tables == "":
             tables = self.tables
         if filtered_parameters == {} and hasattr(self, "filtered_parameters"):
             filtered_parameters = self.filtered_parameters
+        if fill_empty:
+            empty_string = " "
+        else:
+            empty_string = ""
         output = []
         table_count = 0
         for key, table in tables.items():
@@ -111,7 +118,7 @@ class Pyradigms:
                 row_count += 1
                 output[table_count][row_count].append(x_key)
                 for i in x_values:
-                    output[table_count][row_count].append("")
+                    output[table_count][row_count].append(empty_string)
                 for y_key, y in table[x_key].items():
                     col_count = 0
                     while col_count < len(x_values):
