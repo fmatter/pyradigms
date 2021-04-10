@@ -12,6 +12,8 @@ separators = ["+"]
 x = []
 y = []
 z = []
+x_sort = []
+y_sort = []
 filters = {}
 ignore = []
 
@@ -110,7 +112,8 @@ def compose_paradigm(input_df, return_csv = False):
     
     logger.debug("Composing y id…")
     new_y_id = separators[0].join(y)
-    if len(y) > 1: df[new_y_id] = df.apply(concat_values, values=y, axis=1)
+    if len(y) > 1:
+        df[new_y_id] = df.apply(concat_values, values=y, axis=1)
     logger.debug(new_y_id)
     
     new_x_id = separators[0].join(x)
@@ -128,7 +131,6 @@ def compose_paradigm(input_df, return_csv = False):
     pd.set_option("display.max_rows", None, "display.max_columns", None)
     for z_key, df in z_dict.items():
         logger.debug(f"Creating pivot table for {z_key}, using {new_x_id} for x axis and {new_y_id} for y axis")
-        print(df)
         out = pd.pivot_table(
             df,
             values=content_string,
@@ -138,13 +140,20 @@ def compose_paradigm(input_df, return_csv = False):
         )
         out.rename_axis(None, axis="columns", inplace=True) # remove column labels
         if len(z_dict) == 1:
-            out.index.name = "" # set index name to zero
+            out.index.name = new_y_id
         else:
             out.index.name = z_key
+
         out.reset_index(inplace=True) # use index as column
         out.replace("", np.nan, inplace=True) # replace all empty strings with NaN, so we can…
         out.dropna(how="all", inplace=True) # …drop rows with no content whatsoever
         out.fillna("", inplace=True) # then add back the empty strings for exporting
+        out.set_index(new_y_id, drop=True, inplace=True)# then add back the index
+        out = out.reindex([value for value in y_sort if value in out.index] + list(set(list(out.index)) - set(y_sort))) # sort index by specified order, put leftovers at the end
+        out.index.name = "" # set index name to zero
+        comp_x_sort = x_sort + list(set(list(out.columns)) - set(x_sort))        #sort columns, too
+        comp_x_sort = dict(zip(comp_x_sort, range(len(comp_x_sort))))
+        out = out[sorted(out.columns, key=lambda x: comp_x_sort[x])]
         constructed_paradigms[z_key] = out
     if not return_csv:
         return constructed_paradigms
@@ -152,7 +161,7 @@ def compose_paradigm(input_df, return_csv = False):
         output = []
         for df in constructed_paradigms.values():
             s = StringIO()
-            df.to_csv(s, index=False)
+            df.to_csv(s, index=True)
             output.append(s.getvalue())
         return("\n".join(output))
         
