@@ -4,7 +4,7 @@ import re
 from io import StringIO
 import logging
 logger = logging.getLogger("pyradigms")
-logging.basicConfig(level="DEBUG")
+logging.basicConfig(level="ERROR")
 
 person_values = ["1", "2", "3", "1+3", "1+2"]
 content_string = "Form"
