@@ -9,7 +9,7 @@ pyradigms is a python package for composing and decomposing linguistic paradigms
 
 ## Installation
 <a name="installation"/>
-Use `pip(3) install pyradigms` or get the latest version from gitlab with `pip(3) install git+https://gitlab.com/florianmatter/pyradigms.git`.
+Use `pip(3) install pyradigms` or get the latest version from github with `pip(3) install git+https://github.com/fmatter/pyradigms.git`.
 
 ## Usage
 <a name="usage"/>
