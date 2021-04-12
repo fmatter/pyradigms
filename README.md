@@ -8,7 +8,7 @@ Use `pip(3) install pyradigms` or get the latest version from gitlab with `pip(3
 
 ## Using pyradigms
 
-Basically, pyradigms is intended to convert between tables like this:
+Basically, pyradigms is intended to convert between tables like this, where every row represents a linguistic form and every column represents a paradigm:
 
 |    | Verb   | Form   | Tense   | Person   | Number   | Mood   |
 |---:|:-------|:-------|:--------|:---------|:---------|:-------|
@@ -24,20 +24,21 @@ Basically, pyradigms is intended to convert between tables like this:
 |  9 | ma     | kama   | NFUT    | 3        | SG       | IRR    |
 |  … |…     | …   | …    | …        | …       | …    |
 
-and this:
+and paradigms, where columns and rows both represent parameters, with forms in the cells:
 
-|       | PST.RLS   | PST.IRR   | NFUT.IRR   | NFUT.RLS   |
+| *ma*    | PST.IRR   | PST.RLS   | NFUT.IRR   | NFUT.RLS   |
 |:------|:----------|:----------|:-----------|:-----------|
-| 1SG   | *me*      | *ngimi*   | *ngama*    | *ngamam*   |
-| 2SG   | *ne*      | *ni*      | *thama*    | *nam*      |
-| 3SG   | *me*      | *mi*      | *kama*     | *mam*      |
-| 1+2SG | *thume*   | *thumi*   | *pama*     | *thamam*   |
-| 1PAUC | *ngume*   | *ngumi*   | *nguyema*  |            |
-| 2PAUC | *nume*    | *numi*    | *nuyema*   |            |
-| 3PAUC | *pume*    | *pumi*    | *kuyema*   |            |
-| 1PL   | *ngume*   | *ngumi*   | *nguyema*  | *ngamam*   |
-| 2PL   | *nume*    | *numi*    | *nuyema*   | *namam*    |
-| 3PL   | *pume*    | *pumi*    | *kuyema*   | *pamam*    |
+| 1SG   | *ngimi*   | *me*      | *ngama*    | *ngamam*   |
+| 2SG   | *ni*      | *ne*      | *thama*    | *nam*      |
+| 3SG   | *mi*      | *me*      | *kama*     | *mam*      |
+| 1+2SG | *thumi*   | *thume*   | *pama*     | *thamam*   |
+| 1PAUC | *ngumi*   | *ngume*   | *nguyema*  |            |
+| 2PAUC | *numi*    | *nume*    | *nuyema*   |            |
+| 3PAUC | *pumi*    | *pume*    | *kuyema*   |            |
+| 1PL   | *ngumi*   | *ngume*   | *nguyema*  | *ngamam*   |
+| 2PL   | *numi*    | *nume*    | *nuyema*   | *namam*    |
+| 3PL   | *pumi*    | *pume*    | *kuyema*   | *pamam*    |
+
 
 ## composing paradigms
 

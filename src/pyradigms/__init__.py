@@ -126,7 +126,7 @@ def compose_paradigm(input_df, return_csv = False):
         z_dict = dict(tuple(df.groupby(new_z_id)))
     else:
         z_dict = {"z": df}
-    
+
     constructed_paradigms = {}
     pd.set_option("display.max_rows", None, "display.max_columns", None)
     for z_key, df in z_dict.items():
@@ -143,14 +143,14 @@ def compose_paradigm(input_df, return_csv = False):
             out.index.name = new_y_id
         else:
             out.index.name = z_key
-
+        
+        idx_name = out.index.name
         out.reset_index(inplace=True) # use index as column
         out.replace("", np.nan, inplace=True) # replace all empty strings with NaN, so we can…
         out.dropna(how="all", inplace=True) # …drop rows with no content whatsoever
         out.fillna("", inplace=True) # then add back the empty strings for exporting
-        out.set_index(new_y_id, drop=True, inplace=True)# then add back the index
+        out.set_index(idx_name, drop=True, inplace=True)# then add back the index
         out = out.reindex([value for value in y_sort if value in out.index] + list(set(list(out.index)) - set(y_sort))) # sort index by specified order, put leftovers at the end
-        out.index.name = "" # set index name to zero
         comp_x_sort = x_sort + list(set(list(out.columns)) - set(x_sort))        #sort columns, too
         comp_x_sort = dict(zip(comp_x_sort, range(len(comp_x_sort))))
         out = out[sorted(out.columns, key=lambda x: comp_x_sort[x])]
