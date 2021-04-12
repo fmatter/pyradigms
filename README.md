@@ -230,4 +230,71 @@ print(paradigms)
 | Waimiri-Atroari | *pɨnɨ*  | *biʃi*    |         | *jɨhɨ*    | *wiwe*  |
 
 ## decomposing paradigms
- 
+This was added as a secondary functionality and is somewhat experimental.
+The basic idea is that it allows you to decompose a paradigm which is already in the traditional linguistic format, into a list of parametrized rows.
+The file [examples/icelandic_pronoun_paradigm.csv](examples/icelandic_pronoun_paradigm.csv) contains the personal pronouns of Icelandic:
+|        | 1       | 2       | 3M       | 3F       | 3N       |
+|:-------|:--------|:--------|:---------|:---------|:---------|
+| NOM.SG | *ég*    | *þú*    | *hann*   | *hún*    | *það*    |
+| ACC.SG | *mig*   | *þig*   | *hann*   | *hana*   | *það*    |
+| DAT.SG | *mér*   | *þér*   | *honum*  | *henni*  | *því*    |
+| GEN.SG | *mín*   | *þín*   | *hans*   | *hennar* | *þess*   |
+| NOM.PL | *við*   | *þið*   | *þeir*   | *þær*    | *þau*    |
+| ACC.PL | *okkur* | *ykkur* | *þá*     | *þær*    | *þau*    |
+| DAT.PL | *okkur* | *ykkur* | *þeim*   | *þeim*   | *þeim*   |
+| GEN.PL | *okkar* | *ykkar* | *þeirra* | *þeirra* | *þeirra* |
+
+`x` is a combination of person and gender, although first and second person have no gender distinction.
+`y` is a combination of case and number.
+If we define these parameters accordingly, we get the following:
+
+```python
+pyd.x = ["Person", "Gender"]
+pyd.y = ["Case", "Number"]
+pyd.z = []
+entries = pyd.decompose_from_csv("examples/icelandic_pronoun_paradigm.csv")
+print(entries)
+```
+
+|   Person | Gender   | Case   | Number   | Value   |
+|---------:|:---------|:-------|:---------|:--------|
+|        1 |          | NOM    | SG       | ég      |
+|        1 |          | ACC    | SG       | mig     |
+|        1 |          | DAT    | SG       | mér     |
+|        1 |          | GEN    | SG       | mín     |
+|        1 |          | NOM    | PL       | við     |
+|        1 |          | ACC    | PL       | okkur   |
+|        1 |          | DAT    | PL       | okkur   |
+|        1 |          | GEN    | PL       | okkar   |
+|        2 |          | NOM    | SG       | þú      |
+|        2 |          | ACC    | SG       | þig     |
+|        2 |          | DAT    | SG       | þér     |
+|        2 |          | GEN    | SG       | þín     |
+|        2 |          | NOM    | PL       | þið     |
+|        2 |          | ACC    | PL       | ykkur   |
+|        2 |          | DAT    | PL       | ykkur   |
+|        2 |          | GEN    | PL       | ykkar   |
+|        3 | M        | NOM    | SG       | hann    |
+|        3 | M        | ACC    | SG       | hann    |
+|        3 | M        | DAT    | SG       | honum   |
+|        3 | M        | GEN    | SG       | hans    |
+|        3 | M        | NOM    | PL       | þeir    |
+|        3 | M        | ACC    | PL       | þá      |
+|        3 | M        | DAT    | PL       | þeim    |
+|        3 | M        | GEN    | PL       | þeirra  |
+|        3 | F        | NOM    | SG       | hún     |
+|        3 | F        | ACC    | SG       | hana    |
+|        3 | F        | DAT    | SG       | henni   |
+|        3 | F        | GEN    | SG       | hennar  |
+|        3 | F        | NOM    | PL       | þær     |
+|        3 | F        | ACC    | PL       | þær     |
+|        3 | F        | DAT    | PL       | þeim    |
+|        3 | F        | GEN    | PL       | þeirra  |
+|        3 | N        | NOM    | SG       | það     |
+|        3 | N        | ACC    | SG       | það     |
+|        3 | N        | DAT    | SG       | því     |
+|        3 | N        | GEN    | SG       | þess    |
+|        3 | N        | NOM    | PL       | þau     |
+|        3 | N        | ACC    | PL       | þau     |
+|        3 | N        | DAT    | PL       | þeim    |
+|        3 | N        | GEN    | PL       | þeirra  |
