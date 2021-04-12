@@ -163,7 +163,10 @@ def compose_paradigm(input_df, csv_output = None):
             output.append(s.getvalue())
         with open(csv_output, 'w') as file:
             file.write("\n".join(output))
-    return constructed_paradigms
+    if len(constructed_paradigms) == 1:
+        return constructed_paradigms["z"]
+    else:
+        return constructed_paradigms
         
         
 #TEST CODE

@@ -80,13 +80,23 @@ Here is how the Murrinhpatha paradigm above can be constructed:
 
 ```python
 import pyradigms as pyd
-pyd.x = ["Person", "Number"]
-pyd.y = ["Tense", "Mood"]
+pyd.x = ["Tense", "Mood"]
+pyd.y = ["Person", "Number"]
 pyd.z = ["Verb"]
-pyd.filters = {"Verb": ["ma"]}
-pyd.x_sort = ["1SG", "2SG", "3SG", "1+2SG", "1PAUC", "2PAUC", "3PAUC", "1PL", "2PL", "3PL"]
-pyd.compose_from_csv("examples/murrinhpatha_verb_entries.csv")
+pyd.y_sort = ["1SG", "2SG", "3SG", "1+2SG", "1PAUC", "2PAUC", "3PAUC", "1PL", "2PL", "3PL"]
+paradigms = pyd.compose_from_csv("examples/murrinhpatha_verb_entries.csv")
+print(paradigms["ma"])
 ```
+
+This will:
+
+1. use combinations of Tense as Mood as column names
+2. use the combination of Person and Number as row names
+3. create a table for each verb
+4. sort the Person-Number combinations accordingly.
+
+If `z` is not an empty list, pyradigms will return a dict which has the `z` values as keys, containing pandas dataframes, therefore `print(paradigms["ma"])`.
+If `z` is an empty list, only a single dataframe will be returned.
 
 
 ## decomposing paradigms
