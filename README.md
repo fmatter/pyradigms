@@ -120,28 +120,7 @@ print(paradigms["NFUT.IRR"])
 | ni         | *thani*   | *narne*  | *narni*  |
 | e          | *tje*     | *ne*     | *ne*     |
 | ngi        | *thungi*  | *nunge*  | *nungi*  |
-| nu         | *thunu*   | *nunna*  | *nunnu*  |
-| i          | *thu*     | *ne*     | *nuyu*   |
-| be         | *de*      | *nube*   | *nube*   |
-| ntji       | *tha*     | *na*     | *na*     |
-| rdu        | *thurdu*  | *nudda*  | *nuddu*  |
-| ya         | *thu*     | *nu*     | *nu*     |
-| ntha       | *tjintha* | *nintha* | *nintha* |
-| ye         | *thuy*    | *nuy*    | *nuyu*   |
-| mu         | *nu*      | *numu*   | *numu*   |
-| ila        | *tjila*   | *nilla*  | *nilla*  |
-| ngu        | *thungu*  | *nunga*  | *nungu*  |
-| rru        | *thurru*  | *na*     | *nuru*   |
-| nga        | *tji*     | *ne*     | *ni*     |
-| mi         | *ni*      | *numi*   | *numi*   |
-| bu         | *du*      | *nubu*   | *nubu*   |
-| a          | *tha*     | *na*     | *na*     |
-| buy        | *duy*     | *nubuy*  | *nubuy*  |
-| ma         | *thama*   | *nuyema* | *nuyema* |
-| na         | *tjina*   | *ninna*  | *ninna*  |
-| rra        | *tjirra*  | *nira*   | *nira*   |
-| rri        | *tjirri*  | *niri*   | *niri*   |
-| ula        | *thula*   | *nulla*  | *nulla*  |
+|…|…|…|…|
 
 
 
