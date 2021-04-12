@@ -2,6 +2,13 @@
 
 pyradigms is a python package for composing and decomposing linguistic paradigms.
 
+##### Table of Contents  
+[Headers](#headers)  
+[Emphasis](#emphasis)  
+...snip...    
+<a name="headers"/>
+## Headers
+
 ## Installation
 Use `pip(3) install pyradigms` or get the latest version from gitlab with `pip(3) install git+https://gitlab.com/florianmatter/pyradigms.git`.
 
@@ -232,6 +239,8 @@ print(paradigms)
 ## decomposing paradigms
 This was added as a secondary functionality and is somewhat experimental.
 The basic idea is that it allows you to decompose a paradigm which is already in the traditional linguistic format, into a list of parametrized rows.
+THis can be useful if you already have a nicely formatted paradigm somewhere, but need it in an explicit list format -- for example, to rearrange it with `compose_paradigm()`.
+
 The file [examples/icelandic_pronoun_paradigm.csv](examples/icelandic_pronoun_paradigm.csv) contains the personal pronouns of Icelandic:
 |        | 1       | 2       | 3M       | 3F       | 3N       |
 |:-------|:--------|:--------|:---------|:---------|:---------|
