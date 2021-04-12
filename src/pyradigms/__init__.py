@@ -8,7 +8,7 @@ logging.basicConfig(level="ERROR")
 
 person_values = ["1", "2", "3", "1+3", "1+2"]
 content_string = "Form"
-separators = ["+"]
+separators = ["."]
 x = []
 y = []
 z = []

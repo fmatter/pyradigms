@@ -56,12 +56,15 @@ We can also provide the following optional values:
 - `filters`: a list of dicts.
 The dicts contain a parameter name as key, and a list as values.
 Only entries which have the specified value for the specified parameter will be used.
-- `ignore`:
-- `x_sort`:
-- `y_sort`:
-- `separators`:
-- `content_string`
-- `person_values`
+- `ignore`: a list of parameters which will be ignored completely.
+- `x_sort`: a list of values according to which the columns will be sorted.
+- `y_sort`: a list of values according to which the rows will be sorted.
+- `separators`: a list of strings to be used as separators between two parameter values.
+The first one will be used, but multiple can be specified for decomposing paradigms, see below. Default is `"."`.
+- `content_string`: The parameter which contain the values to be used as cell contents. Default is `"Form"`.
+- `person_values`: List of strings which will be combined with other strings without using a separator.
+They will also be parsed accordingly.
+Default is `["1", "2", "3", "1+3", "1+2"]`.
 
 `compose_from_csv`
 
