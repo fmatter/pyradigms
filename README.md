@@ -60,13 +60,34 @@ Only entries which have the specified value for the specified parameter will be 
 - `x_sort`: a list of values according to which the columns will be sorted.
 - `y_sort`: a list of values according to which the rows will be sorted.
 - `separators`: a list of strings to be used as separators between two parameter values.
-The first one will be used, but multiple can be specified for decomposing paradigms, see below. Default is `"."`.
+The first one will be used, but multiple can be specified for decomposing paradigms, see below. Default is `["."]`.
 - `content_string`: The parameter which contain the values to be used as cell contents. Default is `"Form"`.
 - `person_values`: List of strings which will be combined with other strings without using a separator.
 They will also be parsed accordingly.
 Default is `["1", "2", "3", "1+3", "1+2"]`.
 
-`compose_from_csv`
+All these values are module-wide, so we specify them before composing or decomposing paradigms.
+There are three methods for constructing paradigms:
+
+- `compose_from_csv`: takes a path to a csv file
+- `compose_paradigm`: takes a pandas dataframe
+- `compose_from_text`: takes a csv string
+
+All three have the optional argument `csv_output` which can contain a path to a csv file.
+If present, the output will be written to that file.
+
+Here is how the Murrinhpatha paradigm above can be constructed:
+
+```
+import pyradigms as pyd
+pyd.x = ["Person", "Number"]
+pyd.y = ["Tense", "Mood"]
+pyd.z = ["Verb"]
+pyd.filters = {"Verb": ["ma"]}
+pyd.x_sort = ["1SG", "2SG", "3SG", "1+2SG", "1PAUC", "2PAUC", "3PAUC", "1PL", "2PL", "3PL"]
+pyd.compose_from_csv("examples/murrinhpatha_verb_entries.csv")
+```
+
 
 ## decomposing paradigms
  

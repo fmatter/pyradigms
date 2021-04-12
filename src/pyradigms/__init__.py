@@ -155,9 +155,7 @@ def compose_paradigm(input_df, csv_output = None):
         comp_x_sort = dict(zip(comp_x_sort, range(len(comp_x_sort))))
         out = out[sorted(out.columns, key=lambda x: comp_x_sort[x])]
         constructed_paradigms[z_key] = out
-    if not csv_output:
-        return constructed_paradigms
-    else:
+    if csv_output:
         output = []
         for df in constructed_paradigms.values():
             s = StringIO()
@@ -165,6 +163,7 @@ def compose_paradigm(input_df, csv_output = None):
             output.append(s.getvalue())
         with open(csv_output, 'w') as file:
             file.write("\n".join(output))
+    return constructed_paradigms
         
         
 #TEST CODE
