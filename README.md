@@ -168,14 +168,16 @@ print(paradigms["ABL"])
 
 Of course, you can also use pyradigms for comparative tables containing multiple languages.
 For example, [examples/cariban_swadesh_entries.csv](examples/cariban_swadesh_entries.csv) contains some Swadesh entries for Cariban languages from [Matter (2021)](https://zenodo.org/record/4438189).
-the following code puts cognate sets (reconstructed forms) on the y-axis, languages on the x-axis, and filters for three cognatesets from the Parukotoan languages (for vertical space limitations in this readme…).
+The following code puts cognate sets (reconstructed forms) on the y-axis, languages on the x-axis, and filters for six languages (for vertical space limitations in this readme…).
 
 ```python
 pyd.x = ["Language"]
 pyd.y = ["Cognateset"]
 pyd.z = []
 pyd.content_string = "Value"
-pyd.filters = {"Language": ["Hixkaryána", "Waiwai", "Werikyana"]}
+lg_list = ["Werikyana", "Hixkaryána", "Waiwai", "Bakairi", "Arara", "Ikpeng"]
+pyd.filters = {"Language": lg_list}
+pyd.x_sort = lg_list
 paradigms = pyd.compose_from_csv("examples/cariban_swadesh_entries.csv")
 print(paradigms)
 ```
