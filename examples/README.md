@@ -8,8 +8,8 @@ These are some example csv files to play around with `pyradigms` and help you ge
 * Source: Unimorph project, [Murrinhpatha repo](https://github.com/unimorph/mwf)
 
 This is a long list of Murrinhpatha verb forms.
-The data should probably not be taken at face value, as I had to correct two apparently homophonous roots *la* to *ila* ('surface classifier') and *ula* ('eating classifier' (?)) from [Mansfield (2014)](https://doi.org/10.25911/5d723cd88582b).
-Thus, the entries in the Verb column should probably all be longer.
+The data should probably not be taken at face value, as I had to correct two apparently homophonous roots *la* to *ila* ('surface classifier') and *ula* ('eating classifier' (?)), based on the information in [Mansfield (2014)](https://doi.org/10.25911/5d723cd88582b).
+Thus, the entries in the Verb column should probably all be longer, but they suffice for practice purposes.
 
 ## latin_noun_entries_short.csv
 
