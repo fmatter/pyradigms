@@ -8,11 +8,13 @@ pyradigms is a python package for composing and decomposing linguistic paradigms
 	 2. [Decomposing paradigms](#decomposing)
 
 <a name="installation"/>
+
 ## Installation
 
 Use `pip(3) install pyradigms` or get the latest version from github with `pip(3) install git+https://github.com/fmatter/pyradigms.git`.
 
 <a name="usage"/>
+
 ## Usage
 
 Basically, pyradigms is intended to convert between the two following formats:
@@ -39,6 +41,7 @@ The second table is what is conventionally called a paradigm, which shows person
 `pyradigms` is primarily intended to create such paradigm tables from any list, allowing you to combine parameters in any way you like.
 
 <a name="composing"/>
+
 ## Composing paradigms
 
 To create a paradigm, we need to specify at least `x` and `y`, lists of parameter(s) which contain the values to be used as column and row names, respectively.
@@ -239,6 +242,7 @@ print(paradigms)
 | Waimiri-Atroari | *pɨnɨ*  | *biʃi*    |         | *jɨhɨ*    | *wiwe*  |
 
 <a name="decomposing"/>
+
 ## Decomposing paradigms
 
 This was added as a secondary functionality and is somewhat experimental.
