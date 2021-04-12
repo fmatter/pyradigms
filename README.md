@@ -241,7 +241,7 @@ print(paradigms)
 <a name="decomposing"/>
 This was added as a secondary functionality and is somewhat experimental.
 The basic idea is that it allows you to decompose a paradigm which is already in the traditional linguistic format, into a list of parametrized rows.
-This can be useful if you already have a nicely formatted paradigm somewhere, but need it in an explicit list format -- for example, to rearrange it with the `compose_paradigm` function.
+This can be useful if you already have a nicely formatted paradigm somewhere, but need it in an explicit list format -- for example, to recompose it in a different layout.
 
 The file [examples/icelandic_pronoun_paradigm.csv](examples/icelandic_pronoun_paradigm.csv) contains the personal pronouns of Icelandic:
 |        | 1       | 2       | 3M       | 3F       | 3N       |
