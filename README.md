@@ -168,5 +168,64 @@ print(paradigms["ABL"])
 | SG    | *uksoːre*    | *ajstuː*   | *akwaː*  |
 | PL    | *uksoːribus* | *ajstibus* | *akwiːs* |
 
+Of course, you can also use pyradigms for comparative tables containing multiple languages.
+For example, `examples/cariban_swadesh_entries.csv` contains some Swadesh entries for Cariban languages from [Matter (2021)](https://zenodo.org/record/4438189).
+Reconstructions on the y-axis, languages on the x-axis, filter for three cognatesets from the Parukotoan languages:
+
+```python
+pyd.x = ["Language"]
+pyd.y = ["Cognateset"]
+pyd.z = []
+pyd.content_string = "Value"
+pyd.filters = {"Language": ["Hixkaryána", "Waiwai", "Werikyana"]}
+paradigms = pyd.compose_from_csv("examples/cariban_swadesh_entries.csv")
+print(paradigms)
+```
+
+| Cognateset   | Hixkaryána   | Werikyana   | Waiwai   |
+|:-------------|:-------------|:------------|:---------|
+| *pitupə      | *hut͡ʃhu*     | *hi*        | *ɸit͡ʃho* |
+| *punu        | *hun*        | *hunu*      | *ɸun*    |
+| *wewe        | *wewe*       | *wewe*      | *weewe*  |
+| *jətɨpə      | *jot͡ʃhɨ*     | *jot͡ʃpɨ*    | *jot͡ʃho* |
+
+Reconstructions on the x-axis, languages on the y-axis:
+
+```python
+pyd.z = []
+pyd.y = ["Language"]
+pyd.x = ["Cognateset"]
+pyd.filters = {}
+paradigms = pyd.compose_from_csv("examples/cariban_swadesh_entries.csv")
+print(paradigms)
+```
+
+| Language        | *punu   | *wewe   | *jətɨpə   | *pitupə   | *jəje   |
+|:----------------|:--------|:--------|:----------|:----------|:--------|
+| Hixkaryána      | *hun*   | *wewe*  | *jot͡ʃhɨ*  | *hut͡ʃhu*  |         |
+| Macushi         | *pun*   |         | *jeʔpɨ*   | *piʔpɨ*   | *jei*   |
+| Kuikuro         | *huŋu*  |         | *ipɨɣɨ*   | *hiɟo*    | *i*     |
+| Tiriyó          | *pun*   | *wewe*  | *jetɨpə*  | *pihpə*   |         |
+| Kari'ña         | *pun*   | *wewe*  | *jeʔpo*   | *piʔpo*   |         |
+| Tamanaku        | *punu*  |         | *jetpe*   | *pitpe*   | *jeje*  |
+| Waiwai          | *ɸun*   | *weewe* | *jot͡ʃho*  | *ɸit͡ʃho*  |         |
+| Panare          | *-pu*   |         | *jəhpə*   | *pihpə*   | *ije*   |
+| Apalaí          | *pu*    | *wewe*  | *zeʔpo*   | *piʔpo*   |         |
+| Yawarana        | *puunu* |         | *jəspə*   | *pihpə*   | *jəəje* |
+| Ye'kwana        | *hunu*  |         | *jeeʔhə*  | *hiʔhə*   | *ree*   |
+| Waimiri-Atroari | *pɨnɨ*  | *wiwe*  | *jɨhɨ*    | *biʃi*    |         |
+| Ingarikó        | *pun*   |         | *əʔpɨ*    | *piʔpɨ*   | *jɨi*   |
+| Mapoyo          | *punu*  |         | *jəʔpə*   | *piʔpə*   | *jəhe*  |
+| Ikpeng          | *mnu*   |         | *itpɨn*   | *pitu*    | *jaj*   |
+| Bakairi         | *ũrũ*   |         | *ibɨrɨ*   | *tubɨ*    | *e*     |
+| Akuriyó         | *puunu* | *wewe*  | *jeʔpə*   | *pihpə*   |         |
+| Akawaio         | *pun*   |         | *əʔpɨ*    | *piʔpə*   | *jɨi*   |
+| Arara           | *munu*  |         | *itpɨ*    | *iput*    | *jei*   |
+| Pemón           | *pun*   |         | *jeʔpə*   | *piʔpə*   | *jəi*   |
+| Werikyana       | *hunu*  | *wewe*  | *jot͡ʃpɨ*  | *hi*      |         |
+| Yukpa           | *pu*    | *we*    | *jopo*    |           |         |
+| Wayana          | *punu*  | *wewe*  | *jetpə*   | *pitpə*   |         |
+| Karijona        | *bunu*  | *wewe*  | *ijetihɨ* | *hitihə*  |         |
+
 ## decomposing paradigms
  
