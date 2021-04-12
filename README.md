@@ -98,19 +98,19 @@ This will:
 If `z` is not an empty list, pyradigms will return a dict which has the `z` values as keys, containing pandas dataframes, therefore `print(paradigms["ma"])`.
 If `z` is an empty list, only a single dataframe will be returned.
 
-A different example from the same data, where we filter only second person values, and then put number on the `x`, verbs on the `y`, and tense-mood on the `z` axis:
+A different example from the same data, where we filter only second person values, and then put person-number on the `x`, verbs on the `y`, and tense-mood on the `z` axis:
 
 ```python
-pyd.x = ["Number"]
+pyd.x = ["Person", "Number"]
 pyd.y = ["Verb"]
 pyd.z = ["Tense", "Mood"]
 pyd.filters = {"Person": ["2"]}
-pyd.x_sort=["SG", "PAUC", "PL"]
+pyd.x_sort=["2SG", "2PAUC", "2PL"]
 paradigms = pyd.compose_from_csv("murrinhpatha_verb_entries.csv")
 print(paradigms["NFUT.IRR"])
 ```
 
-| NFUT.IRR   | SG        | PAUC     | PL       |
+| NFUT.IRR   | 2SG    | 2PAUC       | 2PL      |
 |:-----------|:----------|:---------|:---------|
 | rdi        | *thurdi*  | *nudde*  | *nuddi*  |
 | ba         | *da*      | *nuba*   | *nuba*   |
@@ -121,6 +121,30 @@ print(paradigms["NFUT.IRR"])
 | e          | *tje*     | *ne*     | *ne*     |
 | ngi        | *thungi*  | *nunge*  | *nungi*  |
 |…|…|…|…|
+
+Another example, with Latin noun forms:
+
+```python
+pyd.x = ["Case"]
+pyd.y = ["Noun"]
+pyd.z = ["Number"]
+pyd.y_sort = ["NOM", "GEN", "DAT", "ACC","ABL","VOC"]
+paradigms = pyd.compose_from_csv("examples/latin_noun_entries_short.csv")
+print(paradigms["SG"])
+print(paradigms["PL"])
+```
+
+| SG     | GEN        | NOM      | ACC        | ABL       | DAT        | VOC      |
+|:-------|:-----------|:---------|:-----------|:----------|:-----------|:---------|
+| uxor   | *uksoːris* | *uksor*  | *uksoːrem* | *uksoːre* | *uksoːriː* | *uksor*  |
+| aestus | *ajstuːs*  | *ajstus* | *ajstum*   | *ajstuː*  | *ajstuiː*  | *ajstus* |
+| aqua   | *akwaj*    | *akwa*   | *akwam*    | *akwaː*   | *akwaj*    | *akwa*   |
+
+| PL     | ACC         | GEN        | ABL          | VOC         | NOM         | DAT          |
+|:-------|:------------|:-----------|:-------------|:------------|:------------|:-------------|
+| uxor   | *uksoːreːs* | *uksoːrum* | *uksoːribus* | *uksoːreːs* | *uksoːreːs* | *uksoːribus* |
+| aestus | *ajstuːs*   | *ajstuum*  | *ajstibus*   | *ajstuːs*   | *ajstuːs*   | *ajstibus*   |
+| aqua   | *akwaːs*    | *akwaːrum* | *akwiːs*     | *akwaj*     | *akwaj*     | *akwiːs*     |
 
 
 
