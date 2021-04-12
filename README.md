@@ -8,7 +8,7 @@ Use `pip(3) install pyradigms` or get the latest version from gitlab with `pip(3
 
 ## Using pyradigms
 
-Basically, pyradigms is intended to convert between tables like this, where every row represents a linguistic form and every column represents a paradigm:
+Basically, pyradigms is intended to convert between tables like this, where every row represents a linguistic form and every column represents a parameter:
 
 | Verb   | Form   | Tense   | Person   | Number   | Mood   |
 |:-------|:-------|:--------|:---------|:---------|:-------|
@@ -42,6 +42,12 @@ and paradigms, where columns and rows both represent parameters, with forms in t
 The two basic functionalities are composing paradigms, which creates tables like the latter form tables like the former, and decomposing paradigms, which does the opposite.
 
 ## composing paradigms
+
+`pyradigms` takes a list such as the one seen in the first table, which is available under [examples/murrinhpatha_verb_entries.csv](examples/murrinhpatha_verb_entries.csv).
+
+There are three methods for composing paradigms:
+
+`compose_from_csv`
 
 ## decomposing paradigms
  
