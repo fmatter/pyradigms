@@ -5,10 +5,9 @@ pyradigms is a python package for composing and decomposing linguistic paradigms
 ## Installation
 Use `pip(3) install pyradigms` or get the latest version from gitlab with `pip(3) install git+https://gitlab.com/florianmatter/pyradigms.git`.
 
+## Usage
 
-## Using pyradigms
-
-Basically, pyradigms is intended to convert between tables like this, where every row represents a linguistic form and every column represents a parameter:
+Basically, pyradigms is intended to convert between the two following formats:
 
 | Verb   | Form   | Tense   | Person   | Number   | Mood   |
 |:-------|:-------|:--------|:---------|:---------|:-------|
@@ -16,15 +15,7 @@ Basically, pyradigms is intended to convert between tables like this, where ever
 | ma     | nam    | NFUT    | 2        | SG       | RLS    |
 | ma     | mam    | NFUT    | 3        | SG       | RLS    |
 | ma     | thamam | NFUT    | 1+2      | SG       | RLS    |
-| ma     | ngamam | NFUT    | 1        | PL       | RLS    |
-| ma     | namam  | NFUT    | 2        | PL       | RLS    |
-| ma     | pamam  | NFUT    | 3        | PL       | RLS    |
-| ma     | ngama  | NFUT    | 1        | SG       | IRR    |
-| ma     | thama  | NFUT    | 2        | SG       | IRR    |
-| ma     | kama   | NFUT    | 3        | SG       | IRR    |
 |…     | …   | …    | …        | …       | …    |
-
-and paradigms, where columns and rows both represent parameters, with forms in the cells:
 
 | *ma*    | PST.IRR   | PST.RLS   | NFUT.IRR   | NFUT.RLS   |
 |:------|:----------|:----------|:-----------|:-----------|
@@ -32,39 +23,31 @@ and paradigms, where columns and rows both represent parameters, with forms in t
 | 2SG   | *ni*      | *ne*      | *thama*    | *nam*      |
 | 3SG   | *mi*      | *me*      | *kama*     | *mam*      |
 | 1+2SG | *thumi*   | *thume*   | *pama*     | *thamam*   |
-| 1PAUC | *ngumi*   | *ngume*   | *nguyema*  |            |
-| 2PAUC | *numi*    | *nume*    | *nuyema*   |            |
-| 3PAUC | *pumi*    | *pume*    | *kuyema*   |            |
-| 1PL   | *ngumi*   | *ngume*   | *nguyema*  | *ngamam*   |
-| 2PL   | *numi*    | *nume*    | *nuyema*   | *namam*    |
-| 3PL   | *pumi*    | *pume*    | *kuyema*   | *pamam*    |
+|…|…|…|…|…|
 
-The two basic functionalities are composing paradigms, which creates tables like the latter form tables like the former, and decomposing paradigms, which does the opposite.
+In linguistic morphology, a paradigm is a collection of word forms belonging to the same lexeme, here for the Murrinhpatha verb root *ma* 'say, do'.
+The first table shows all word forms, with relevant grammatical categories like tense, person, etc. represented in their own column.
+The second table is what is conventionally called a paradigm, which shows person-number combinations on the left, and tense-mood combinations at the top, with cells only containing the word forms.
+`pyradigms` is primarily intended to create such paradigm tables from any list, allowing you to combine parameters in any way you like.
 
 ## composing paradigms
 
-`pyradigms` takes a list such as the one seen in the first table, which you can find under [examples/murrinhpatha_verb_entries.csv](examples/murrinhpatha_verb_entries.csv).
-To create a paradigm, we need to specify at least the following values:
-
-- `x`: A list of parameter(s) which contain the values to be used as column names.
-- `y`: A list of parameter(s) which contain the values to be used as row names.
-- `z`: A list of parameter(s) which contain the values to be used as table names.
-
-`x` and `y` are the usual axes, the third dimension `z` is represented by using multiple tables.
+To create a paradigm, we need to specify at least `x` and `y`, lists of parameter(s) which contain the values to be used as column and row names, respectively.
+Optionally, a list `z` can be specified, which will be represented as several tables.
 We can also provide the following optional values:
 
 - `filters`: a list of dicts.
 The dicts contain a parameter name as key, and a list as values.
 Only entries which have the specified value for the specified parameter will be used.
 - `ignore`: a list of parameters which will be ignored completely.
-- `x_sort`: a list of values according to which the columns will be sorted.
-- `y_sort`: a list of values according to which the rows will be sorted.
+- `x_sort`: a list of values according to which columns will be sorted.
+- `y_sort`: a list of values according to which rows will be sorted.
 - `separators`: a list of strings to be used as separators between two parameter values.
-The first one will be used, but multiple can be specified for decomposing paradigms, see below. Default is `["."]`.
-- `content_string`: The parameter which contain the values to be used as cell contents. Default is `"Form"`.
+The first one will be used, but multiple can be specified for decomposing paradigms, see below. Default value is `["."]`.
+- `content_string`: The parameter which contain the values to be used as cell contents. Default value is `"Form"`.
 - `person_values`: List of strings which will be combined with other strings without using a separator.
 They will also be parsed accordingly.
-Default is `["1", "2", "3", "1+3", "1+2"]`.
+Default value is `["1", "2", "3", "1+3", "1+2"]`.
 
 All these values are module-wide, so we specify them before composing or decomposing paradigms.
 There are three methods for constructing paradigms:
@@ -76,7 +59,7 @@ There are three methods for constructing paradigms:
 All three have the optional argument `csv_output` which can contain a path to a csv file.
 If present, the output will be written to that file.
 
-Here is how the Murrinhpatha paradigm above can be constructed:
+Here is an example based on the Murrinhpatha verbs seen above, which can be found under [examples/murrinhpatha_verb_entries.csv](examples/murrinhpatha_verb_entries.csv).
 
 ```python
 import pyradigms as pyd
@@ -94,6 +77,21 @@ This will:
 2. use the combination of Person and Number as row names
 3. create a table for each verb
 4. sort the Person-Number combinations accordingly.
+
+The resulting paradigm table:
+
+| ma    | NFUT.RLS   | PST.IRR   | NFUT.IRR   | PST.RLS   |
+|:------|:-----------|:----------|:-----------|:----------|
+| 1SG   | *ngamam*   | *ngimi*   | *ngama*    | *me*      |
+| 2SG   | *nam*      | *ni*      | *thama*    | *ne*      |
+| 3SG   | *mam*      | *mi*      | *kama*     | *me*      |
+| 1+2SG | *thamam*   | *thumi*   | *pama*     | *thume*   |
+| 1PAUC |            | *ngumi*   | *nguyema*  | *ngume*   |
+| 2PAUC |            | *numi*    | *nuyema*   | *nume*    |
+| 3PAUC |            | *pumi*    | *kuyema*   | *pume*    |
+| 1PL   | *ngamam*   | *ngumi*   | *nguyema*  | *ngume*   |
+| 2PL   | *namam*    | *numi*    | *nuyema*   | *nume*    |
+| 3PL   | *pamam*    | *pumi*    | *kuyema*   | *pume*    |
 
 If `z` is not an empty list, pyradigms will return a dict which has the `z` values as keys, containing pandas dataframes, therefore `print(paradigms["ma"])`.
 If `z` is an empty list, only a single dataframe will be returned.
@@ -146,7 +144,7 @@ print(paradigms["PL"])
 | aestus | *ajstuːs*   | *ajstuum*  | *ajstibus*   | *ajstuːs*   | *ajstuːs*   | *ajstibus*   |
 | aqua   | *akwaːs*    | *akwaːrum* | *akwiːs*     | *akwaj*     | *akwaj*     | *akwiːs*     |
 
-Generate tables for each case:
+Alternatively, we can generate tables for each case, and look at dative and ablative forms:
 
 ```python
 pyd.x = ["Noun"]
@@ -170,7 +168,7 @@ print(paradigms["ABL"])
 
 Of course, you can also use pyradigms for comparative tables containing multiple languages.
 For example, `examples/cariban_swadesh_entries.csv` contains some Swadesh entries for Cariban languages from [Matter (2021)](https://zenodo.org/record/4438189).
-Reconstructions on the y-axis, languages on the x-axis, filter for three cognatesets from the Parukotoan languages:
+the following code puts cognate sets (reconstructed forms) on the y-axis, languages on the x-axis, and filters for three cognatesets from the Parukotoan languages (for vertical space limitations in this readme…).
 
 ```python
 pyd.x = ["Language"]
@@ -189,7 +187,7 @@ print(paradigms)
 | *wewe        | *wewe*       | *wewe*      | *weewe*  |
 | *jətɨpə      | *jot͡ʃhɨ*     | *jot͡ʃpɨ*    | *jot͡ʃho* |
 
-Reconstructions on the x-axis, languages on the y-axis:
+Alternatively, we can put cognate sets on the x-axis and languages on the y-axis:
 
 ```python
 pyd.z = []
