@@ -175,7 +175,7 @@ print(paradigms["ABL"])
 | PL    | *uksoːribus* | *ajstibus* | *akwiːs* |
 
 Of course, you can also use pyradigms for comparative tables containing multiple languages.
-For example, [examples/cariban_swadesh_entries.csv](examples/cariban_swadesh_entries.csv) contains some Swadesh entries for Cariban languages from [Matter (2021)](https://zenodo.org/record/4438189).
+For example, [examples/cariban_swadesh_entries.csv](examples/cariban_swadesh_entries.csv) contains some Swadesh entries for Cariban languages.
 The following code puts cognate sets (reconstructed forms) on the y-axis, languages on the x-axis, and filters for six languages (for vertical space limitations in this readme…).
 
 ```python
