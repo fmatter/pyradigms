@@ -146,7 +146,27 @@ print(paradigms["PL"])
 | aestus | *ajstuːs*   | *ajstuum*  | *ajstibus*   | *ajstuːs*   | *ajstuːs*   | *ajstibus*   |
 | aqua   | *akwaːs*    | *akwaːrum* | *akwiːs*     | *akwaj*     | *akwaj*     | *akwiːs*     |
 
+Generate tables for each case:
 
+```python
+pyd.x = ["Noun"]
+pyd.y = ["Number"]
+pyd.z = ["Case"]
+pyd.y_sort=["SG", "PL"]
+paradigms = pyd.compose_from_csv("examples/latin_noun_entries_short.csv")
+print(paradigms["DAT"])
+print(paradigms["ABL"])
+```
+
+| DAT   | aqua     | aestus     | uxor         |
+|:------|:---------|:-----------|:-------------|
+| SG    | *akwaj*  | *ajstuiː*  | *uksoːriː*   |
+| PL    | *akwiːs* | *ajstibus* | *uksoːribus* |
+
+| ABL   | uxor         | aestus     | aqua     |
+|:------|:-------------|:-----------|:---------|
+| SG    | *uksoːre*    | *ajstuː*   | *akwaː*  |
+| PL    | *uksoːribus* | *ajstibus* | *akwiːs* |
 
 ## decomposing paradigms
  
