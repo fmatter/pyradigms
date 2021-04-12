@@ -2,10 +2,13 @@
 
 pyradigms is a python package for composing and decomposing linguistic paradigms.
 
-##### Table of Contents  
-[Usage](#usage)  
+[Installation](#installation)
+[Usage](#usage)
+[Composing paradigms](#composing)
+[Decomposing paradigms](#decomposing)
 
 ## Installation
+<a name="installation"/>
 Use `pip(3) install pyradigms` or get the latest version from gitlab with `pip(3) install git+https://gitlab.com/florianmatter/pyradigms.git`.
 
 ## Usage
@@ -34,7 +37,8 @@ The first table shows all word forms, with relevant grammatical categories like 
 The second table is what is conventionally called a paradigm, which shows person-number combinations on the left, and tense-mood combinations at the top, with cells only containing the word forms.
 `pyradigms` is primarily intended to create such paradigm tables from any list, allowing you to combine parameters in any way you like.
 
-## composing paradigms
+## Composing paradigms
+<a name="composing"/>
 
 To create a paradigm, we need to specify at least `x` and `y`, lists of parameter(s) which contain the values to be used as column and row names, respectively.
 Optionally, a list `z` can be specified, which will be represented as several tables.
@@ -234,6 +238,7 @@ print(paradigms)
 | Waimiri-Atroari | *pɨnɨ*  | *biʃi*    |         | *jɨhɨ*    | *wiwe*  |
 
 ## decomposing paradigms
+<a name="decomposing"/>
 This was added as a secondary functionality and is somewhat experimental.
 The basic idea is that it allows you to decompose a paradigm which is already in the traditional linguistic format, into a list of parametrized rows.
 THis can be useful if you already have a nicely formatted paradigm somewhere, but need it in an explicit list format -- for example, to rearrange it with `compose_paradigm()`.
