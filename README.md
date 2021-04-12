@@ -182,12 +182,13 @@ paradigms = pyd.compose_from_csv("examples/cariban_swadesh_entries.csv")
 print(paradigms)
 ```
 
-| Cognateset   | Hixkaryána   | Werikyana   | Waiwai   |
-|:-------------|:-------------|:------------|:---------|
-| *pitupə      | *hut͡ʃhu*     | *hi*        | *ɸit͡ʃho* |
-| *punu        | *hun*        | *hunu*      | *ɸun*    |
-| *wewe        | *wewe*       | *wewe*      | *weewe*  |
-| *jətɨpə      | *jot͡ʃhɨ*     | *jot͡ʃpɨ*    | *jot͡ʃho* |
+| Cognateset   | Werikyana   | Hixkaryána   | Waiwai   | Bakairi   | Arara   | Ikpeng   |
+|:-------------|:------------|:-------------|:---------|:----------|:--------|:---------|
+| *wewe        | *wewe*      | *wewe*       | *weewe*  |           |         |          |
+| *punu        | *hunu*      | *hun*        | *ɸun*    | *ũrũ*     | *munu*  | *mnu*    |
+| *pitupə      | *hi*        | *hut͡ʃhu*     | *ɸit͡ʃho* | *tubɨ*    | *iput*  | *pitu*   |
+| *jəje        |             |              |          | *e*       | *jei*   | *jaj*    |
+| *jətɨpə      | *jot͡ʃpɨ*    | *jot͡ʃhɨ*     | *jot͡ʃho* | *ibɨrɨ*   | *itpɨ*  | *itpɨn*  |
 
 Alternatively, we can put cognate sets on the x-axis and languages on the y-axis:
 
