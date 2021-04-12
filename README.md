@@ -39,6 +39,7 @@ and paradigms, where columns and rows both represent parameters, with forms in t
 | 2PL   | *numi*    | *nume*    | *nuyema*   | *namam*    |
 | 3PL   | *pumi*    | *pume*    | *kuyema*   | *pamam*    |
 
+The two basic functionalities are composing paradigms, which creates tables like the latter form tables like the former, and decomposing paradigms, which does the opposite.
 
 ## composing paradigms
 

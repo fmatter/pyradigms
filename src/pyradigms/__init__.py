@@ -82,15 +82,15 @@ def decompose_from_text(string):
     full.reset_index(drop=True, inplace=True)
     return full
 
-def compose_from_text(df_string, return_csv=False):
+def compose_from_text(df_string, csv_output=None):
     entries = pd.read_csv(StringIO(df_string), dtype=str, keep_default_na=False)
-    return compose_paradigm(entries, return_csv = return_csv)
+    return compose_paradigm(entries, csv_output = csv_output)
 
-def compose_from_csv(csvfile, return_csv = False):
+def compose_from_csv(csvfile, csv_output=None):
     entries = pd.read_csv(csvfile, dtype=str, keep_default_na=False)
-    return compose_paradigm(entries, return_csv = return_csv)
+    return compose_paradigm(entries, csv_output = csv_output)
 
-def compose_paradigm(input_df, return_csv = False):
+def compose_paradigm(input_df, csv_output = None):
     logger.debug("Composing a new paradigm from entries:")
     df = input_df.copy()
     df.replace(np.nan, "", inplace=True)
@@ -155,7 +155,7 @@ def compose_paradigm(input_df, return_csv = False):
         comp_x_sort = dict(zip(comp_x_sort, range(len(comp_x_sort))))
         out = out[sorted(out.columns, key=lambda x: comp_x_sort[x])]
         constructed_paradigms[z_key] = out
-    if not return_csv:
+    if not csv_output:
         return constructed_paradigms
     else:
         output = []
@@ -163,7 +163,8 @@ def compose_paradigm(input_df, return_csv = False):
             s = StringIO()
             df.to_csv(s, index=True)
             output.append(s.getvalue())
-        return("\n".join(output))
+        with open(csv_output, 'w') as file:
+            file.write("\n".join(output))
         
         
 #TEST CODE
