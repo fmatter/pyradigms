@@ -43,9 +43,25 @@ The two basic functionalities are composing paradigms, which creates tables like
 
 ## composing paradigms
 
-`pyradigms` takes a list such as the one seen in the first table, which is available under [examples/murrinhpatha_verb_entries.csv](examples/murrinhpatha_verb_entries.csv).
+`pyradigms` takes a list such as the one seen in the first table, which you can find under [examples/murrinhpatha_verb_entries.csv](examples/murrinhpatha_verb_entries.csv).
+To create a paradigm, we need to specify at least the following values:
 
-There are three methods for composing paradigms:
+- `x`: A list of parameter(s) which contain the values to be used as column names.
+- `y`: A list of parameter(s) which contain the values to be used as row names.
+- `z`: A list of parameter(s) which contain the values to be used as table names.
+
+`x` and `y` are the usual axes, the third dimension `z` is represented by using multiple tables.
+We can also provide the following optional values:
+
+- `filters`: a list of dicts.
+The dicts contain a parameter name as key, and a list as values.
+Only entries which have the specified value for the specified parameter will be used.
+- `ignore`:
+- `x_sort`:
+- `y_sort`:
+- `separators`:
+- `content_string`
+- `person_values`
 
 `compose_from_csv`
 
