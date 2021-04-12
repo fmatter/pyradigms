@@ -197,36 +197,37 @@ pyd.z = []
 pyd.y = ["Language"]
 pyd.x = ["Cognateset"]
 pyd.filters = {}
+pyd.y_sort = ['Werikyana', 'Hixkaryána', 'Waiwai', 'Arara', 'Ikpeng', 'Bakairi', 'Tiriyó', 'Akuriyó', 'Karijona', 'Wayana', 'Apalaí', "Kari'ña", "Ye'kwana", 'Kapón', 'Akawaio', 'Ingarikó', 'Patamona', 'Pemón', 'Macushi', 'Panare', 'Tamanaku', 'Yawarana', 'Mapoyo', 'Kumaná', 'Upper Xingu Carib', 'Kuikuro', 'Yukpa', 'Japreria', 'Waimiri-Atroari']
 paradigms = pyd.compose_from_csv("examples/cariban_swadesh_entries.csv")
 print(paradigms)
 ```
 
-| Language        | *punu   | *wewe   | *jətɨpə   | *pitupə   | *jəje   |
-|:----------------|:--------|:--------|:----------|:----------|:--------|
-| Hixkaryána      | *hun*   | *wewe*  | *jot͡ʃhɨ*  | *hut͡ʃhu*  |         |
-| Macushi         | *pun*   |         | *jeʔpɨ*   | *piʔpɨ*   | *jei*   |
-| Kuikuro         | *huŋu*  |         | *ipɨɣɨ*   | *hiɟo*    | *i*     |
-| Tiriyó          | *pun*   | *wewe*  | *jetɨpə*  | *pihpə*   |         |
-| Kari'ña         | *pun*   | *wewe*  | *jeʔpo*   | *piʔpo*   |         |
-| Tamanaku        | *punu*  |         | *jetpe*   | *pitpe*   | *jeje*  |
-| Waiwai          | *ɸun*   | *weewe* | *jot͡ʃho*  | *ɸit͡ʃho*  |         |
-| Panare          | *-pu*   |         | *jəhpə*   | *pihpə*   | *ije*   |
-| Apalaí          | *pu*    | *wewe*  | *zeʔpo*   | *piʔpo*   |         |
-| Yawarana        | *puunu* |         | *jəspə*   | *pihpə*   | *jəəje* |
-| Ye'kwana        | *hunu*  |         | *jeeʔhə*  | *hiʔhə*   | *ree*   |
-| Waimiri-Atroari | *pɨnɨ*  | *wiwe*  | *jɨhɨ*    | *biʃi*    |         |
-| Ingarikó        | *pun*   |         | *əʔpɨ*    | *piʔpɨ*   | *jɨi*   |
-| Mapoyo          | *punu*  |         | *jəʔpə*   | *piʔpə*   | *jəhe*  |
-| Ikpeng          | *mnu*   |         | *itpɨn*   | *pitu*    | *jaj*   |
-| Bakairi         | *ũrũ*   |         | *ibɨrɨ*   | *tubɨ*    | *e*     |
-| Akuriyó         | *puunu* | *wewe*  | *jeʔpə*   | *pihpə*   |         |
-| Akawaio         | *pun*   |         | *əʔpɨ*    | *piʔpə*   | *jɨi*   |
-| Arara           | *munu*  |         | *itpɨ*    | *iput*    | *jei*   |
-| Pemón           | *pun*   |         | *jeʔpə*   | *piʔpə*   | *jəi*   |
-| Werikyana       | *hunu*  | *wewe*  | *jot͡ʃpɨ*  | *hi*      |         |
-| Yukpa           | *pu*    | *we*    | *jopo*    |           |         |
-| Wayana          | *punu*  | *wewe*  | *jetpə*   | *pitpə*   |         |
-| Karijona        | *bunu*  | *wewe*  | *ijetihɨ* | *hitihə*  |         |
+| Language        | *punu   | *pitupə   | *jəje   | *jətɨpə   | *wewe   |
+|:----------------|:--------|:----------|:--------|:----------|:--------|
+| Werikyana       | *hunu*  | *hi*      |         | *jot͡ʃpɨ*  | *wewe*  |
+| Hixkaryána      | *hun*   | *hut͡ʃhu*  |         | *jot͡ʃhɨ*  | *wewe*  |
+| Waiwai          | *ɸun*   | *ɸit͡ʃho*  |         | *jot͡ʃho*  | *weewe* |
+| Arara           | *munu*  | *iput*    | *jei*   | *itpɨ*    |         |
+| Ikpeng          | *mnu*   | *pitu*    | *jaj*   | *itpɨn*   |         |
+| Bakairi         | *ũrũ*   | *tubɨ*    | *e*     | *ibɨrɨ*   |         |
+| Tiriyó          | *pun*   | *pihpə*   |         | *jetɨpə*  | *wewe*  |
+| Akuriyó         | *puunu* | *pihpə*   |         | *jeʔpə*   | *wewe*  |
+| Karijona        | *bunu*  | *hitihə*  |         | *ijetihɨ* | *wewe*  |
+| Wayana          | *punu*  | *pitpə*   |         | *jetpə*   | *wewe*  |
+| Apalaí          | *pu*    | *piʔpo*   |         | *zeʔpo*   | *wewe*  |
+| Kari'ña         | *pun*   | *piʔpo*   |         | *jeʔpo*   | *wewe*  |
+| Ye'kwana        | *hunu*  | *hiʔhə*   | *ree*   | *jeeʔhə*  |         |
+| Akawaio         | *pun*   | *piʔpə*   | *jɨi*   | *əʔpɨ*    |         |
+| Ingarikó        | *pun*   | *piʔpɨ*   | *jɨi*   | *əʔpɨ*    |         |
+| Pemón           | *pun*   | *piʔpə*   | *jəi*   | *jeʔpə*   |         |
+| Macushi         | *pun*   | *piʔpɨ*   | *jei*   | *jeʔpɨ*   |         |
+| Panare          | *-pu*   | *pihpə*   | *ije*   | *jəhpə*   |         |
+| Tamanaku        | *punu*  | *pitpe*   | *jeje*  | *jetpe*   |         |
+| Yawarana        | *puunu* | *pihpə*   | *jəəje* | *jəspə*   |         |
+| Mapoyo          | *punu*  | *piʔpə*   | *jəhe*  | *jəʔpə*   |         |
+| Kuikuro         | *huŋu*  | *hiɟo*    | *i*     | *ipɨɣɨ*   |         |
+| Yukpa           | *pu*    |           |         | *jopo*    | *we*    |
+| Waimiri-Atroari | *pɨnɨ*  | *biʃi*    |         | *jɨhɨ*    | *wiwe*  |
 
 ## decomposing paradigms
  
