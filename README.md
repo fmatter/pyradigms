@@ -78,7 +78,7 @@ If present, the output will be written to that file.
 
 Here is how the Murrinhpatha paradigm above can be constructed:
 
-```
+```python
 import pyradigms as pyd
 pyd.x = ["Person", "Number"]
 pyd.y = ["Tense", "Mood"]
