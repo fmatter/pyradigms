@@ -2,6 +2,7 @@
 
 pyradigms is a python package for composing and decomposing linguistic paradigms.
 
+##### Table of Contents  
 [Installation](#installation)
 [Usage](#usage)
 [Composing paradigms](#composing)
