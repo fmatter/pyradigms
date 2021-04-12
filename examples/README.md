@@ -31,3 +31,10 @@ This is a list with word forms for 'tree', 'skin', 'flesh', and 'bone' for diffe
 * Source: [Wikipedia](https://en.wikipedia.org/wiki/Icelandic_grammar#Personal)
 
 The Icelandic person pronoun paradigm.
+
+## mapudungun_verb_paradigms.csv
+
+* Language: [Mapudungun](https://glottolog.org/resource/languoid/id/mapu1245)
+* Source: [Zúñiga (2006)](https://www.cepchile.cl/cep/libros/libros-digitales/mapudungun-el-habla-mapuche)
+
+Paradigms of three intransitive Mapudungun verbs, with person, number, and mood.
