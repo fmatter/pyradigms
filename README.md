@@ -318,24 +318,23 @@ print(entries)
 
 As a last example, [examples/mapudungun_verb_paradigms.csv](examples/mapudungun_verb_paradigms.csv) contains three verb paradigms from Mapudungun, separated by a double line break:
 
-| kon-   | 1SG      | 1DU       | 1PL        | 2SG      | 2DU      | 2PL       | 3SG     | 3DU          | 3PL           |
-|:-------|:---------|:----------|:-----------|:---------|:---------|:----------|:--------|:-------------|:--------------|
-| IND    | konün    | koniyu    | koniyiñ    | konimi   | konimu   | konimün   | koni    | koningu      | koningün      |
-| SBJV   | konli    | konliyu   | konliyiñ   | konülmi  | konülmu  | konülmün  | konle   | konle engu   | konle engün   |
-| IMP    | konchi   | koniw     | koniñ      | konnge   | konmu    | konmün    | konpe   | konpe engu   | konpe engün   |
+| *kon-*   | 1SG      | 1DU       | 1PL        | 2SG       | 2DU       | 2PL        | 3SG     | 3DU          | 3PL           |
+|:-------|:---------|:----------|:-----------|:----------|:----------|:-----------|:--------|:-------------|:--------------|
+| IND    | *konün*  | *koniyu*  | *koniyiñ*  | *konimi*  | *konimu*  | *konimün*  | *koni*  | *koningu*    | *koningün*    |
+| SBJV   | *konli*  | *konliyu* | *konliyiñ* | *konülmi* | *konülmu* | *konülmün* | *konle* | *konle engu* | *konle engün* |
+| IMP    | *konchi* |           |            | *konnge*  | *konmu*   | *konmün*   | *konpe* | *konpe engu* | *konpe engün* |
 
-| pi-    | 1SG      | 1DU       | 1PL        | 2SG      | 2DU      | 2PL       | 3SG     | 3DU          | 3PL           |
-|:-------|:---------|:----------|:-----------|:---------|:---------|:----------|:--------|:-------------|:--------------|
-| IND    | pin      | piyu      | piyiñ      | pimi     | pimu     | pimün     | pi      | pingu        | pingün        |
-| SBJV   | pili     | piliyu    | piliyiñ    | pilmi    | pilmu    | pilmün    | pile    | pile engu    | pile engün    |
-| IMP    | pichi    | piyu      | piyiñ      | pinge    | pimu     | pimün     | pipe    | pipe engu    | pipe engün    |
+| *pi-*   | 1SG     | 1DU      | 1PL       | 2SG     | 2DU     | 2PL      | 3SG    | 3DU         | 3PL          |
+|:------|:--------|:---------|:----------|:--------|:--------|:---------|:-------|:------------|:-------------|
+| IND   | *pin*   | *piyu*   | *piiñ*    | *pimi*  | *pimu*  | *pimün*  | *pi*   | *pingu*     | *pingün*     |
+| SBJV  | *pili*  | *piliyu* | *piliyiñ* | *pilmi* | *pilmu* | *pilmün* | *pile* | *pile engu* | *pile engün* |
+| IMP   | *pichi* |          |           | *pinge* | *pimu*  | *pimün*  | *pipe* | *pipe engu* | *pipe engün* |
 
-| tripa- | 1SG      | 1DU       | 1PL        | 2SG      | 2DU      | 2PL       | 3SG     | 3DU          | 3PL           |
-|:-------|:---------|:----------|:-----------|:---------|:---------|:----------|:--------|:-------------|:--------------|
-| IND    | tripan   | tripayu   | tripayiñ   | tripaymi | tripaymu | tripaymün | tripay  | tripayngu    | tripayngü     |
-| SBJV   | tripali  | tripaliyu | tripaliyiñ | tripalmi | tripalmu | tripalmün | tripale | tripale engu | tripale engü  |
-| IMP    | tripachi | tripayu   | tripaiñ    | tripange | tripamu  | tripamün  | tripape | tripape engu | tripape engün |
-
+| *tripa-*   | 1SG        | 1DU         | 1PL          | 2SG        | 2DU        | 2PL         | 3SG       | 3DU            | 3PL             |
+|:---------|:-----------|:------------|:-------------|:-----------|:-----------|:------------|:----------|:---------------|:----------------|
+| IND      | *tripan*   | *tripayu*   | *tripaiñ*    | *tripaymi* | *tripaymu* | *tripaymün* | *tripay*  | *tripayngu*    | *tripayngün*    |
+| SBJV     | *tripali*  | *tripaliyu* | *tripaliyiñ* | *tripalmi* | *tripalmu* | *tripalmün* | *tripale* | *tripale engu* | *tripale engü*  |
+| IMP      | *tripachi* |             |              | *tripange* | *tripamu*  | *tripamün*  | *tripape* | *tripape engu* | *tripape engün* |
 
 We can extract the entries as follows:
 
@@ -346,86 +345,80 @@ pyd.z = ["Verb"]
 print(pyd.decompose_from_csv("examples/mapudungun_verb_paradigms.csv"))
 ```
 
-|   Person | Number   | Verb   | Mood   | Form            |
-|---------:|:---------|:-------|:-------|:----------------|
-|        1 | SG       | kon-   | IND    | *konün*         |
-|        1 | SG       | kon-   | SBJV   | *konli*         |
-|        1 | SG       | kon-   | IMP    | *konchi*        |
-|        1 | DU       | kon-   | IND    | *koniyu*        |
-|        1 | DU       | kon-   | SBJV   | *konliyu*       |
-|        1 | DU       | kon-   | IMP    | *koniw*         |
-|        1 | PL       | kon-   | IND    | *koniyiñ*       |
-|        1 | PL       | kon-   | SBJV   | *konliyiñ*      |
-|        1 | PL       | kon-   | IMP    | *koniñ*         |
-|        2 | SG       | kon-   | IND    | *konimi*        |
-|        2 | SG       | kon-   | SBJV   | *konülmi*       |
-|        2 | SG       | kon-   | IMP    | *konnge*        |
-|        2 | DU       | kon-   | IND    | *konimu*        |
-|        2 | DU       | kon-   | SBJV   | *konülmu*       |
-|        2 | DU       | kon-   | IMP    | *konmu*         |
-|        2 | PL       | kon-   | IND    | *konimün*       |
-|        2 | PL       | kon-   | SBJV   | *konülmün*      |
-|        2 | PL       | kon-   | IMP    | *konmün*        |
-|        3 | SG       | kon-   | IND    | *koni*          |
-|        3 | SG       | kon-   | SBJV   | *konle*         |
-|        3 | SG       | kon-   | IMP    | *konpe*         |
-|        3 | DU       | kon-   | IND    | *koningu*       |
-|        3 | DU       | kon-   | SBJV   | *konle engu*    |
-|        3 | DU       | kon-   | IMP    | *konpe engu*    |
-|        3 | PL       | kon-   | IND    | *koningün*      |
-|        3 | PL       | kon-   | SBJV   | *konle engün*   |
-|        3 | PL       | kon-   | IMP    | *konpe engün*   |
-|        1 | SG       | pi-    | IND    | *pin*           |
-|        1 | SG       | pi-    | SBJV   | *pili*          |
-|        1 | SG       | pi-    | IMP    | *pichi*         |
-|        1 | DU       | pi-    | IND    | *piyu*          |
-|        1 | DU       | pi-    | SBJV   | *piliyu*        |
-|        1 | DU       | pi-    | IMP    | *piyu*          |
-|        1 | PL       | pi-    | IND    | *piyiñ*         |
-|        1 | PL       | pi-    | SBJV   | *piliyiñ*       |
-|        1 | PL       | pi-    | IMP    | *piyiñ*         |
-|        2 | SG       | pi-    | IND    | *pimi*          |
-|        2 | SG       | pi-    | SBJV   | *pilmi*         |
-|        2 | SG       | pi-    | IMP    | *pinge*         |
-|        2 | DU       | pi-    | IND    | *pimu*          |
-|        2 | DU       | pi-    | SBJV   | *pilmu*         |
-|        2 | DU       | pi-    | IMP    | *pimu*          |
-|        2 | PL       | pi-    | IND    | *pimün*         |
-|        2 | PL       | pi-    | SBJV   | *pilmün*        |
-|        2 | PL       | pi-    | IMP    | *pimün*         |
-|        3 | SG       | pi-    | IND    | *pi*            |
-|        3 | SG       | pi-    | SBJV   | *pile*          |
-|        3 | SG       | pi-    | IMP    | *pipe*          |
-|        3 | DU       | pi-    | IND    | *pingu*         |
-|        3 | DU       | pi-    | SBJV   | *pile engu*     |
-|        3 | DU       | pi-    | IMP    | *pipe engu*     |
-|        3 | PL       | pi-    | IND    | *pingün*        |
-|        3 | PL       | pi-    | SBJV   | *pile engün*    |
-|        3 | PL       | pi-    | IMP    | *pipe engün*    |
-|        1 | SG       | tripa- | IND    | *tripan*        |
-|        1 | SG       | tripa- | SBJV   | *tripali*       |
-|        1 | SG       | tripa- | IMP    | *tripachi*      |
-|        1 | DU       | tripa- | IND    | *tripayu*       |
-|        1 | DU       | tripa- | SBJV   | *tripaliyu*     |
-|        1 | DU       | tripa- | IMP    | *tripayu*       |
-|        1 | PL       | tripa- | IND    | *tripayiñ*      |
-|        1 | PL       | tripa- | SBJV   | *tripaliyiñ*    |
-|        1 | PL       | tripa- | IMP    | *tripaiñ*       |
-|        2 | SG       | tripa- | IND    | *tripaymi*      |
-|        2 | SG       | tripa- | SBJV   | *tripalmi*      |
-|        2 | SG       | tripa- | IMP    | *tripange*      |
-|        2 | DU       | tripa- | IND    | *tripaymu*      |
-|        2 | DU       | tripa- | SBJV   | *tripalmu*      |
-|        2 | DU       | tripa- | IMP    | *tripamu*       |
-|        2 | PL       | tripa- | IND    | *tripaymün*     |
-|        2 | PL       | tripa- | SBJV   | *tripalmün*     |
-|        2 | PL       | tripa- | IMP    | *tripamün*      |
-|        3 | SG       | tripa- | IND    | *tripay*        |
-|        3 | SG       | tripa- | SBJV   | *tripale*       |
-|        3 | SG       | tripa- | IMP    | *tripape*       |
-|        3 | DU       | tripa- | IND    | *tripayngu*     |
-|        3 | DU       | tripa- | SBJV   | *tripale engu*  |
-|        3 | DU       | tripa- | IMP    | *tripape engu*  |
-|        3 | PL       | tripa- | IND    | *tripayngü*     |
-|        3 | PL       | tripa- | SBJV   | *tripale engü*  |
-|        3 | PL       | tripa- | IMP    | *tripape engün* |
+|   Person | Number   | Verb   | Mood   | Form          |
+|---------:|:---------|:-------|:-------|:--------------|
+|        1 | SG       | kon-   | IND    | konün         |
+|        1 | SG       | kon-   | SBJV   | konli         |
+|        1 | SG       | kon-   | IMP    | konchi        |
+|        1 | DU       | kon-   | IND    | koniyu        |
+|        1 | DU       | kon-   | SBJV   | konliyu       |
+|        1 | PL       | kon-   | IND    | koniyiñ       |
+|        1 | PL       | kon-   | SBJV   | konliyiñ      |
+|        2 | SG       | kon-   | IND    | konimi        |
+|        2 | SG       | kon-   | SBJV   | konülmi       |
+|        2 | SG       | kon-   | IMP    | konnge        |
+|        2 | DU       | kon-   | IND    | konimu        |
+|        2 | DU       | kon-   | SBJV   | konülmu       |
+|        2 | DU       | kon-   | IMP    | konmu         |
+|        2 | PL       | kon-   | IND    | konimün       |
+|        2 | PL       | kon-   | SBJV   | konülmün      |
+|        2 | PL       | kon-   | IMP    | konmün        |
+|        3 | SG       | kon-   | IND    | koni          |
+|        3 | SG       | kon-   | SBJV   | konle         |
+|        3 | SG       | kon-   | IMP    | konpe         |
+|        3 | DU       | kon-   | IND    | koningu       |
+|        3 | DU       | kon-   | SBJV   | konle engu    |
+|        3 | DU       | kon-   | IMP    | konpe engu    |
+|        3 | PL       | kon-   | IND    | koningün      |
+|        3 | PL       | kon-   | SBJV   | konle engün   |
+|        3 | PL       | kon-   | IMP    | konpe engün   |
+|        1 | SG       | pi-    | IND    | pin           |
+|        1 | SG       | pi-    | SBJV   | pili          |
+|        1 | SG       | pi-    | IMP    | pichi         |
+|        1 | DU       | pi-    | IND    | piyu          |
+|        1 | DU       | pi-    | SBJV   | piliyu        |
+|        1 | PL       | pi-    | IND    | piiñ          |
+|        1 | PL       | pi-    | SBJV   | piliyiñ       |
+|        2 | SG       | pi-    | IND    | pimi          |
+|        2 | SG       | pi-    | SBJV   | pilmi         |
+|        2 | SG       | pi-    | IMP    | pinge         |
+|        2 | DU       | pi-    | IND    | pimu          |
+|        2 | DU       | pi-    | SBJV   | pilmu         |
+|        2 | DU       | pi-    | IMP    | pimu          |
+|        2 | PL       | pi-    | IND    | pimün         |
+|        2 | PL       | pi-    | SBJV   | pilmün        |
+|        2 | PL       | pi-    | IMP    | pimün         |
+|        3 | SG       | pi-    | IND    | pi            |
+|        3 | SG       | pi-    | SBJV   | pile          |
+|        3 | SG       | pi-    | IMP    | pipe          |
+|        3 | DU       | pi-    | IND    | pingu         |
+|        3 | DU       | pi-    | SBJV   | pile engu     |
+|        3 | DU       | pi-    | IMP    | pipe engu     |
+|        3 | PL       | pi-    | IND    | pingün        |
+|        3 | PL       | pi-    | SBJV   | pile engün    |
+|        3 | PL       | pi-    | IMP    | pipe engün    |
+|        1 | SG       | tripa- | IND    | tripan        |
+|        1 | SG       | tripa- | SBJV   | tripali       |
+|        1 | SG       | tripa- | IMP    | tripachi      |
+|        1 | DU       | tripa- | IND    | tripayu       |
+|        1 | DU       | tripa- | SBJV   | tripaliyu     |
+|        1 | PL       | tripa- | IND    | tripaiñ       |
+|        1 | PL       | tripa- | SBJV   | tripaliyiñ    |
+|        2 | SG       | tripa- | IND    | tripaymi      |
+|        2 | SG       | tripa- | SBJV   | tripalmi      |
+|        2 | SG       | tripa- | IMP    | tripange      |
+|        2 | DU       | tripa- | IND    | tripaymu      |
+|        2 | DU       | tripa- | SBJV   | tripalmu      |
+|        2 | DU       | tripa- | IMP    | tripamu       |
+|        2 | PL       | tripa- | IND    | tripaymün     |
+|        2 | PL       | tripa- | SBJV   | tripalmün     |
+|        2 | PL       | tripa- | IMP    | tripamün      |
+|        3 | SG       | tripa- | IND    | tripay        |
+|        3 | SG       | tripa- | SBJV   | tripale       |
+|        3 | SG       | tripa- | IMP    | tripape       |
+|        3 | DU       | tripa- | IND    | tripayngu     |
+|        3 | DU       | tripa- | SBJV   | tripale engu  |
+|        3 | DU       | tripa- | IMP    | tripape engu  |
+|        3 | PL       | tripa- | IND    | tripayngün    |
+|        3 | PL       | tripa- | SBJV   | tripale engü  |
+|        3 | PL       | tripa- | IMP    | tripape engün |
