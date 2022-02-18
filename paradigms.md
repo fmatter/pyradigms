@@ -24,6 +24,7 @@
 		* JSG left academia in 2017 and now works at facebook, some activity on the github repos from various (?) people
 		* feature bundle: 23 dimensions, >212 features (see b)
 		* aktionsart, animacy, aspect, case, comparison, definiteness, deixis, evidentiality, finiteness, gender, information structure, interrogativity, mood, number, part of speech, person, polarity, politeness, switch-reference, tense, valency, and voice
+
 ||||
 | -------------- | ------------------- | --------------------------- |
 | aʼáád          | aʼáád               | N;PSS0                      |
@@ -44,4 +45,3 @@
 
 * reference catalogs provide a standard inventory
 	* [unimorph](https://unimorph.github.io/): [OWL-encoded ontology](https://github.com/acoli-repo/olia/blob/master/owl/experimental/unimorph/zips/unimorph-2017-08-16-2157.owl) (not by project itself, most [up to date](https://unimorph.github.io/doc/unimorph-schema.pdf) scheme is PDF)
-	
