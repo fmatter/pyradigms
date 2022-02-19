@@ -71,7 +71,7 @@ def test_missing_form():
     assert pyd.compose_paradigm() == None
 
 def test_string_param():
-    pyd = Pyradigm(df, x="Case", y="Number", z= filters={"Lexeme": ["aestus"]})
-    print(pyd.compose_paradigm())
-
+    pyd = Pyradigm(df, x="Case", y="Number", filters={"Lexeme": ["aestus"]})
+    tables = pyd.compose_paradigm()
+    print(tables)
 test_string_param()
