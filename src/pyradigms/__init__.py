@@ -31,15 +31,103 @@ class Pyradigm:
     sort_orders: dict = field(default_factory=dict)
     filters: dict = field(default_factory=dict)
     ignore: list[str] = field(default_factory=list)
+    separators: list[str] = field(default_factory=list)
     log_level: str = None
     logger = get_colorlog(__name__, sys.stdout, level="DEBUG")
-    separators = ["."]
     joiner = "/"
     content_string: str = "Form"
 
     def __post_init__(self):
         if self.log_level is not None:
             self.logger.setLevel(self.log_level)
+        if self.separators is None:
+            self.separators = ["."]
+
+    @property    
+    def parameters(self):
+        l = list(self.entries.columns)
+        l.remove(self.content_string)
+        return l
+
+    @classmethod
+    def from_dataframe(cls, df: pd.DataFrame, format="wide", **kwargs):
+        """Create a new Pyradigm from a pandas dataframe.
+
+        :param df: a pandas dataframe containing the data in wide/unstacked format
+
+        :return: a Pyradigm object
+        """
+
+        if format=="wide":
+            return cls(entries=df, **kwargs)
+        elif format=="paradigm":
+            return cls(entries=cls.decompose_paradigm(cls, paradigm=df,**kwargs), **kwargs)
+
+    @classmethod
+    def from_csv(cls, path, format="wide", **kwargs):
+        """Create a new Pyradigm from a CSV file.
+
+        :param path: a path to a CSV file containing the data in wide/unstacked format
+
+        :return: a Pyradigm object
+        """
+        df = pd.read_csv(path, keep_default_na=False, dtype=str)
+        if format=="wide":
+            return cls(entries=df, **kwargs)
+        elif format=="paradigm":
+            df.set_index(df.columns[0], inplace=True)
+            return cls(entries=cls.decompose_paradigm(cls, paradigm=df,**kwargs), **kwargs)
+    
+    def decompose_paradigm(self, paradigm, x, y, separators=["."], z_value=None, **kwargs):
+        if not z_value:
+            z_value = paradigm.index.name
+    
+        entries = pd.DataFrame(columns=z + x + y + [content_string])
+        for x_string, row in paradigm.iteritems():
+            for y_string, form in row.iteritems():
+                x_values = get_parameter_values(x_string, x, separators)
+                y_values = get_parameter_values(y_string, y, separators)
+                param_list = x + y  # List of parameter names
+                value_list = x_values + y_values  # List of parameter values
+                if z:
+                    param_list += z
+                    value_list += [z_value]
+                param_list += [content_string]
+                value_list += [form]
+                out_dict = dict(zip(param_list, value_list))
+                entries = entries.append(
+                    out_dict,
+                    ignore_index=True,
+                )
+        entries.dropna(subset=[content_string], inplace=True)  # …drop rows with no form
+        entries.reset_index(drop=True, inplace=True)  # reset index
+        entries.fillna("", inplace=True)
+        return entries
+
+    @classmethod
+    def from_text(cls, text, x_sep=",", y_sep="\n"):
+        """Create a new Pyradigm from a string.
+
+        :param text: a string containing the data in wide/unstacked format
+        :param x_sep: how "cells" are horizontally separated
+        :param y_sep: how "cells" are vertically separated
+
+        :return: a Pyradigm object
+        """
+        df = pd.read_csv(StringIO(text), sep=x_sep, lineterminator=y_sep)
+        return cls(df)
+
+    def to_markdown(self, format="paradigm", **kwargs):
+        if format == "long":
+            out = self.to_long()
+        elif format == "paradigm":
+            out = self.compose_paradigm(**kwargs)
+        elif format == "wide":
+            out = self.entries
+        return out.to_markdown()
+
+    def to_long(self):
+        return pd.melt(self.entries, id_vars=self.content_string, value_vars=self.parameters, var_name="Parameter", value_name="Value")
 
     def compose_paradigm(
         self,
@@ -115,6 +203,8 @@ class Pyradigm:
         )
         self.logger.debug(f"Filtering parameters:\n" + filter_string + "\n")
         for col, values in filters.items():
+            if type(values) != list:
+                values = [values]
             df = df[df[col].isin(values)]
         self.logger.debug("New entries:\n" + _short_repr(df))
 
@@ -198,6 +288,7 @@ class Pyradigm:
                 "", inplace=True
             )  # then add back the empty strings for exporting
             out.set_index(idx_name, drop=True, inplace=True)  # then add back the index
+            out.index.name = ""
             if not multi_index:
                 out = out.reindex(
                     [value for value in y_sort if value in out.index]
@@ -257,7 +348,7 @@ class Pyradigm:
             return constructed_paradigms
 
 
-def get_parameter_values(string, parameters):
+def get_parameter_values(string, parameters, separators):
     parameter_list = re.split("|".join(map(re.escape, separators)), string)
     parameter_list = [x for x in parameter_list if x]  # Remove leftovers of separation
     new_parameter_list = []
@@ -279,33 +370,6 @@ def get_parameter_values(string, parameters):
         print(parameter_list)
         print(parameters)
     return parameter_list
-
-
-def decompose_paradigm(paradigm, z_value=None):
-    if not z_value:
-        z_value = paradigm.index.name
-
-    entries = pd.DataFrame(columns=z + x + y + [content_string])
-    for x_string, row in paradigm.iteritems():
-        for y_string, form in row.iteritems():
-            x_values = get_parameter_values(x_string, x)
-            y_values = get_parameter_values(y_string, y)
-            param_list = x + y  # List of parameter names
-            value_list = x_values + y_values  # List of parameter values
-            if z:
-                param_list += z
-                value_list += [z_value]
-            param_list += [content_string]
-            value_list += [form]
-            out_dict = dict(zip(param_list, value_list))
-            entries = entries.append(
-                out_dict,
-                ignore_index=True,
-            )
-    entries.dropna(subset=[content_string], inplace=True)  # …drop rows with no form
-    entries.reset_index(drop=True, inplace=True)  # reset index
-    entries.fillna("", inplace=True)
-    return entries
 
 
 def decompose_from_csv(csvfile):
