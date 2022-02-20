@@ -127,7 +127,7 @@ class Pyradigm:
         return out.to_markdown()
 
     def to_long(self):
-        return pd.melt(self.entries, id_vars=self.content_string, value_vars=self.parameters, var_name="Parameter", value_name="Value")
+        return pd.melt(self.entries, id_vars=self.content_string, value_vars=self.parameters, var_name="Parameter", value_name="Value").drop_duplicates()
 
     def compose_paradigm(
         self,
