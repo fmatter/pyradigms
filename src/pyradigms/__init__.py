@@ -40,7 +40,7 @@ class Pyradigm:
     def __post_init__(self):
         if self.log_level is not None:
             self.logger.setLevel(self.log_level)
-        if self.separators is None:
+        if self.separators is None or self.separators == []:
             self.separators = ["."]
 
     @property    
@@ -60,6 +60,9 @@ class Pyradigm:
 
         if format=="wide":
             return cls(entries=df, **kwargs)
+        elif format=="long":
+            print(df)
+            return df
         elif format=="paradigm":
             return cls(entries=cls.decompose_paradigm(cls, paradigm=df,**kwargs), **kwargs)
 
@@ -74,6 +77,9 @@ class Pyradigm:
         df = pd.read_csv(path, keep_default_na=False, dtype=str)
         if format=="wide":
             return cls(entries=df, **kwargs)
+        elif format=="long":
+            print(df)
+            print(df.pivot(index="Form", columns="Parameter")["Value"])
         elif format=="paradigm":
             df.set_index(df.columns[0], inplace=True)
             return cls(entries=cls.decompose_paradigm(cls, paradigm=df,**kwargs), **kwargs)

@@ -28,5 +28,6 @@ setup(
     python_requires=">=3.6",
     install_requires=[
         "pandas>=1.2.3",
+        "clldutils==2.6.0"
     ],
 )
