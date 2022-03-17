@@ -90,7 +90,7 @@ class Pyradigm:
             z_value = paradigm.index.name
     
         entries = pd.DataFrame(columns=z + x + y + [content_string])
-        for x_string, row in paradigm.iteritems():
+        for i, (x_string, row) in enumerate(paradigm.iteritems()):
             for y_string, form in row.iteritems():
                 x_values = get_parameter_values(x_string, x, separators)
                 y_values = get_parameter_values(y_string, y, separators)
@@ -102,10 +102,8 @@ class Pyradigm:
                 param_list += [content_string]
                 value_list += [form]
                 out_dict = dict(zip(param_list, value_list))
-                entries = entries.append(
-                    out_dict,
-                    ignore_index=True,
-                )
+                entries = pd.concat([entries,pd.DataFrame(out_dict, index=[i])])
+
         entries.dropna(subset=[content_string], inplace=True)  # …drop rows with no form
         entries.reset_index(drop=True, inplace=True)  # reset index
         entries.fillna("", inplace=True)
