@@ -5,7 +5,8 @@ from io import StringIO
 import logging
 from clldutils.loglib import Logging, get_colorlog
 import sys
-from dataclasses import dataclass, field
+from attrs import define, Factory
+from typing import List, Dict
 
 person_values = ["1", "2", "3", "1+3", "1+2"]
 content_string = "Form"
@@ -20,24 +21,24 @@ filters = {}
 ignore = []
 
 
-@dataclass
+@define
 class Pyradigm:
     entries: pd.DataFrame = None
-    x: list[str] = field(default_factory=list)
-    y: list[str] = field(default_factory=list)
-    z: list[str] = field(default_factory=list)
-    x_sort: list[str] = field(default_factory=list)
-    y_sort: list[str] = field(default_factory=list)
-    sort_orders: dict = field(default_factory=dict)
-    filters: dict = field(default_factory=dict)
-    ignore: list[str] = field(default_factory=list)
-    separators: list[str] = field(default_factory=list)
+    x: List[str] = Factory(list)
+    y: List[str] = Factory(list)
+    z: List[str] = Factory(list)
+    x_sort: List[str] = Factory(list)
+    y_sort: List[str] = Factory(list)
+    sort_orders: Dict = Factory(dict)
+    filters: Dict = Factory(dict)
+    ignore: List[str] = Factory(list)
+    separators: List[str] = Factory(list)
     log_level: str = None
     logger = get_colorlog(__name__, sys.stdout, level="DEBUG")
     joiner = "/"
     content_string: str = "Form"
 
-    def __post_init__(self):
+    def __attrs_post_init__(self):
         if self.log_level is not None:
             self.logger.setLevel(self.log_level)
         if self.separators is None or self.separators == []:

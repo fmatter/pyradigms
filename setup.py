@@ -1,5 +1,6 @@
 from setuptools import setup, find_packages
 
+requirements = open("requirements.txt", "r").read().split("\n")
 setup(
     name="pyradigms",
     version="0.0.4",
@@ -26,8 +27,5 @@ setup(
     ],
     platforms="any",
     python_requires=">=3.6",
-    install_requires=[
-        "pandas>=1.2.3",
-        "clldutils==2.6.0"
-    ],
+    install_requires=requirements,
 )
