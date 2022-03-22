@@ -1,6 +1,51 @@
 import pytest
+from pathlib import Path
 from pyradigms import Pyradigm
 import pandas as pd
+from pandas.testing import assert_frame_equal
+
+@pytest.fixture
+def data():
+    return Path(__file__).parent / "data"
+
+@pytest.fixture
+def lverbs(data):
+    return pd.read_csv(data / "entries_out.csv", keep_default_na=False, dtype=str)
+
+@pytest.fixture
+def usurpo(data):
+    df = pd.read_csv(data / "usurpo.csv", keep_default_na=False, dtype=str, index_col=0)
+    df.index.name = ""
+    return df
+
+def test_latin_verbs(lverbs, usurpo):
+    pyd = Pyradigm(entries=lverbs)
+    pyd.x = ["Person", "Number"]
+    pyd.y = ["Mood", "Tense", "Voice"]
+    pyd.z=["Verb"]
+    pyd.x_sort=["1SG", "2SG", "3SG", "1PL", "2PL", "3PL"]
+    pyd.y_sort=[
+"IND.PRS.ACT",  
+"IND.PRS.PASS", 
+"IND.PST.ACT",   
+"IND.FUT.ACT",  
+"IND.FUT.PASS", 
+"IND.IMP.ACT",
+"IND.IMP.PASS", 
+"IND.PLUP.ACT", 
+"SBJV.PRS.ACT", 
+"SBJV.PRS.PASS", 
+"SBJV.PST.ACT", 
+"SBJV.PLUP.ACT", 
+"SBJV.IMP.ACT", 
+"SBJV.IMP.PASS", 
+"IMP.PRS.ACT",  
+"IMP.PRS.PASS", 
+"IMP.FUT.ACT",  
+"IMP.FUT.PASS", 
+]
+    paradigms = pyd.compose_paradigm()
+    assert_frame_equal(paradigms["usurpo"], usurpo)
 
 df = pd.DataFrame(
         [

@@ -8,6 +8,8 @@ import sys
 from attrs import define, Factory
 from typing import List, Dict
 
+"""Docstring describing pyradigms"""
+
 person_values = ["1", "2", "3", "1+3", "1+2"]
 content_string = "Form"
 # separators = ["."]
@@ -23,6 +25,9 @@ ignore = []
 
 @define
 class Pyradigm:
+    """A pyradigm instance holds the data underlying paradigms, as well as parameters and methods used to generate them.
+
+    """
     entries: pd.DataFrame = None
     x: List[str] = Factory(list)
     y: List[str] = Factory(list)
