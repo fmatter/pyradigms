@@ -25,15 +25,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install .[test]
     - name: Test with pytest
-      run: |
-        pytest --cov=./src --cov-report=xml
+      run: pytest
+    - name: "Convert coverage"
+      run: "python -m coverage xml"
     - name: "Upload coverage to Codecov"
       uses: "codecov/codecov-action@v2"
       with:
         fail_ci_if_error: true
-    - name: 'Upload Artifact'
-      uses: actions/upload-artifact@v3
-      with:
-        name: coverage-artifact
-        path: coverage.xml
-        retention-days: 1
