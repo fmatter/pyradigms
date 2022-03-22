@@ -1,6 +1,0 @@
-[report]
-include = ./src/**
-omit = venv/*,VENV/*
-
-[html]
-directory = coverage_html_report
