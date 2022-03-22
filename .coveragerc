@@ -1,5 +1,5 @@
 [report]
-include = src/**
+include = ./src/**, ./tests/**
 omit = venv/*,VENV/*
 
 [html]
