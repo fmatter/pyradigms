@@ -28,4 +28,11 @@ setup(
     platforms="any",
     python_requires=">=3.6",
     install_requires=requirements,
+    extras_require={
+        "test": [
+            "pytest>=5",
+            "pytest-cov",
+            "coverage>=4.2",
+        ],
+    },
 )
