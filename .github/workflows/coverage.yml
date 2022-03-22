@@ -26,7 +26,9 @@ jobs:
         pip install .[test]
     - name: Test with pytest
       run: |
-        pytest --cov=./src --cov-report=term
+        pytest
+    - name: "Convert coverage"
+      run: "python -m coverage xml"
     - name: "Upload coverage to Codecov"
       uses: "codecov/codecov-action@v2"
       with:
