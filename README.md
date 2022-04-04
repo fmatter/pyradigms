@@ -8,7 +8,6 @@ Note: This is slightly out of date.
 [![Build Status](https://github.com/fmatter/pyradigms/workflows/tests/badge.svg)](https://github.com/fmatter/pyradigms/actions?query=workflow%3Atests)
 [![Codecov](https://img.shields.io/codecov/c/github/fmatter/pyradigms)](https://app.codecov.io/gh/fmatter/pyradigms/)
 [![PyPI](https://img.shields.io/pypi/v/pyradigms.svg)](https://pypi.org/project/pyradigms)
-![Versions](https://img.shields.io/pypi/pyversions/pyradigms)
 
 
 1. [Installation](#installation)
