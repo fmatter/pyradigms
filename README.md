@@ -3,6 +3,7 @@
 [![codecov](https://codecov.io/gh/fmatter/pyradigms/branch/master/graph/badge.svg?token=4WR29DAL93)](https://codecov.io/gh/fmatter/pyradigms)
 
 pyradigms is a python package for composing and decomposing linguistic paradigms.
+Note: This is slightly out of date.
 
 1. [Installation](#installation)
 2. [Usage](#usage)
