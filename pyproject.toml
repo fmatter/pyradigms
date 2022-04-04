@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = py36,py37,py38,py39,lint
+skip_missing_interpreters = true
+toxworkdir=/tmp/.pyradigms_tox
+
+[testenv]
+usedevelop = True
+commands = 
+    pytest --cov
+extras = dev
+
+[testenv:lint]
+commands = python -m flake8 src
+extras = dev
+"""

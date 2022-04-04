@@ -2,8 +2,7 @@ import pandas as pd
 import numpy as np
 import re
 from io import StringIO
-import logging
-from clldutils.loglib import Logging, get_colorlog
+from clldutils.loglib import get_colorlog
 import sys
 from attrs import define, Factory
 from typing import List, Dict
@@ -25,9 +24,11 @@ ignore = []
 
 @define
 class Pyradigm:
-    """A pyradigm instance holds the data underlying paradigms, as well as parameters and methods used to generate them.
+    """A pyradigm instance holds the data underlying paradigms, as well as parameters
+    and methods used to generate them.
 
     """
+
     entries: pd.DataFrame = None
     x: List[str] = Factory(list)
     y: List[str] = Factory(list)
@@ -49,11 +50,11 @@ class Pyradigm:
         if self.separators is None or self.separators == []:
             self.separators = ["."]
 
-    @property    
+    @property
     def parameters(self):
-        l = list(self.entries.columns)
-        l.remove(self.content_string)
-        return l
+        parlist = list(self.entries.columns)
+        parlist.remove(self.content_string)
+        return parlist
 
     @classmethod
     def from_dataframe(cls, df: pd.DataFrame, format="wide", **kwargs):
@@ -64,13 +65,15 @@ class Pyradigm:
         :return: a Pyradigm object
         """
 
-        if format=="wide":
+        if format == "wide":
             return cls(entries=df, **kwargs)
-        elif format=="long":
+        elif format == "long":
             print(df)
             return df
-        elif format=="paradigm":
-            return cls(entries=cls.decompose_paradigm(cls, paradigm=df,**kwargs), **kwargs)
+        elif format == "paradigm":
+            return cls(
+                entries=cls.decompose_paradigm(cls, paradigm=df, **kwargs), **kwargs
+            )
 
     @classmethod
     def from_csv(cls, path, format="wide", **kwargs):
@@ -81,24 +84,28 @@ class Pyradigm:
         :return: a Pyradigm object
         """
         df = pd.read_csv(path, keep_default_na=False, dtype=str)
-        if format=="wide":
+        if format == "wide":
             return cls(entries=df, **kwargs)
-        elif format=="long":
+        elif format == "long":
             print(df)
             print(df.pivot(index="Form", columns="Parameter")["Value"])
-        elif format=="paradigm":
+        elif format == "paradigm":
             df.set_index(df.columns[0], inplace=True)
-            return cls(entries=cls.decompose_paradigm(cls, paradigm=df,**kwargs), **kwargs)
-    
-    def decompose_paradigm(self, paradigm, x, y, separators=["."], z_value=None, **kwargs):
+            return cls(
+                entries=cls.decompose_paradigm(cls, paradigm=df, **kwargs), **kwargs
+            )
+
+    def decompose_paradigm(
+        self, paradigm, x, y, separators=["."], z_value=None, **kwargs
+    ):
         if not z_value:
             z_value = paradigm.index.name
-    
+
         entries = pd.DataFrame(columns=z + x + y + [content_string])
         for i, (x_string, row) in enumerate(paradigm.iteritems()):
             for y_string, form in row.iteritems():
-                x_values = get_parameter_values(x_string, x, separators)
-                y_values = get_parameter_values(y_string, y, separators)
+                x_values = self.get_parameter_values(x_string, x, separators)
+                y_values = self.get_parameter_values(y_string, y, separators)
                 param_list = x + y  # List of parameter names
                 value_list = x_values + y_values  # List of parameter values
                 if z:
@@ -107,7 +114,7 @@ class Pyradigm:
                 param_list += [content_string]
                 value_list += [form]
                 out_dict = dict(zip(param_list, value_list))
-                entries = pd.concat([entries,pd.DataFrame(out_dict, index=[i])])
+                entries = pd.concat([entries, pd.DataFrame(out_dict, index=[i])])
 
         entries.dropna(subset=[content_string], inplace=True)  # …drop rows with no form
         entries.reset_index(drop=True, inplace=True)  # reset index
@@ -137,7 +144,13 @@ class Pyradigm:
         return out.to_markdown()
 
     def to_long(self):
-        return pd.melt(self.entries, id_vars=self.content_string, value_vars=self.parameters, var_name="Parameter", value_name="Value").drop_duplicates()
+        return pd.melt(
+            self.entries,
+            id_vars=self.content_string,
+            value_vars=self.parameters,
+            var_name="Parameter",
+            value_name="Value",
+        ).drop_duplicates()
 
     def compose_paradigm(
         self,
@@ -153,7 +166,7 @@ class Pyradigm:
         ignore=None,
         separators=None,
         joiner=None,
-        content_string=None
+        content_string=None,
     ):
         if input_df is None:
             input_df = self.entries
@@ -180,8 +193,9 @@ class Pyradigm:
 
         df = input_df.copy()
         df.replace(np.nan, "", inplace=True)
-        self.logger.debug("Composing a new paradigm from entries:\n" + _short_repr(df))
-
+        self.logger.debug(
+            f"Composing a new paradigm from entries:\n{self._short_repr(df)}"
+        )
 
         # cast parameters to list
         def listify(var):
@@ -193,36 +207,40 @@ class Pyradigm:
         x = listify(x)
         y = listify(y)
         z = listify(z)
-            
+
         # check if all axes have valid parameters
         parameters = {"x": x, "y": y, "z": z}
         for k, v in parameters.items():
             remainders = set(v) - set(df.columns)
             if len(remainders) > 0:
-                self.logger.error(f"{k} axis contains inexistent parameter(s): {', '.join(remainders)}")
+                rstring = ", ".join(remainders)
+                self.logger.error(
+                    f"{k} axis contains inexistent parameter(s): {rstring}"
+                )
                 return None
 
         # make sure that "Form" or whatever other content string is present
         if content_string not in df.columns:
-            self.logger.error(f"String {content_string} is not found in dataframe columns")
+            self.logger.error(
+                f"String {content_string} is not found in dataframe columns"
+            )
             return None
-
 
         filter_string = "\n".join(
             [f"\t{k}: {', '.join(v)}" for k, v in filters.items()]
         )
-        self.logger.debug(f"Filtering parameters:\n" + filter_string + "\n")
+        self.logger.debug(f"Filtering parameters:\n{filter_string}\n")
         for col, values in filters.items():
             if type(values) != list:
                 values = [values]
             df = df[df[col].isin(values)]
-        self.logger.debug("New entries:\n" + _short_repr(df))
+        self.logger.debug("New entries:\n" + self._short_repr(df))
 
         if len(ignore) > 0:
-            self.logger.debug(f"Ignoring parameters:\n" + ", ".join(ignore))
+            self.logger.debug(f"""Ignoring parameters:\n{", ".join(ignore)}""")
             for col in ignore:
                 df.drop(col, axis=1, inplace=True)
-                self.logger.debug("New entries:\n" + _short_repr(df))
+                self.logger.debug("New entries:\n" + self._short_repr(df))
 
         def concat_values(row, values):
             out = ""
@@ -258,7 +276,7 @@ class Pyradigm:
         pd.set_option("display.max_rows", None, "display.max_columns", None)
         for z_key, df in z_dict.items():
             self.logger.debug(
-                f"Creating pivot table for [{z_key}], using [{new_x_id}] for x axis and [{new_y_id}] for y axis"
+                f"Creating pivot table for [{z_key}], x: [{new_x_id}], y: [{new_y_id}]"
             )
             if multi_index:
                 out = pd.pivot_table(
@@ -337,11 +355,6 @@ class Pyradigm:
                         new_columns.append(pd.CategoricalIndex(values))
                 out.columns = new_columns
                 out.sort_index(inplace=True, axis=1)
-                # print(out.columns.to_frame())
-                # print(out.columns)
-                # s = pd.Series(out.columns)
-                # s = s.fillna('unnamed:' + (s.groupby(s.isnull()).cumcount() + 1).astype(str))
-                # out.columns = s
 
             constructed_paradigms[z_key] = out
         if csv_output:
@@ -357,91 +370,56 @@ class Pyradigm:
         else:
             return constructed_paradigms
 
+    def get_parameter_values(self, string, parameters, separators):
+        parameter_list = re.split("|".join(map(re.escape, separators)), string)
+        parameter_list = [
+            x for x in parameter_list if x
+        ]  # Remove leftovers of separation
+        new_parameter_list = []
+        for param in parameter_list:
+            p_hit = False
+            for p_v in sorted(person_values, key=len, reverse=True):
+                if param.startswith(p_v):
+                    new_parameter_list += list(filter(None, list(param.partition(p_v))))
+                    p_hit = True
+                    break
+            if not p_hit:
+                new_parameter_list.append(param)
+        parameter_list = new_parameter_list
+        if len(parameter_list) < len(parameters):
+            for i in range(0, len(parameters) - len(parameter_list)):
+                parameter_list.append(None)
+        elif len(parameter_list) > len(parameters):
+            print("ERROR")
+            print(parameter_list)
+            print(parameters)
+        return parameter_list
 
-def get_parameter_values(string, parameters, separators):
-    parameter_list = re.split("|".join(map(re.escape, separators)), string)
-    parameter_list = [x for x in parameter_list if x]  # Remove leftovers of separation
-    new_parameter_list = []
-    for param in parameter_list:
-        p_hit = False
-        for p_v in sorted(person_values, key=len, reverse=True):
-            if param.startswith(p_v):
-                new_parameter_list += list(filter(None, list(param.partition(p_v))))
-                p_hit = True
-                break
-        if not p_hit:
-            new_parameter_list.append(param)
-    parameter_list = new_parameter_list
-    if len(parameter_list) < len(parameters):
-        for i in range(0, len(parameters) - len(parameter_list)):
-            parameter_list.append(None)
-    elif len(parameter_list) > len(parameters):
-        print("ERROR")
-        print(parameter_list)
-        print(parameters)
-    return parameter_list
+    def decompose_from_csv(self, csvfile):
+        dfull = open(csvfile).read()
+        return self.decompose_from_text(dfull)
 
+    def decompose_from_text(self, string):
+        full = pd.DataFrame(columns=x)
+        strings = string.split("\n\n")
+        for df_string in strings:
+            paradigm = pd.read_csv(StringIO(df_string), dtype=str, index_col=0)
+            if paradigm.index.name:
+                z_value = paradigm.index.name
+            else:
+                z_value = ""
+            paradigm.index = [str(x) for x in paradigm.index]
+            full = full.append(self.decompose_paradigm(paradigm, z_value=z_value))
+        full.reset_index(drop=True, inplace=True)
+        return full
 
-def decompose_from_csv(csvfile):
-    dfull = open(csvfile).read()
-    return decompose_from_text(dfull)
+    def compose_from_text(self, df_string, csv_output=None):
+        entries = pd.read_csv(StringIO(df_string), dtype=str, keep_default_na=False)
+        return self.compose_paradigm(entries, csv_output=csv_output)
 
+    def compose_from_csv(self, csvfile, csv_output=None):
+        entries = pd.read_csv(csvfile, dtype=str, keep_default_na=False)
+        return self.compose_paradigm(entries, csv_output=csv_output)
 
-def decompose_from_text(string):
-    full = pd.DataFrame(columns=x)
-    strings = string.split("\n\n")
-    for df_string in strings:
-        paradigm = pd.read_csv(StringIO(df_string), dtype=str, index_col=0)
-        if paradigm.index.name:
-            z_value = paradigm.index.name
-        else:
-            z_value = ""
-        paradigm.index = [str(x) for x in paradigm.index]
-        full = full.append(decompose_paradigm(paradigm, z_value=z_value))
-    full.reset_index(drop=True, inplace=True)
-    return full
-
-
-def compose_from_text(df_string, csv_output=None):
-    entries = pd.read_csv(StringIO(df_string), dtype=str, keep_default_na=False)
-    return compose_paradigm(entries, csv_output=csv_output)
-
-
-def compose_from_csv(csvfile, csv_output=None):
-    entries = pd.read_csv(csvfile, dtype=str, keep_default_na=False)
-    return compose_paradigm(entries, csv_output=csv_output)
-
-
-def _short_repr(df):
-    return df.head().to_string() + f"\n({len(df)} entries)"
-
-
-# TEST CODE
-# separators = ["."]
-# person_values = ["1", "2", "3", "1+3", "1+2"]
-#
-# def get_parameter_values(string, parameters):
-#     parameter_list = re.split('|'.join(map(re.escape, separators)),string)
-#     parameter_list = [x for x in parameter_list if x] #Remove leftovers of separation
-#     new_parameter_list = []
-#     for param in parameter_list:
-#         p_hit = False
-#         for p_v in sorted(person_values, key=len, reverse=True):
-#             if p_v in param:
-#                 new_parameter_list += list(filter(None, list(param.partition(p_v))))
-#                 p_hit = True
-#                 break
-#         if not p_hit: new_parameter_list.append(param)
-#     parameter_list = new_parameter_list
-#     if len(parameter_list) < len(parameters):
-#         for i in range(0,len(parameters)-len(parameter_list)):
-#             parameter_list.append(None)
-#     elif len(parameter_list) > len(parameters):
-#         print("ERROR")
-#         print(parameter_list)
-#         print(parameters)
-#     return parameter_list
-#
-# a = "1+2PL.IPFV"
-# b = ['Person', 'Number', "Aspect"]
-# print(get_parameter_values(a, b))
+    def _short_repr(self, df):
+        return df.head().to_string() + f"\n({len(df)} entries)"

@@ -22,12 +22,20 @@ from IPython.display import display, Markdown
 
 # Here's an icelandic paradigm in traditional format:
 
-paradigm = pd.read_csv("../examples/icelandic_pronoun_paradigm.csv", keep_default_na=False, index_col=0)
+paradigm = pd.read_csv(
+    "../examples/icelandic_pronoun_paradigm.csv", keep_default_na=False, index_col=0
+)
 display(Markdown(paradigm.to_markdown()))
 
 # We can give this to `pyradigms`, letting it know what parameters are reflected on what axis:
 
-pyd = Pyradigm.from_dataframe(paradigm, format="paradigm", x=["Person", "Gender"], y=["Case", "Number"], log_level="WARNING")
+pyd = Pyradigm.from_dataframe(
+    paradigm,
+    format="paradigm",
+    x=["Person", "Gender"],
+    y=["Case", "Number"],
+    log_level="WARNING",
+)
 
 # It tries to decompose the paradigm, and stores it in wide format (which is also the default input):
 
