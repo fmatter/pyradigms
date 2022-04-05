@@ -37,7 +37,6 @@ autodoc_mock_imports = [
     'pandas',
     "numpy",
     "clldutils",
-    "attrs"
 ]
 
 # Add any paths that contain templates here, relative to this directory.
