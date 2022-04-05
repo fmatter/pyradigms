@@ -33,8 +33,7 @@ release = "0.0.5"
 # ones.
 extensions = ["sphinx.ext.autodoc", "sphinx.ext.coverage"]
 
-# Add 
-ny paths that contain templates here, relative to this directory.
+# Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
 # List of patterns, relative to source directory, that match files and
