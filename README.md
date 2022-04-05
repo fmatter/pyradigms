@@ -7,6 +7,7 @@ Note: This is slightly out of date.
 ![License](https://img.shields.io/github/license/fmatter/pyradigms)
 [![Build Status](https://github.com/fmatter/pyradigms/workflows/tests/badge.svg)](https://github.com/fmatter/pyradigms/actions?query=workflow%3Atests)
 [![Codecov](https://img.shields.io/codecov/c/github/fmatter/pyradigms)](https://app.codecov.io/gh/fmatter/pyradigms/)
+[![Documentation Status](https://readthedocs.org/projects/pyradigms/badge/?version=latest)](https://pyradigms.readthedocs.io/en/latest/?badge=latest)
 [![PyPI](https://img.shields.io/pypi/v/pyradigms.svg)](https://pypi.org/project/pyradigms)
 
 
