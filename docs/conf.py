@@ -33,6 +33,10 @@ release = "0.0.5"
 # ones.
 extensions = ["sphinx.ext.autodoc", "sphinx.ext.coverage"]
 
+autodoc_mock_imports = [
+    'pandas',
+]
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
