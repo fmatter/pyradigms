@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 * `x_sort` and `y_sort`
 * `compose_from_csv` and `compose_from_text`
+* `decompose_from_csv` and `decompose_from_text`
 
 ### Changed
 * new: `pyd = Pyradigms()`

@@ -457,22 +457,3 @@ class Pyradigm:
         if len(constructed_paradigms) == 1:
             return list(constructed_paradigms.values())[0]
         return constructed_paradigms
-
-    def decompose_from_csv(self, csvfile):
-        with open(csvfile, "r", encoding="utf-8") as f:
-            dfull = f.read()
-        return self.decompose_from_text(dfull)
-
-    def decompose_from_text(self, string):
-        full = pd.DataFrame()
-        strings = string.split("\n\n")
-        for df_string in strings:
-            paradigm = pd.read_csv(StringIO(df_string), dtype=str, index_col=0)
-            if paradigm.index.name:
-                z_value = paradigm.index.name
-            else:
-                z_value = ""
-            paradigm.index = [str(x) for x in paradigm.index]
-            full = full.append(self.decompose_paradigm(paradigm, z_value=z_value))
-        full.reset_index(drop=True, inplace=True)
-        return full
