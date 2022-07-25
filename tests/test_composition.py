@@ -6,11 +6,6 @@ from pandas.testing import assert_frame_equal
 
 
 @pytest.fixture
-def data():
-    return Path(__file__).parent / "data"
-
-
-@pytest.fixture
 def lverbs(data):
     return pd.read_csv(data / "entries_out.csv", keep_default_na=False, dtype=str)
 
@@ -27,28 +22,16 @@ def test_latin_verbs(lverbs, usurpo):
     pyd.x = ["Person", "Number"]
     pyd.y = ["Mood", "Tense", "Voice"]
     pyd.z = ["Verb"]
-    pyd.x_sort = ["1SG", "2SG", "3SG", "1PL", "2PL", "3PL"]
-    pyd.y_sort = [
-        "IND.PRS.ACT",
-        "IND.PRS.PASS",
-        "IND.PST.ACT",
-        "IND.FUT.ACT",
-        "IND.FUT.PASS",
-        "IND.IMP.ACT",
-        "IND.IMP.PASS",
-        "IND.PLUP.ACT",
-        "SBJV.PRS.ACT",
-        "SBJV.PRS.PASS",
-        "SBJV.PST.ACT",
-        "SBJV.PLUP.ACT",
-        "SBJV.IMP.ACT",
-        "SBJV.IMP.PASS",
-        "IMP.PRS.ACT",
-        "IMP.PRS.PASS",
-        "IMP.FUT.ACT",
-        "IMP.FUT.PASS",
-    ]
+    pyd.sort_orders = {
+        "Number": ["SG", "PL"],
+        "Mood": ["IND", "SBJV", "IMP"],
+        "Tense": ["PRS", "PST", "FUT", "IMP", "PLUP"],
+    }
     paradigms = pyd.compose_paradigm()
+    paradigms["usurpo"].index.name = ""
+    paradigms["usurpo"].columns.name = None
+    print(paradigms["usurpo"].columns)
+    print(usurpo.columns)
     assert_frame_equal(paradigms["usurpo"], usurpo)
 
 
@@ -103,7 +86,7 @@ def test_simple():
 
 def test_multiple_values():
     pyd = Pyradigm(df, y=["Case"], x=["Number"])
-    table = pyd.compose_paradigm(joiner=" A/A ")
+    table = pyd.compose_paradigm(category_joiner=" A/A ")
     for i, row in table.iterrows():
         assert " A/A " in row["SG"]
 
@@ -131,24 +114,49 @@ def test_complex():
 
 
 def test_missing_param():
-    pyd = Pyradigm(
-        df, x=["Case"], y=["Birds aren't real"], filters={"Lexeme": ["aestus"]}
-    )
-    assert pyd.compose_paradigm() is None
+
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        pyd = Pyradigm(
+            df, x=["Case"], y=["Birds aren't real"], filters={"Lexeme": ["aestus"]}
+        )
+        pyd.compose_paradigm()
+    assert pytest_wrapped_e.type == SystemExit
 
 
-def test_missing_form():
-    pyd = Pyradigm(
-        df,
-        x=["Case"],
-        y=["Number"],
-        filters={"Lexeme": ["aestus"]},
-        content_string="Value",
-    )
-    assert pyd.compose_paradigm() is None
+def test_missing_print():
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        pyd = Pyradigm(
+            df,
+            x=["Case"],
+            y=["Number"],
+            filters={"Lexeme": ["aestus"]},
+            print_column="Value",
+        )
+        pyd.compose_paradigm()
+
+    assert pytest_wrapped_e.type == SystemExit
 
 
 def test_string_param():
     pyd = Pyradigm(df, x="Case", y="Number", filters={"Lexeme": ["aestus"]})
     tables = pyd.compose_paradigm()
     print(tables)
+
+
+def test_italian():
+    df = pd.read_csv(
+        Path(__file__).parent / "data" / "simple_entries.csv",
+        keep_default_na=False,
+        dtype=str,
+    )
+    pyd = Pyradigm(df)
+    pyd.compose_paradigm(
+        x=["Person", "Number"],
+        y=["Mood", "Tense"],
+        z="Lexeme",
+        filters={"Person": ["1", "2"], "Lexeme": "andare"},
+        # sort_orders={"Tense": ["IMPF", "PRS"]},
+        csv_output="output.csv",
+        with_multi_index=False,
+        output_folder="output",
+    )

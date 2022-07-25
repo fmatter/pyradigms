@@ -11,10 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * tests
 
 ### Removed
+* `x_sort` and `y_sort`
+* `compose_from_csv` and `compose_from_text`
 
 ### Changed
 * new: `pyd = Pyradigms()`
-* allows keeping different pyradigm objects w/ different parameters 
+* allows keeping different pyradigm objects w/ different parameters
+* under the hood: always use multiindex
+* `long` format generates IDs if necessary
 
 ## [0.0.4] - 2021-04-12
 

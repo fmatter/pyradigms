@@ -2,10 +2,14 @@
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
 
+[tool.pylint.messages_control]
+disable=["logging-fstring-interpolation"]
+
+
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = py36,py37,py38,py39,lint
+envlist = py36,py37,py38,py39,py310,lint
 skip_missing_interpreters = true
 toxworkdir=/tmp/.pyradigms_tox
 
