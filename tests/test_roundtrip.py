@@ -17,6 +17,13 @@ def sort_entries(df):
     return df
 
 
+def sort_long(df):
+    df = df.copy()
+    df = df.sort_values(by=["ID", "Parameter", "Value"])
+    df.reset_index(drop=True, inplace=True)
+    return df
+
+
 def test_roundtrip(data):
 
     # long to wide
@@ -52,10 +59,7 @@ def test_roundtrip(data):
     pyd.entries = sort_entries(pyd.entries)
     gen_long = pyd.to_long()
 
-    gen_long = gen_long.sort_values(by=["ID", "Parameter", "Value"])
-    long_df = long_df.sort_values(by=["ID", "Parameter", "Value"])
-
-    gen_long.reset_index(drop=True, inplace=True)
-    long_df.reset_index(drop=True, inplace=True)
+    gen_long = sort_long(gen_long)
+    long_df = sort_long(long_df)
 
     assert_frame_equal(gen_long, long_df)
