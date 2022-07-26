@@ -57,7 +57,6 @@ def test_roundtrip(data):
         y=["Tense", "Mood"],
         z="Lexeme",
     )
-    print("printT", pyd.print_column)
 
     pyd.entries = sort_entries(pyd.entries)
     gen_long = pyd.to_long()

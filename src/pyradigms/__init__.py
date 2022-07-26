@@ -3,6 +3,7 @@ import logging
 import re
 import sys
 from io import StringIO
+from pathlib import Path
 from typing import Dict
 from typing import List
 import colorlog
@@ -22,16 +23,6 @@ log.addHandler(handler)
 
 
 person_values = ["1", "2", "3", "1+3", "1+2"]
-print_column = "Form"
-# separators = ["."]
-x = []
-y = []
-z = []
-x_sort = []
-y_sort = []
-sort_orders = {}
-filters = {}
-ignore = []
 
 
 def format_person_values(string, sep):
@@ -99,7 +90,6 @@ class Pyradigm:
     def __attrs_post_init__(self):
         if not self.print_column:
             self.print_column = "Form"
-        log.error(f"ATTRS IS ALL GO !{self.print_column}!")
 
     @property
     def parameters(self):
@@ -140,7 +130,13 @@ class Pyradigm:
 
         :return: a Pyradigm object
         """
-        df = pd.read_csv(path, keep_default_na=False, dtype=str, index_col=0)
+        if data_format in ["wide", "long"]:
+            df = pd.read_csv(path, keep_default_na=False, dtype=str)
+        elif data_format == "paradigm":
+            df = pd.read_csv(path, keep_default_na=False, dtype=str, index_col=0)
+        else:
+            log.error(f"Invalid format: {data_format}")
+            sys.exit(1)
         return cls.from_dataframe(df, data_format=data_format, **kwargs)
 
     @classmethod
@@ -153,7 +149,9 @@ class Pyradigm:
 
         :return: a Pyradigm object
         """
-        df = pd.read_csv(StringIO(text), sep=x_sep, lineterminator=y_sep)
+        df = pd.read_csv(
+            StringIO(text), sep=x_sep, lineterminator=y_sep, index_col=0, dtype=str
+        )
         return cls(df)
 
     def decompose_paradigm(self, paradigm, z_value=None, **kwargs):  # noqa
@@ -195,20 +193,25 @@ class Pyradigm:
     def to_markdown(self, data_format="paradigm", **kwargs):
         if data_format == "long":
             out = self.to_long()
-        elif data_format == "paradigm":
+            return out.to_markdown(index=False, **kwargs)
+        if data_format == "paradigm":
             out = self.compose_paradigm(**kwargs)
-        elif data_format == "wide":
-            out = self.entries
-        else:
-            log.error(f"Unknown format {data_format}.")
-            sys.exit(1)
-        return out.to_markdown()
+            if isinstance(out, dict):
+                mds = []
+                for z, x in out.items():
+                    x.index.name = z
+                    mds.append(x.to_markdown(**kwargs))
+                return "\n\n".join(mds)
+        if data_format == "wide":
+            return self.entries.to_markdown(index=False, **kwargs)
+        log.error(f"Unknown format '{data_format}'.")
+        sys.exit(1)
 
     def to_long(self):
         if "ID" not in self.entries.columns:
             self.entries[  # pylint: disable=unsupported-assignment-operation
                 "ID"
-            ] = self.entries.apply(lambda x: f"{x.name}-{x[print_column]}", axis=1)
+            ] = self.entries.apply(lambda x: f"{x.name}-{x[self.print_column]}", axis=1)
         return pd.melt(
             self.entries,
             id_vars="ID",
@@ -226,13 +229,15 @@ class Pyradigm:
         y = kwargs.get("y", self.y)
         z = kwargs.get("z", self.z)
         filters = kwargs.get("filters", self.filters)
-        ignore = kwargs.get("ignore", self.ignore)
+        ignore = listify(kwargs.get("ignore", self.ignore))
         separators = kwargs.get("separators", self.separators)
         value_joiner = kwargs.get("value_joiner", self.value_joiner)
         category_joiner = kwargs.get("category_joiner", self.category_joiner)
         print_column = kwargs.get("print_column", self.print_column)
         sort_orders = kwargs.get("sort_orders", self.sort_orders)
         output_folder = kwargs.get("output_folder", self.output_folder)
+        if output_folder:
+            output_folder = Path(output_folder)
 
         df = input_df.copy()
         df.replace(np.nan, "", inplace=True)
@@ -344,7 +349,7 @@ class Pyradigm:
                     sort_orders[parameter] = df_sort
                 elif set(sort_orders[parameter]) != set(df_sort):
                     log.error(
-                        f"Specified order {sort_orders[parameter]} for parameter"
+                        f"Specified order {sort_orders[parameter]} for parameter "
                         f"'{parameter}' does not cover all values: {df_sort}"
                     )
                     sys.exit(1)
@@ -353,7 +358,6 @@ class Pyradigm:
             new_indices = []
             for idx in y:
                 values = out.index.get_level_values(idx)
-                log.info(values)
                 new_indices.append(
                     pd.CategoricalIndex(
                         values, categories=sort_orders[idx], ordered=True
@@ -401,14 +405,7 @@ class Pyradigm:
             output = []
             for z_key, df in constructed_paradigms.items():
                 s = StringIO()
-                if not with_multi_index:
-                    if z_key == "z":
-                        idx_label = ""
-                    else:
-                        idx_label = z_key
-                    df.to_csv(s, index=True, index_label=idx_label)
-                else:
-                    df.to_csv(s, index=True)
+                df.to_csv(s, index=True)
                 output.append(s.getvalue())
             with open(csv_output, "w", encoding="utf-8") as file:
                 file.write("\n".join(output))
@@ -422,12 +419,7 @@ class Pyradigm:
                 else:
                     filename = z_key + ".csv"
                     idx_label = z_key
-                if with_multi_index:
-                    df.to_csv(output_folder / filename, index=True)
-                else:
-                    df.to_csv(
-                        output_folder / filename, index=True, index_label=idx_label
-                    )
+                df.to_csv(output_folder / filename, index=True, index_label=idx_label)
 
         if len(constructed_paradigms) == 1:
             return list(constructed_paradigms.values())[0]

@@ -3,6 +3,7 @@ from pathlib import Path
 from pyradigms import Pyradigm
 import pandas as pd
 from pandas.testing import assert_frame_equal
+import logging
 
 
 @pytest.fixture
@@ -30,8 +31,6 @@ def test_latin_verbs(lverbs, usurpo):
     paradigms = pyd.compose_paradigm()
     paradigms["usurpo"].index.name = ""
     paradigms["usurpo"].columns.name = None
-    print(paradigms["usurpo"].columns)
-    print(usurpo.columns)
     assert_frame_equal(paradigms["usurpo"], usurpo)
 
 
@@ -142,3 +141,120 @@ def test_string_param():
     tables = pyd.compose_paradigm()
     print(tables)
     # todo fix this
+
+
+def test_csv(data, caplog):
+    entries = pd.read_csv(data / "venire/entries.csv", dtype=str)
+    pyd = Pyradigm.from_csv(data / "venire/entries.csv")
+    assert_frame_equal(entries, pyd.entries)
+
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        with caplog.at_level(logging.DEBUG):
+            pyd = Pyradigm.from_csv(data / "venire/entries.csv", data_format="nonsense")
+        assert "Invalid format" in caplog.text
+    assert pytest_wrapped_e.type == SystemExit
+
+
+def test_text(data):
+    path = data / "venire/entries.csv"
+    entries = pd.read_csv(path, dtype=str, index_col=0)
+    with open(path, "r", encoding="utf-8") as f:
+        text = f.read()
+    assert_frame_equal(entries, Pyradigm.from_text(text).entries)
+
+
+def test_format(data, caplog):
+    entries = pd.read_csv(data / "venire/entries.csv", dtype=str, index_col=0)
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        with caplog.at_level(logging.DEBUG):
+            pyd = Pyradigm.from_dataframe(entries, data_format="unknown")
+        assert "Invalid format" in caplog.text
+    assert pytest_wrapped_e.type == SystemExit
+
+
+def test_z(data, caplog, tmp_path):
+    entries = pd.read_csv(data / "italian_entries.csv", dtype=str)
+    venire = pd.read_csv(data / "venire/paradigm.csv", dtype=str, index_col=0)
+    pyd = Pyradigm.from_dataframe(
+        entries,
+        x=["Person", "Number"],
+        y=["Tense", "Mood"],
+        z="Lexeme",
+        ignore="ID",
+        sort_orders={"Number": ["SG", "PL"], "Person": ["1", "2", "3"]},
+    )
+    pyd.compose_paradigm(output_folder=tmp_path)
+    venire2 = pd.read_csv(tmp_path / "venire.csv", dtype=str, index_col=0)
+    assert_frame_equal(venire, venire2)
+
+    paras = pyd.compose_paradigm(x="Mood", y="Tense", z=["Lexeme", "Person", "Number"])
+    assert list(paras["andare.1PL"].columns) == ["IND", "SBJV"]
+
+
+def test_sorting(data, caplog):
+    entries = pd.read_csv(data / "italian_entries.csv", dtype=str)
+    pyd = Pyradigm.from_dataframe(
+        entries,
+        x=["Person", "Number"],
+        y=["Tense", "Mood"],
+        z="Lexeme",
+        ignore="ID",
+        sort_orders={"Number": ["SG", "PL"], "Person": ["1", "3"]},
+    )
+
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        with caplog.at_level(logging.DEBUG):
+            pyd.compose_paradigm()
+        assert "does not cover all values" in caplog.text
+    assert pytest_wrapped_e.type == SystemExit
+
+
+def test_csv_output(data, tmp_path):
+    entries = pd.read_csv(data / "italian_entries.csv", dtype=str)
+    pyd = Pyradigm.from_dataframe(
+        entries, x=["Person", "Number"], y=["Tense", "Mood"], z="Lexeme", ignore="ID"
+    )
+    pyd.compose_paradigm(csv_output=tmp_path / "output.csv", with_multi_index=True)
+    assert (tmp_path / "output.csv").is_file()
+
+
+def test_output_folder(data, caplog, tmp_path):
+    entries = pd.read_csv(data / "venire/entries.csv", dtype=str)
+    pyd = Pyradigm.from_dataframe(
+        entries, x=["Person", "Number"], y=["Tense", "Mood"], ignore="Lexeme"
+    )
+    pyd.compose_paradigm(output_folder=tmp_path)
+    assert (tmp_path / "generated_paradigm.csv").is_file()
+
+
+def test_markdown(caplog):
+    pyd = Pyradigm.from_csv(
+        "tests/data/italian_entries.csv",
+        x=["Person", "Number"],
+        y=["Tense", "Mood"],
+        z=["Lexeme"],
+    )
+    assert (
+        "| PRS.SBJV  | venga   | veniamo   | venga   | veniate  | venga   | vengano   |"
+        in pyd.to_markdown(data_format="paradigm")
+    )
+    assert (
+        "<tr><td>PRS.IND  </td><td>vengo  </td><td>veniamo  </td><td>vieni  </td><td>venite  </td><td>viene  </td><td>vengono  </td></tr>"
+        in pyd.to_markdown(data_format="paradigm", tablefmt="html")
+    )
+
+    pyd.filters = {"Lexeme": "venire"}
+    assert "| venire-SG-1-IND-IMPF  | Form        | venivo    |" in pyd.to_markdown(
+        data_format="long"
+    )
+
+    assert (
+        "| venire-SG-1-SBJV-IMPF | venissi   | SG       |        1 | SBJV   | IMPF    | venire   |"
+        in pyd.to_markdown(data_format="wide")
+    )
+
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        with caplog.at_level(logging.DEBUG):
+            pyd.to_markdown(data_format="nonsense")
+        assert "Unknown format" in caplog.text
+    assert pytest_wrapped_e.type == SystemExit

@@ -2,6 +2,7 @@ from pyradigms import Pyradigm
 import pandas as pd
 from pandas.testing import assert_frame_equal
 import logging
+import pytest
 
 
 def test_venire(data):
@@ -34,3 +35,15 @@ def test_too_many_params(caplog, data):
             df, x=["Person", "Number", "Too much"], y=["Tense", "Mood"], z="Lexeme"
         )
     assert "than specified" in caplog.text
+
+
+def test_too_few_params(caplog, data):
+    pyd = Pyradigm()
+    with pytest.raises(SystemExit) as pytest_wrapped_e:
+        with caplog.at_level(logging.DEBUG):
+            df = pd.read_csv(data / "venire/paradigm.csv", index_col=0, dtype=str)
+            df = pyd.decompose_paradigm(
+                df, x=["Person"], y=["Tense", "Mood"], z="Lexeme"
+            )
+        assert "More values than specified" in caplog.text
+    assert pytest_wrapped_e.type == SystemExit
