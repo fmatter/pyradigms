@@ -13,6 +13,11 @@ from attrs import Factory
 from attrs import define
 
 
+__author__ = "Florian Matter"
+__email__ = "florianmatter@gmail.com"
+__version__ = "0.0.4"
+
+
 handler = colorlog.StreamHandler(None)
 handler.setFormatter(
     colorlog.ColoredFormatter("%(log_color)s%(levelname)-7s%(reset)s %(message)s")
