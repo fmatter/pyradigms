@@ -1,11 +1,12 @@
 from pyradigms import Pyradigm
 import pandas as pd
 from pandas.testing import assert_frame_equal
+import logging
 
 
 def test_venire(data):
     pyd = Pyradigm()
-    df = pd.read_csv(data / "venire.csv", index_col=0, dtype=str)
+    df = pd.read_csv(data / "venire/paradigm.csv", index_col=0, dtype=str)
     df = pyd.decompose_paradigm(
         df, x=["Person", "Number"], y=["Tense", "Mood"], z="Lexeme"
     )
@@ -23,3 +24,13 @@ def test_venire(data):
     entries = entries.reset_index(drop=True)
 
     assert_frame_equal(df, entries)
+
+
+def test_too_many_params(caplog, data):
+    pyd = Pyradigm()
+    with caplog.at_level(logging.DEBUG):
+        df = pd.read_csv(data / "venire/paradigm.csv", index_col=0, dtype=str)
+        df = pyd.decompose_paradigm(
+            df, x=["Person", "Number", "Too much"], y=["Tense", "Mood"], z="Lexeme"
+        )
+    assert "than specified" in caplog.text

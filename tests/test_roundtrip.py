@@ -3,6 +3,7 @@ from pathlib import Path
 from pyradigms import Pyradigm
 import pandas as pd
 from pandas.testing import assert_frame_equal
+import logging
 
 par_cols = ["Mood", "Tense", "Number", "Person", "Lexeme"]
 
@@ -48,7 +49,7 @@ def test_roundtrip(data):
     gen_paradigm.columns.name = None
     assert_frame_equal(paradigm, gen_paradigm)
 
-    # paradigm to long
+    # paradigm too long
     pyd = Pyradigm.from_csv(
         data / "venire/paradigm.csv",
         data_format="paradigm",
@@ -56,6 +57,8 @@ def test_roundtrip(data):
         y=["Tense", "Mood"],
         z="Lexeme",
     )
+    print("printT", pyd.print_column)
+
     pyd.entries = sort_entries(pyd.entries)
     gen_long = pyd.to_long()
 

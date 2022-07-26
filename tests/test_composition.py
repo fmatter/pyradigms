@@ -141,22 +141,4 @@ def test_string_param():
     pyd = Pyradigm(df, x="Case", y="Number", filters={"Lexeme": ["aestus"]})
     tables = pyd.compose_paradigm()
     print(tables)
-
-
-def test_italian():
-    df = pd.read_csv(
-        Path(__file__).parent / "data" / "simple_entries.csv",
-        keep_default_na=False,
-        dtype=str,
-    )
-    pyd = Pyradigm(df)
-    pyd.compose_paradigm(
-        x=["Person", "Number"],
-        y=["Mood", "Tense"],
-        z="Lexeme",
-        filters={"Person": ["1", "2"], "Lexeme": "andare"},
-        # sort_orders={"Tense": ["IMPF", "PRS"]},
-        csv_output="output.csv",
-        with_multi_index=False,
-        output_folder="output",
-    )
+    # todo fix this

@@ -1,15 +1,16 @@
 """Docstring describing pyradigms"""
-import pandas as pd
-import numpy as np
-import re
-from io import StringIO
-from clldutils.loglib import get_colorlog
-import sys
-from pathlib import Path
-from attrs import define, Factory
-from typing import List, Dict
 import logging
+import re
+import sys
+from io import StringIO
+from pathlib import Path
+from typing import Dict
+from typing import List
 import colorlog
+import numpy as np
+import pandas as pd
+from attrs import Factory
+from attrs import define
 
 
 handler = colorlog.StreamHandler(None)
@@ -17,7 +18,6 @@ handler.setFormatter(
     colorlog.ColoredFormatter("%(log_color)s%(levelname)-7s%(reset)s %(message)s")
 )
 log = logging.getLogger(__name__)
-log.setLevel(logging.DEBUG)
 log.propagate = True
 log.addHandler(handler)
 
@@ -64,6 +64,7 @@ def get_parameter_values(string, parameters, separators):
             new_parameter_list.append(param)
     parameter_list = new_parameter_list
     if len(parameter_list) < len(parameters):
+        log.warning(f"Fewer values ({parameter_list}) than specified: {parameters}")
         for i in range(0, len(parameters) - len(parameter_list)):
             del i
             parameter_list.append(None)
@@ -91,12 +92,15 @@ class Pyradigm:
     ignore: List[str] = Factory(list)
     with_multi_index = False
     separators = ["."]
-    log_level: str = None
-    logger = get_colorlog(__name__, sys.stdout, level="DEBUG")
     value_joiner = "."
     category_joiner = " / "
-    print_column = "Form"
+    print_column: str = None
     output_folder = None
+
+    def __attrs_post_init__(self):
+        if not self.print_column:
+            self.print_column = "Form"
+        log.error(f"ATTRS IS ALL GO !{self.print_column}!")
 
     @property
     def parameters(self):
@@ -131,25 +135,15 @@ class Pyradigm:
 
     @classmethod
     def from_csv(cls, path, data_format="wide", **kwargs):
+        log.error(f"CSV and {cls.print_column}")
         """Create a new Pyradigm from a CSV file.
 
         :param path: a path to a CSV file containing the data in wide/unstacked format
 
         :return: a Pyradigm object
         """
-        df = pd.read_csv(path, keep_default_na=False, dtype=str)
-        if data_format == "wide":
-            return cls(entries=df, **kwargs)
-        if data_format == "long":
-            # print(df.pivot(index="Form", columns="Parameter")["Value"])
-            return df
-        if data_format == "paradigm":
-            df.set_index(df.columns[0], inplace=True)
-            return cls(
-                entries=cls.decompose_paradigm(cls, paradigm=df, **kwargs), **kwargs
-            )
-        log.error(f"Invalid format: {data_format}")
-        sys.exit(1)
+        df = pd.read_csv(path, keep_default_na=False, dtype=str, index_col=0)
+        return cls.from_dataframe(df, data_format=data_format, **kwargs)
 
     @classmethod
     def from_text(cls, text, x_sep=",", y_sep="\n"):
@@ -170,9 +164,8 @@ class Pyradigm:
         y = listify(kwargs.get("y", self.y))
         z = listify(kwargs.get("z", self.z))
         separators = kwargs.get("separators", self.separators)
-        print_column = kwargs.get("print_column", self.print_column)
-
-        log.error(print_column)
+        print_column = kwargs.get("print_column", "Form")
+        log.error(paradigm)
         if not z_value:
             z_value = paradigm.index.name
 
@@ -181,6 +174,7 @@ class Pyradigm:
 
         for i, (x_string, col) in enumerate(paradigm.iteritems()):
             for y_string, form in col.iteritems():
+                log.error(f"{x_string} {y_string}")
                 x_values = get_parameter_values(x_string, x, separators)
                 y_values = get_parameter_values(y_string, y, separators)
                 param_list = x + y  # List of parameter names
@@ -240,9 +234,7 @@ class Pyradigm:
 
         df = input_df.copy()
         df.replace(np.nan, "", inplace=True)
-        self.logger.debug(
-            f"Composing a new paradigm from entries:\n{self._short_repr(df)}"
-        )
+        log.debug(f"Composing a new paradigm from entries:\n{self._short_repr(df)}")
 
         # get a sensible default sort order for a given parameter (order in the input)
         def get_sort_order(parameter):
@@ -310,7 +302,7 @@ class Pyradigm:
 
         new_z_id = separators[0].join(z)
         if len(z) > 1:
-            # self.logger.debug(f"New z id: [{new_z_id}]")
+            # log.debug(f"New z id: [{new_z_id}]")
             df[new_z_id] = df.apply(concat_values, values=z, axis=1)
 
         if len(z) > 0:
