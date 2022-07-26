@@ -1,6 +1,6 @@
 # pyradigms
 
-pyradigms is a python package for composing and decomposing linguistic paradigms.
+Compose and decompose linguistic paradigms.
 
 ![License](https://img.shields.io/github/license/fmatter/pyradigms)
 [![Tests](https://img.shields.io/github/workflow/status/fmatter/pyradigms/tests?label=tests)](https://github.com/fmatter/pyradigms/actions/workflows/tests.yml)
