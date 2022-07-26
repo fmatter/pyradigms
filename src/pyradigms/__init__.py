@@ -3,7 +3,6 @@ import logging
 import re
 import sys
 from io import StringIO
-from pathlib import Path
 from typing import Dict
 from typing import List
 import colorlog
@@ -135,7 +134,6 @@ class Pyradigm:
 
     @classmethod
     def from_csv(cls, path, data_format="wide", **kwargs):
-        log.error(f"CSV and {cls.print_column}")
         """Create a new Pyradigm from a CSV file.
 
         :param path: a path to a CSV file containing the data in wide/unstacked format
@@ -158,23 +156,21 @@ class Pyradigm:
         df = pd.read_csv(StringIO(text), sep=x_sep, lineterminator=y_sep)
         return cls(df)
 
-    def decompose_paradigm(self, paradigm, z_value=None, **kwargs):
+    def decompose_paradigm(self, paradigm, z_value=None, **kwargs):  # noqa
         """Important: the y axis labels must be the index, not the first column"""
         x = listify(kwargs.get("x", self.x))
         y = listify(kwargs.get("y", self.y))
         z = listify(kwargs.get("z", self.z))
         separators = kwargs.get("separators", self.separators)
         print_column = kwargs.get("print_column", "Form")
-        log.error(paradigm)
-        if not z_value:
-            z_value = paradigm.index.name
+        z_value = z_value or paradigm.index.name
 
-        # gather all parameter names from the defined axes + the name of what's in the cells
+        # gather all parameter names from the defined axes
+        # + the name of what's in the cells
         entries = pd.DataFrame(columns=z + x + y + [print_column])
 
         for i, (x_string, col) in enumerate(paradigm.iteritems()):
             for y_string, form in col.iteritems():
-                log.error(f"{x_string} {y_string}")
                 x_values = get_parameter_values(x_string, x, separators)
                 y_values = get_parameter_values(y_string, y, separators)
                 param_list = x + y  # List of parameter names
@@ -184,8 +180,12 @@ class Pyradigm:
                     value_list += [z_value]
                 param_list += [print_column]
                 value_list += [form]
-                out_dict = dict(zip(param_list, value_list))
-                entries = pd.concat([entries, pd.DataFrame(out_dict, index=[i])])
+                entries = pd.concat(
+                    [
+                        entries,
+                        pd.DataFrame(dict(zip(param_list, value_list)), index=[i]),
+                    ]
+                )
 
         entries.dropna(subset=[print_column], inplace=True)  # …drop rows with no form
         entries.reset_index(drop=True, inplace=True)  # reset index
@@ -205,10 +205,10 @@ class Pyradigm:
         return out.to_markdown()
 
     def to_long(self):
-        if "ID" not in self.entries:
-            self.entries["ID"] = self.entries.apply(
-                lambda x: f"{x.name}-{x[print_column]}", axis=1
-            )
+        if "ID" not in self.entries.columns:
+            self.entries[  # pylint: disable=unsupported-assignment-operation
+                "ID"
+            ] = self.entries.apply(lambda x: f"{x.name}-{x[print_column]}", axis=1)
         return pd.melt(
             self.entries,
             id_vars="ID",
@@ -217,7 +217,9 @@ class Pyradigm:
             value_name="Value",
         )
 
-    def compose_paradigm(self, csv_output=None, **kwargs):
+    def compose_paradigm(  # pylint: disable=too-many-locals,too-many-branches,too-many-statements
+        self, csv_output=None, **kwargs
+    ):
         input_df = kwargs.get("input_df", self.entries)
         with_multi_index = kwargs.get("with_multi_index", self.with_multi_index)
         x = kwargs.get("x", self.x)
@@ -256,7 +258,6 @@ class Pyradigm:
                 log.error(f"{k} axis contains inexistent parameter(s): {rstring}")
                 sys.exit(1)
 
-        log.info(print_column in df.columns)
         # make sure that "Form" or whatever other column to print is present
         if print_column not in df.columns:
             log.error(f"'{print_column}' not found in dataframe columns")
@@ -266,7 +267,8 @@ class Pyradigm:
         leftover_columns = set(df.columns) - set(x + y + z + [print_column])
         if len(leftover_columns) > 0:
             log.info(
-                "You did not specify what should happen to the following columns/fields/parameters: %s",
+                "You did not specify what should happen"
+                " to the following columns/fields/parameters: %s",
                 "\t".join(leftover_columns),
             )
 
@@ -302,7 +304,6 @@ class Pyradigm:
 
         new_z_id = separators[0].join(z)
         if len(z) > 1:
-            # log.debug(f"New z id: [{new_z_id}]")
             df[new_z_id] = df.apply(concat_values, values=z, axis=1)
 
         if len(z) > 0:
@@ -335,31 +336,16 @@ class Pyradigm:
                 "", inplace=True
             )  # then add back the empty strings for exporting
             out.set_index(idx_name, drop=True, inplace=True)  # then add back the index
-            # out.index.name = ""
-
-            log.debug(out.index.names)
-            log.debug(out.columns.names)
-            # if not 1==1:
-            #     out = out.reindex(
-            #         [value for value in y_sort if value in out.index]
-            #         + list(set(list(out.index)) - set(y_sort))
-            #     )  # sort index by specified order, put leftovers at the end
-            #     comp_x_sort = x_sort + list(
-            #         set(list(out.columns)) - set(x_sort)
-            #     )  # sort columns, too
-            #     comp_x_sort = dict(zip(comp_x_sort, range(len(comp_x_sort))))
-            #     out = out[sorted(out.columns, key=lambda x: comp_x_sort[x])]
-            # else:
 
             # for those parameters lacking a specified sort order, establish a default
             for parameter in out.index.names + out.columns.names:
-                print(parameter)
                 df_sort = get_sort_order(parameter)
                 if parameter not in sort_orders:
                     sort_orders[parameter] = df_sort
                 elif set(sort_orders[parameter]) != set(df_sort):
                     log.error(
-                        f"Specified order {sort_orders[parameter]} for parameter '{parameter}' does not cover all values: {df_sort}"
+                        f"Specified order {sort_orders[parameter]} for parameter"
+                        f"'{parameter}' does not cover all values: {df_sort}"
                     )
                     sys.exit(1)
 
@@ -379,7 +365,6 @@ class Pyradigm:
             new_columns = []
             for col in x:
                 values = out.columns.get_level_values(col)
-                log.info(values)
                 new_columns.append(
                     pd.CategoricalIndex(
                         values, categories=sort_orders[col], ordered=True
@@ -390,7 +375,6 @@ class Pyradigm:
                 level=[c for c in sort_orders if c in x], inplace=True, axis=1
             )
 
-            log.warning(out.columns.values)
             if not with_multi_index:
                 log.debug("Flattening multiindices")
 
@@ -409,7 +393,6 @@ class Pyradigm:
                     for col in out.index.values
                 ]
                 out.index.name = new_index_name
-            log.warning(out)
 
             constructed_paradigms[z_key] = out
 

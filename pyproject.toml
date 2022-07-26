@@ -9,7 +9,7 @@ disable=["logging-fstring-interpolation"]
 [tool.tox]
 legacy_tox_ini = """
 [tox]
-envlist = py36,py37,py38,py39,py310,lint
+envlist = py37,py38,py39,py310,lint
 skip_missing_interpreters = true
 toxworkdir=/tmp/.pyradigms_tox
 
@@ -20,6 +20,11 @@ commands =
 extras = dev
 
 [testenv:lint]
-commands = python -m flake8 src
+commands = 
+    python -m prospector --without-tool mccabe src
+    python -m isort --check-only src
+    python -m flake8 src
+    python -m flake8 tests
+    python -m prospector tests
 extras = dev
 """
