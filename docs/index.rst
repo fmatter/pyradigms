@@ -10,11 +10,6 @@ Welcome to pyradigms's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-
-
-Indices and tables
-==================
+   installation
 
 * :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
