@@ -1,8 +1,8 @@
-from pyradigms import Pyradigm
-import pandas as pd
-from pandas.testing import assert_frame_equal
 import logging
+import pandas as pd
 import pytest
+from pandas.testing import assert_frame_equal
+from pyradigms import Pyradigm
 
 
 def test_venire(data):

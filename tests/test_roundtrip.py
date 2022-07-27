@@ -1,9 +1,10 @@
-import pytest
-from pathlib import Path
-from pyradigms import Pyradigm
-import pandas as pd
-from pandas.testing import assert_frame_equal
 import logging
+from pathlib import Path
+import pandas as pd
+import pytest
+from pandas.testing import assert_frame_equal
+from pyradigms import Pyradigm
+
 
 par_cols = ["Mood", "Tense", "Number", "Person", "Lexeme"]
 

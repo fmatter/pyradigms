@@ -1,4 +1,4 @@
-"""Docstring describing pyradigms"""
+"""This is the main pyradigms module"""
 import logging
 import re
 import sys
@@ -30,21 +30,20 @@ log.addHandler(handler)
 person_values = ["1", "2", "3", "1+3", "1+2"]
 
 
-def format_person_values(string, sep):
+def _format_person_values(string, sep):
     for val in person_values:
         if val in string:
             string = string.replace(val + sep, val)
     return string
 
 
-# cast parameters to list
-def listify(var):
+def _listify(var):
     if not isinstance(var, list) and not isinstance(var, tuple):
         return [var]
     return var
 
 
-def get_parameter_values(string, parameters, separators):
+def _get_parameter_values(string, parameters, separators):
     parameter_list = re.split("|".join(map(re.escape, separators)), string)
     parameter_list = [x for x in parameter_list if x]  # Remove leftovers of separation
     new_parameter_list = []
@@ -71,47 +70,61 @@ def get_parameter_values(string, parameters, separators):
 
 @define
 class Pyradigm:
-    """A pyradigm instance holds the data underlying paradigms, as well as parameters
-    and methods used to generate them.
-
+    """Pyradigm instances hold the data from which paradigms are created, as well as
+    parameters and methods used to generate them.
     """
 
     entries: pd.DataFrame = None
+    """The data in a wide format pandas DataFrame"""
     x: List[str] = Factory(list)
+    """The parameters to be represented on the x axis"""
     y: List[str] = Factory(list)
+    """The parameters to be represented on the y axis"""
     z: List[str] = Factory(list)
-    x_sort: List[str] = Factory(list)
-    y_sort: List[str] = Factory(list)
+    """The parameters to be represented on the z axis"""
     sort_orders: Dict = Factory(dict)
+    """Pass parameter names as keys, ordered value lists as values.
+    Example: ``{"Number": ["SG", "DU", "PL"]}``"""
     filters: Dict = Factory(dict)
+    """Pass parameter names as keys, value lists to be filtered as values.
+    Example: ``{"Number": ["SG", "DU"]}``"""
     ignore: List[str] = Factory(list)
+    """Parameters which will be ignored completely."""
     with_multi_index = False
+    """If False, the value labels for categories sharing an axis will be joined in
+    single cells.
+    If True, a pandas ``MultiIndex`` will be used."""
     separators = ["."]
-    value_joiner = "."
+    """The first item is used to concatenate labels of values combined in a column or
+    row label.
+    Subsequent items are only used when decomposing paradigms."""
     category_joiner = " / "
-    print_column: str = None
+    """The string used to concatenate labels of categories combined on an axis."""
+    print_column: str = "Form"
+    """The column in wide format which holds the values in the cells
+    (usually forms or IDs)"""
     output_folder = None
-
-    def __attrs_post_init__(self):
-        if not self.print_column:
-            self.print_column = "Form"
+    """The folder into which generated paradigms will be written."""
 
     @property
-    def parameters(self):
+    def _parameters(self):
         parlist = list(self.entries.columns)
         parlist.remove(self.print_column)
         return parlist
 
-    def _short_repr(self, df):
-        return df.head().to_string() + f"\n({len(df)} entries)"
+    @property
+    def _short_repr(self):
+        return self.entries.head().to_string() + f"\n({len(self.entries)} entries)"
 
     @classmethod
     def from_dataframe(cls, df: pd.DataFrame, data_format="wide", **kwargs):
         """Create a new Pyradigm from a pandas dataframe.
 
-        :param df: a pandas dataframe containing the data in wide/unstacked format
+        Args:
+            df (DataFrame): a pandas dataframe containing the data in wide format
 
-        :return: a Pyradigm object
+        Returns:
+            a :class:`.Pyradigm` object
         """
 
         if data_format == "wide":
@@ -121,19 +134,24 @@ class Pyradigm:
             out.columns.name = None
             return cls(entries=out, **kwargs)
         if data_format == "paradigm":
-            return cls(
-                entries=cls.decompose_paradigm(cls, paradigm=df, **kwargs), **kwargs
-            )
+            return cls(entries=cls.decompose_paradigm(cls, paradigm=df, **kwargs))
         log.error(f"Invalid format: {data_format}")
         sys.exit(1)
 
     @classmethod
     def from_csv(cls, path, data_format="wide", **kwargs):
-        """Create a new Pyradigm from a CSV file.
+        """Create a new Pyradigm object from a CSV file.
 
-        :param path: a path to a CSV file containing the data in wide/unstacked format
+        Args:
+            path (str): path to the CSV file to be read
+            data_format (str):
+                * ``"wide"`` (default): Parameters in columns, entries in rows.
+                * ``"long"``: Columns: ID, Parameter, Value
+                * ``"paradigm"``: Decompose a paradigm by specifying at least x and y\
+         (kwargs are passed to :meth:`.Pyradigm.decompose_paradigm`)
 
-        :return: a Pyradigm object
+        Returns:
+            a :class:`.Pyradigm` object
         """
         if data_format in ["wide", "long"]:
             df = pd.read_csv(path, keep_default_na=False, dtype=str)
@@ -146,13 +164,15 @@ class Pyradigm:
 
     @classmethod
     def from_text(cls, text, x_sep=",", y_sep="\n"):
-        """Create a new Pyradigm from a string.
+        """Create a new Pyradigm object from a string.
 
-        :param text: a string containing the data in wide/unstacked format
-        :param x_sep: how "cells" are horizontally separated
-        :param y_sep: how "cells" are vertically separated
+        Args:
+            text (str): a string containing the data in wide format
+            x_sep (str): how columns are separated
+            y_sep (str): how rows are separated
 
-        :return: a Pyradigm object
+        Returns:
+            a :class:`.Pyradigm` object
         """
         df = pd.read_csv(
             StringIO(text), sep=x_sep, lineterminator=y_sep, index_col=0, dtype=str
@@ -160,10 +180,28 @@ class Pyradigm:
         return cls(df)
 
     def decompose_paradigm(self, paradigm, z_value=None, **kwargs):  # noqa
-        """Important: the y axis labels must be the index, not the first column"""
-        x = listify(kwargs.get("x", self.x))
-        y = listify(kwargs.get("y", self.y))
-        z = listify(kwargs.get("z", self.z))
+        """Decompose a paradigm by specifying the parameters shown on the x and y axes.
+
+        Args:
+            paradigm (DataFrame): The paradigm as a pandas DataFrame.
+                Note: the y axis labels of the **must be the index**, not the first
+                column. To achieve that, use
+                ``pd.read_csv("file.csv", dtype=str, index_col=0)``
+                or ``df.set_index()``
+            x (list): The parameters shown on the x axis (columns)
+            y (list): The parameters shown on the y axis (index)
+            separators (list): Strings by which x and y labels (combined categories)
+                will be split.
+            print_column (str): Name of the column where paradigm cells will be stored.
+            z_value (str): if a z parameter is specified for the paradigm to be
+                decomposed, you can assign a value manually.
+
+        Returns: a `pandas DataFrame\
+        <https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html>`_ object
+        """
+        x = _listify(kwargs.get("x", self.x))
+        y = _listify(kwargs.get("y", self.y))
+        z = _listify(kwargs.get("z", self.z))
         separators = kwargs.get("separators", self.separators)
         print_column = kwargs.get("print_column", "Form")
         z_value = z_value or paradigm.index.name
@@ -174,8 +212,8 @@ class Pyradigm:
 
         for i, (x_string, col) in enumerate(paradigm.iteritems()):
             for y_string, form in col.iteritems():
-                x_values = get_parameter_values(x_string, x, separators)
-                y_values = get_parameter_values(y_string, y, separators)
+                x_values = _get_parameter_values(x_string, x, separators)
+                y_values = _get_parameter_values(y_string, y, separators)
                 param_list = x + y  # List of parameter names
                 value_list = x_values + y_values  # List of parameter values
                 if z:
@@ -195,12 +233,29 @@ class Pyradigm:
         entries.fillna("", inplace=True)
         return entries
 
-    def to_markdown(self, data_format="paradigm", **kwargs):
+    def to_markdown(self, data_format="paradigm", pyd_kwargs=None, **kwargs):
+        """Print a markdown representation of the data. **kwargs are passed to pandas'\
+        `to_markdown <https://pandas.pydata.org/docs/reference\
+/api/pandas.DataFrame.to_markdown.html>`_ and to\
+        `tabulate <https://pypi.org/project/tabulate/>`_, so you can use ``tablefmt``.
+
+        Args:
+            data_format (str):
+                * ``"paradigm"`` (default): The data rendered as a paradigm.
+                * ``"wide"``: Parameters in columns, entries in rows.
+                * ``"long"``: Columns: ID, Parameter, Value
+            pyd_kwargs (dict): Any parameters to be passed to\
+            :meth:`.Pyradigm.compose_paradigm` if ``data_format=="paradigm"``
+
+        Returns:
+            A markdown string.
+        """
+        pyd_kwargs = pyd_kwargs or {}
         if data_format == "long":
             out = self.to_long()
             return out.to_markdown(index=False, **kwargs)
         if data_format == "paradigm":
-            out = self.compose_paradigm(**kwargs)
+            out = self.compose_paradigm(**pyd_kwargs)
             if isinstance(out, dict):
                 mds = []
                 for z, x in out.items():
@@ -213,6 +268,12 @@ class Pyradigm:
         sys.exit(1)
 
     def to_long(self):
+        """Arrange the entries in\
+        `long <https://en.wikipedia.org/wiki/Wide_and_narrow_data#Narrow>`_ format.
+        If there is no column ``ID``, one will be created.
+
+        Returns: a `pandas DataFrame <https://pandas.pydata.org\
+/docs/reference/api/pandas.DataFrame.html>`_ object"""
         if "ID" not in self.entries.columns:
             self.entries[  # pylint: disable=unsupported-assignment-operation
                 "ID"
@@ -220,7 +281,7 @@ class Pyradigm:
         return pd.melt(
             self.entries,
             id_vars="ID",
-            value_vars=self.parameters + [self.print_column],
+            value_vars=self._parameters + [self.print_column],
             var_name="Parameter",
             value_name="Value",
         )
@@ -228,15 +289,24 @@ class Pyradigm:
     def compose_paradigm(  # pylint: disable=too-many-locals,too-many-branches,too-many-statements
         self, csv_output=None, **kwargs
     ):
+        """The central function of pyradigms, creating paradigms. In addition to the list
+        below, **you can pass any
+        argument described for the** :class:`.Pyradigm` **class**.
+
+        Args:
+            csv_output (str): CSV file to save paradigm to.
+
+        Returns:
+           If one paradigm is generated, a pandas DataFrame.
+           If multiple paradigms are generated, a dict of DataFrames."""
         input_df = kwargs.get("input_df", self.entries)
         with_multi_index = kwargs.get("with_multi_index", self.with_multi_index)
         x = kwargs.get("x", self.x)
         y = kwargs.get("y", self.y)
         z = kwargs.get("z", self.z)
         filters = kwargs.get("filters", self.filters)
-        ignore = listify(kwargs.get("ignore", self.ignore))
+        ignore = _listify(kwargs.get("ignore", self.ignore))
         separators = kwargs.get("separators", self.separators)
-        value_joiner = kwargs.get("value_joiner", self.value_joiner)
         category_joiner = kwargs.get("category_joiner", self.category_joiner)
         print_column = kwargs.get("print_column", self.print_column)
         sort_orders = kwargs.get("sort_orders", self.sort_orders)
@@ -246,7 +316,7 @@ class Pyradigm:
 
         df = input_df.copy()
         df.replace(np.nan, "", inplace=True)
-        log.debug(f"Composing a new paradigm from entries:\n{self._short_repr(df)}")
+        log.debug(f"Composing a new paradigm from entries:\n{self._short_repr}")
 
         # get a sensible default sort order for a given parameter (order in the input)
         def get_sort_order(parameter):
@@ -255,9 +325,9 @@ class Pyradigm:
             log.debug(f"New sort order for {parameter}: {val_list}")
             return val_list
 
-        x = listify(x)
-        y = listify(y)
-        z = listify(z)
+        x = _listify(x)
+        y = _listify(y)
+        z = _listify(z)
 
         # check if all axes have valid parameters
         parameters = {"x": x, "y": y, "z": z}
@@ -290,16 +360,16 @@ class Pyradigm:
 
         # filter rows by fitler arg
         for col, values in filters.items():
-            values = listify(values)
+            values = _listify(values)
             df = df[df[col].isin(values)]
-        log.debug("Filtered entries:\n%s", self._short_repr(df))
+        log.debug("Filtered entries:\n%s", self._short_repr)
 
         # drop irrelevant columns
         if len(ignore) > 0:
             log.debug(f"""Ignoring parameters:\n{", ".join(ignore)}""")
             for col in ignore:
                 df.drop(col, axis=1, inplace=True)
-                log.debug("New entries:\n%s", self._short_repr(df))
+                log.debug("New entries:\n%s", self._short_repr)
 
         # join columns for the y axis
         def concat_values(row, values):
@@ -389,15 +459,17 @@ class Pyradigm:
 
                 new_colindex_name = category_joiner.join(x)
                 out.columns = [
-                    format_person_values(value_joiner.join(col).strip(), value_joiner)
+                    _format_person_values(
+                        separators[0].join(col).strip(), separators[0]
+                    )
                     for col in out.columns.values
                 ]
                 out.columns.name = new_colindex_name
 
                 new_index_name = category_joiner.join(y)
                 out.index = [
-                    format_person_values(
-                        value_joiner.join(listify(col)).strip(), value_joiner
+                    _format_person_values(
+                        separators[0].join(_listify(col)).strip(), separators[0]
                     )
                     for col in out.index.values
                 ]

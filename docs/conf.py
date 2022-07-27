@@ -23,7 +23,7 @@ copyright = "2022, Florian Matter"
 author = "Florian Matter"
 
 # The full version, including alpha/beta/rc tags
-release = "0.0.5"
+version = release = "0.0.4"
 
 
 # -- General configuration ---------------------------------------------------
@@ -31,7 +31,7 @@ release = "0.0.5"
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ["sphinx.ext.autodoc", "sphinx.ext.coverage"]
+extensions = ["sphinx.ext.autodoc", "sphinx.ext.coverage", "sphinx.ext.napoleon"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
