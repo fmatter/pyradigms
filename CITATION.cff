@@ -7,8 +7,8 @@ authors:
     given-names: Florian
     orcid: "https://orcid.org/0000-0002-2545-5154"
 date-released: 2022-07-26
-version: "0.0.4"
-url: "https://github.com/fmatter/pyradigms/releases/tag/0.0.4"
+version: "0.0.5"
+url: "https://github.com/fmatter/pyradigms/releases/tag/0.0.5"
 keywords:
   - digital linguistics
 message: "If you use this software, please cite it using these metadata."

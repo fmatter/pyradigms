@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+### Removed
+
+### Changed
+
+### Fixed
+
+## [0.0.5] -- 2022-07-26
+
 ### Changed
 * new: `pyd = Pyradigms()`
 * allows keeping different pyradigm objects w/ different parameters
@@ -25,5 +35,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 First proper release.
 
-[Unreleased]: https://github.com/fmatter/pyradigms/compare/0.0.4...HEAD
+[Unreleased]: https://github.com/fmatter/pyradigms/compare/0.0.5...HEAD
+[0.0.5]: https://github.com/fmatter/pyradigms/releases/tag/0.0.5
 [0.0.4]: https://github.com/fmatter/pyradigms/releases/tag/v0.0.4
