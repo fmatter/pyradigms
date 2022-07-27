@@ -10,6 +10,17 @@ Welcome to pyradigms's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   installation
+Installation
+-------------
 
-* :ref:`genindex`
+To install, simply use ``pip install pyradigms``.
+To get the latest development version, use ``pip install git+https://github.com/fmatter/pyradigms``.
+Releases are also available `on github <https://github.com/fmatter/pyradigms/releases>`_.
+
+Basic usage
+------------
+
+TBD
+
+
+For more, see :class:`the Pyradigm class documentation<.Pyradigm>`.
