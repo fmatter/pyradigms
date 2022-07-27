@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+* new: `pyd = Pyradigms()`
+* allows keeping different pyradigm objects w/ different parameters
+* under the hood: always use multiindex
+* `long` format generates IDs if necessary
+
 ### Added
 * docs
 * tests
@@ -15,15 +21,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * `compose_from_csv` and `compose_from_text`
 * `decompose_from_csv` and `decompose_from_text`
 
-### Changed
-* new: `pyd = Pyradigms()`
-* allows keeping different pyradigm objects w/ different parameters
-* under the hood: always use multiindex
-* `long` format generates IDs if necessary
-
 ## [0.0.4] - 2021-04-12
 
 First proper release.
 
-[Unreleased]: https://github.com/fmatter/pyradigms/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/fmatter/pyradigms/compare/0.0.4...HEAD
 [0.0.4]: https://github.com/fmatter/pyradigms/releases/tag/v0.0.4
