@@ -1,5 +1,4 @@
 import logging
-from pathlib import Path
 import pandas as pd
 import pytest
 from pandas.testing import assert_frame_equal
@@ -167,7 +166,7 @@ def test_format(data, caplog):
     entries = pd.read_csv(data / "venire/entries.csv", dtype=str, index_col=0)
     with pytest.raises(SystemExit) as pytest_wrapped_e:
         with caplog.at_level(logging.DEBUG):
-            pyd = Pyradigm.from_dataframe(entries, data_format="unknown")
+            Pyradigm.from_dataframe(entries, data_format="unknown")
         assert "Invalid format" in caplog.text
     assert pytest_wrapped_e.type == SystemExit
 
@@ -239,7 +238,8 @@ def test_markdown(caplog):
         in pyd.to_markdown(data_format="paradigm")
     )
     assert (
-        "<tr><td>PRS.IND  </td><td>vengo  </td><td>veniamo  </td><td>vieni  </td><td>venite  </td><td>viene  </td><td>vengono  </td></tr>"
+        """<tr><td>PRS.IND  </td><td>vengo  </td><td>veniamo  </td><td>vieni  </td>\
+<td>venite  </td><td>viene  </td><td>vengono  </td></tr>"""
         in pyd.to_markdown(data_format="paradigm", tablefmt="html")
     )
 
@@ -249,7 +249,8 @@ def test_markdown(caplog):
     )
 
     assert (
-        "| venire-SG-1-SBJV-IMPF | venissi   | SG       |        1 | SBJV   | IMPF    | venire   |"
+        "| venire-SG-1-SBJV-IMPF | venissi   | SG       |        1 | SBJV   | IMPF\
+    | venire   |"
         in pyd.to_markdown(data_format="wide")
     )
 

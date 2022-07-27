@@ -286,8 +286,12 @@ class Pyradigm:
             value_name="Value",
         )
 
-    def compose_paradigm(  # pylint: disable=too-many-locals,too-many-branches,too-many-statements
-        self, csv_output=None, **kwargs
+    def compose_paradigm(  # pylint: disable=too-many-locals
+        # pylint: disable=too-many-branches
+        # pylint: disable=too-many-statements
+        self,
+        csv_output=None,
+        **kwargs,
     ):
         """The central function of pyradigms, creating paradigms. In addition to the list
         below, **you can pass any
