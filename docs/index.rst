@@ -9,6 +9,9 @@ Welcome to pyradigms's documentation!
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
+   :glob:
+   
+   doc_gen
 
 Installation
 -------------
@@ -19,8 +22,6 @@ Releases are also available `on github <https://github.com/fmatter/pyradigms/rel
 
 Basic usage
 ------------
-
-TBD
 
 
 For more, see :class:`the Pyradigm class documentation<.Pyradigm>`.
