@@ -7,10 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+* if a filter is specified for a parameter, the value order in `filters` is used
+* `decorate_x` and `decorate_y` functions
 
 ### Removed
 
 ### Changed
+* don't print index name in csv output
 
 ### Fixed
 

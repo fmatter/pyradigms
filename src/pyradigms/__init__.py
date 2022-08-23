@@ -315,6 +315,8 @@ class Pyradigm:
         print_column = kwargs.get("print_column", self.print_column)
         sort_orders = kwargs.get("sort_orders", self.sort_orders)
         output_folder = kwargs.get("output_folder", self.output_folder)
+        decorate_x = kwargs.get("decorate_x", lambda x: x)
+        decorate_y = kwargs.get("decorate_y", lambda y: y)
         if output_folder:
             output_folder = Path(output_folder)
 
@@ -324,8 +326,9 @@ class Pyradigm:
 
         # get a sensible default sort order for a given parameter (order in the input)
         def get_sort_order(parameter):
-            val_list = list(df[parameter])
-            val_list = [i for n, i in enumerate(val_list) if i not in val_list[:n]]
+            if parameter in filters:
+                return filters[parameter]
+            val_list = list(dict.fromkeys(list(df[parameter])))
             log.debug(f"New sort order for {parameter}: {val_list}")
             return val_list
 
@@ -362,7 +365,7 @@ class Pyradigm:
         )
         log.debug(f"Filtering parameters:\n{filter_string}\n")
 
-        # filter rows by fitler arg
+        # filter rows by filter arg
         for col, values in filters.items():
             values = _listify(values)
             df = df[df[col].isin(values)]
@@ -458,23 +461,24 @@ class Pyradigm:
                 level=[c for c in sort_orders if c in x], inplace=True, axis=1
             )
 
+
             if not with_multi_index:
                 log.debug("Flattening multiindices")
 
                 new_colindex_name = category_joiner.join(x)
                 out.columns = [
-                    _format_person_values(
+                    decorate_x(_format_person_values(
                         separators[0].join(col).strip(), separators[0]
-                    )
+                    ))
                     for col in out.columns.values
                 ]
                 out.columns.name = new_colindex_name
 
                 new_index_name = category_joiner.join(y)
                 out.index = [
-                    _format_person_values(
+                    decorate_y(_format_person_values(
                         separators[0].join(_listify(col)).strip(), separators[0]
-                    )
+                    ))
                     for col in out.index.values
                 ]
                 out.index.name = new_index_name
@@ -486,7 +490,7 @@ class Pyradigm:
             output = []
             for z_key, df in constructed_paradigms.items():
                 s = StringIO()
-                df.to_csv(s, index=True)
+                df.to_csv(s, index=True, index_label="")
                 output.append(s.getvalue())
             with open(csv_output, "w", encoding="utf-8") as file:
                 file.write("\n".join(output))
