@@ -317,6 +317,7 @@ class Pyradigm:
         output_folder = kwargs.get("output_folder", self.output_folder)
         decorate_x = kwargs.get("decorate_x", lambda x: x)
         decorate_y = kwargs.get("decorate_y", lambda y: y)
+        decorate = kwargs.get("decorate", lambda x: x)
         if output_folder:
             output_folder = Path(output_folder)
 
@@ -461,7 +462,9 @@ class Pyradigm:
                 level=[c for c in sort_orders if c in x], inplace=True, axis=1
             )
 
-
+            print(out)
+            out = out.applymap(decorate)
+            print(out)
             if not with_multi_index:
                 log.debug("Flattening multiindices")
 
