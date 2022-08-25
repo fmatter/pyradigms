@@ -405,6 +405,7 @@ class Pyradigm:
             log.debug(
                 f"Creating pivot table for x={x}, y={y}, cell values: {print_column}"
             )
+            df[print_column] = df[print_column].map(decorate)
             out = pd.pivot_table(
                 df,
                 values=print_column,
@@ -462,12 +463,8 @@ class Pyradigm:
                 level=[c for c in sort_orders if c in x], inplace=True, axis=1
             )
 
-            print(out)
-            out = out.applymap(decorate)
-            print(out)
             if not with_multi_index:
                 log.debug("Flattening multiindices")
-
                 new_colindex_name = category_joiner.join(x)
                 out.columns = [
                     decorate_x(_format_person_values(
