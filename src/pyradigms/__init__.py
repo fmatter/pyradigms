@@ -25,6 +25,7 @@ handler.setFormatter(
 log = logging.getLogger(__name__)
 log.propagate = True
 log.addHandler(handler)
+log.setLevel(logging.INFO)
 
 
 person_values = ["1", "2", "3", "1+3", "1+2"]
@@ -357,7 +358,7 @@ class Pyradigm:
             log.info(
                 "You did not specify what should happen"
                 " to the following columns/fields/parameters: %s",
-                "\t".join(leftover_columns),
+                ", ".join(leftover_columns),
             )
 
         # only for debugging purposes
@@ -430,11 +431,12 @@ class Pyradigm:
             for parameter in out.index.names + out.columns.names:
                 df_sort = get_sort_order(parameter)
                 if parameter not in sort_orders:
+                    log.info(f"Guessing order {df_sort} for parameter {parameter}")
                     sort_orders[parameter] = df_sort
                 elif set(sort_orders[parameter]) != set(df_sort):
                     log.error(
                         f"Specified order {sort_orders[parameter]} for parameter "
-                        f"'{parameter}' does not cover all values: {df_sort}"
+                        f"'{parameter}' does not cover all values: {df_sort}."
                     )
                     sys.exit(1)
 
