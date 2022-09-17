@@ -31,7 +31,7 @@ jobs:
           python3 --version
       - name: Upgrade pip and install dependencies
         run: |
-          python3 -m pip install --upgrade pip setuptools
+          python3 -m pip install --upgrade pip setuptools==58.0
           pip install .[dev,publishing]
       - name: Verify that we can build the package
         run: python3 setup.py sdist bdist_wheel
