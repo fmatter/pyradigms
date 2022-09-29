@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 ### Fixed
+* docs generation
 
 ## [0.0.6] -- 2022-09-28
 
@@ -20,12 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * if a filter is specified for a parameter, the value order in `filters` is used
 * `decorate`, `decorate_x` and `decorate_y` functions
 
-### Removed
-
 ### Changed
 * don't print index name in csv output
-
-### Fixed
 
 ## [0.0.5] -- 2022-07-26
 
