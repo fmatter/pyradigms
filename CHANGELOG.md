@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Removed
+
+### Changed
+
+### Fixed
+
+## [0.0.6] -- 2022-09-28
+
+### Added
 * if a filter is specified for a parameter, the value order in `filters` is used
 * `decorate`, `decorate_x` and `decorate_y` functions
 
@@ -38,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 First proper release.
 
-[Unreleased]: https://github.com/fmatter/pyradigms/compare/0.0.5...HEAD
+[Unreleased]: https://github.com/fmatter/pyradigms/compare/0.0.6...HEAD
+[0.0.6]: https://github.com/fmatter/pyradigms/releases/tag/0.0.6
 [0.0.5]: https://github.com/fmatter/pyradigms/releases/tag/0.0.5
 [0.0.4]: https://github.com/fmatter/pyradigms/releases/tag/v0.0.4

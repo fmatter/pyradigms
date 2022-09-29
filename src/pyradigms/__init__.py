@@ -15,7 +15,7 @@ from attrs import define
 
 __author__ = "Florian Matter"
 __email__ = "florianmatter@gmail.com"
-__version__ = "0.0.6.dev"
+__version__ = "0.0.6"
 
 
 handler = colorlog.StreamHandler(None)
