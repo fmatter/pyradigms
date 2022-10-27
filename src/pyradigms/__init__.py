@@ -433,7 +433,7 @@ class Pyradigm:
                 if parameter not in sort_orders:
                     log.info(f"Guessing order {df_sort} for parameter {parameter}")
                     sort_orders[parameter] = df_sort
-                elif set(sort_orders[parameter]) != set(df_sort):
+                elif set(df_sort) - set(sort_orders[parameter]) != set():
                     log.error(
                         f"Specified order {sort_orders[parameter]} for parameter "
                         f"'{parameter}' does not cover all values: {df_sort}."
