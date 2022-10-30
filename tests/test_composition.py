@@ -201,11 +201,9 @@ def test_sorting(data, caplog):
         sort_orders={"Number": ["SG", "PL"], "Person": ["1", "3"]},
     )
 
-    with pytest.raises(SystemExit) as pytest_wrapped_e:
-        with caplog.at_level(logging.DEBUG):
-            pyd.compose_paradigm()
-        assert "does not cover all values" in caplog.text
-    assert pytest_wrapped_e.type == SystemExit
+    with caplog.at_level(logging.DEBUG):
+        pyd.compose_paradigm()
+    assert "does not cover all values" in caplog.text
 
 
 def test_csv_output(data, tmp_path):

@@ -211,8 +211,8 @@ class Pyradigm:
         # + the name of what's in the cells
         entries = pd.DataFrame(columns=z + x + y + [print_column])
 
-        for i, (x_string, col) in enumerate(paradigm.iteritems()):
-            for y_string, form in col.iteritems():
+        for i, (x_string, col) in enumerate(paradigm.items()):
+            for y_string, form in col.items():
                 x_values = _get_parameter_values(x_string, x, separators)
                 y_values = _get_parameter_values(y_string, y, separators)
                 param_list = x + y  # List of parameter names
@@ -286,6 +286,9 @@ class Pyradigm:
             var_name="Parameter",
             value_name="Value",
         )
+
+    def _print_cell_string(self, series, category_joiner):
+        return category_joiner.join(series.unique())
 
     def compose_paradigm(  # pylint: disable=too-many-locals
         # pylint: disable=too-many-branches
@@ -412,7 +415,7 @@ class Pyradigm:
                 values=print_column,
                 index=y,
                 columns=x,
-                aggfunc=category_joiner.join,
+                aggfunc=lambda x: self._print_cell_string(x, category_joiner),
             )
 
             # drop empty rows
