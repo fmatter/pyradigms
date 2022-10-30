@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 * docs generation
 * complaints about missing values in sort order
+* complaint about "unaccounted for" columns that are actually in `ignore`
 
 ## [0.0.6] -- 2022-09-28
 

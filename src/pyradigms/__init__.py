@@ -356,7 +356,7 @@ class Pyradigm:
             sys.exit(1)
 
         # inform user if there are columns they did not give directions for
-        leftover_columns = set(df.columns) - set(x + y + z + [print_column])
+        leftover_columns = set(df.columns) - set(x + y + z + [print_column]) - set(ignore)
         if len(leftover_columns) > 0:
             log.info(
                 "You did not specify what should happen"
@@ -379,9 +379,8 @@ class Pyradigm:
         # drop irrelevant columns
         if len(ignore) > 0:
             log.debug(f"""Ignoring parameters:\n{", ".join(ignore)}""")
-            for col in ignore:
-                df.drop(col, axis=1, inplace=True)
-                log.debug("New entries:\n%s", self._short_repr)
+            df.drop(columns=ignore, inplace=True)
+            log.debug("New entries:\n%s", df)
 
         # join columns for the y axis
         def concat_values(row, values):
