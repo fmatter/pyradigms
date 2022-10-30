@@ -434,11 +434,12 @@ class Pyradigm:
                     log.info(f"Guessing order {df_sort} for parameter {parameter}")
                     sort_orders[parameter] = df_sort
                 elif set(df_sort) - set(sort_orders[parameter]) != set():
-                    log.error(
+                    log.warning(
                         f"Specified order {sort_orders[parameter]} for parameter "
-                        f"'{parameter}' does not cover all values: {df_sort}."
+                        f"'{parameter}' does not cover all values: {set(df_sort) - set(sort_orders[parameter])}."
                     )
-                    sys.exit(1)
+                    log.info(f"Guessing order {df_sort} for parameter {parameter}")
+                    sort_orders[parameter] = df_sort
 
             # sort x and y axis
             new_indices = []

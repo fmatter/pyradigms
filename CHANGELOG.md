@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 * docs generation
-* complaint about missing values in sort order
+* complaints about missing values in sort order
 
 ## [0.0.6] -- 2022-09-28
 
