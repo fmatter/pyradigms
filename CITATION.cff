@@ -6,9 +6,9 @@ authors:
   - family-names: Matter
     given-names: Florian
     orcid: "https://orcid.org/0000-0002-2545-5154"
-date-released: 2022-09-28
-version: "0.0.6"
-url: "https://github.com/fmatter/pyradigms/releases/tag/0.0.6"
+date-released: 2022-10-30
+version: "0.1.0"
+url: "https://github.com/fmatter/pyradigms/releases/tag/0.1.0"
 keywords:
   - digital linguistics
 message: "If you use this software, please cite it using these metadata."
