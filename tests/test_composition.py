@@ -82,6 +82,14 @@ def test_simple():
     assert table.loc["SG"]["ACC"] == "ajstum"
 
 
+def test_filter():
+    pyd = Pyradigm(
+        df, x=["Case"], y=["Number", "Lexeme"], filters={"Lexeme": ["uxor", "aestus"]}
+    )
+    table = pyd.compose_paradigm()
+    assert table.index[2] == "PL.uxor"
+
+
 def test_multiple_values():
     pyd = Pyradigm(df, y=["Case"], x=["Number"])
     table = pyd.compose_paradigm(category_joiner=" A/A ")
@@ -235,10 +243,9 @@ def test_markdown(caplog):
         "| PRS.SBJV  | venga   | veniamo   | venga   | veniate  | venga   | vengano   |"
         in pyd.to_markdown(data_format="paradigm")
     )
-    assert (
-        """<tr><td>PRS.IND  </td><td>vengo  </td><td>veniamo  </td><td>vieni  </td>\
-<td>venite  </td><td>viene  </td><td>vengono  </td></tr>"""
-        in pyd.to_markdown(data_format="paradigm", tablefmt="html")
+    assert """<tr><td>PRS.IND  </td><td>vengo  </td><td>veniamo  </td><td>vieni  </td>\
+<td>venite  </td><td>viene  </td><td>vengono  </td></tr>""" in pyd.to_markdown(
+        data_format="paradigm", tablefmt="html"
     )
 
     pyd.filters = {"Lexeme": "venire"}
