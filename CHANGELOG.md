@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 ### Changed
+
+### Fixed
+
+## [0.1.0] -- 2022-10-30
+
+### Changed
 * duplicate values in a single paradigm cell are deleted
 
 ### Fixed
@@ -48,7 +54,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 First proper release.
 
-[Unreleased]: https://github.com/fmatter/pyradigms/compare/0.0.6...HEAD
+[Unreleased]: https://github.com/fmatter/pyradigms/compare/0.1.0...HEAD
+[0.1.0]: https://github.com/fmatter/pyradigms/releases/tag/0.1.0
 [0.0.6]: https://github.com/fmatter/pyradigms/releases/tag/0.0.6
 [0.0.5]: https://github.com/fmatter/pyradigms/releases/tag/0.0.5
 [0.0.4]: https://github.com/fmatter/pyradigms/releases/tag/v0.0.4
