@@ -356,7 +356,9 @@ class Pyradigm:
             sys.exit(1)
 
         # inform user if there are columns they did not give directions for
-        leftover_columns = set(df.columns) - set(x + y + z + [print_column]) - set(ignore)
+        leftover_columns = (
+            set(df.columns) - set(x + y + z + [print_column]) - set(ignore)
+        )
         if len(leftover_columns) > 0:
             log.info(
                 "You did not specify what should happen"
@@ -472,18 +474,22 @@ class Pyradigm:
                 log.debug("Flattening multiindices")
                 new_colindex_name = category_joiner.join(x)
                 out.columns = [
-                    decorate_x(_format_person_values(
-                        separators[0].join(col).strip(), separators[0]
-                    ))
+                    decorate_x(
+                        _format_person_values(
+                            separators[0].join(col).strip(), separators[0]
+                        )
+                    )
                     for col in out.columns.values
                 ]
                 out.columns.name = new_colindex_name
 
                 new_index_name = category_joiner.join(y)
                 out.index = [
-                    decorate_y(_format_person_values(
-                        separators[0].join(_listify(col)).strip(), separators[0]
-                    ))
+                    decorate_y(
+                        _format_person_values(
+                            separators[0].join(_listify(col)).strip(), separators[0]
+                        )
+                    )
                     for col in out.index.values
                 ]
                 out.index.name = new_index_name
