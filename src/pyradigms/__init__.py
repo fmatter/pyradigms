@@ -117,6 +117,10 @@ class Pyradigm:
     def _short_repr(self):
         return self.entries.head().to_string() + f"\n({len(self.entries)} entries)"
 
+    def update(self, **kwargs):
+        for k, v in kwargs.items():
+            setattr(self, k, v)
+
     @classmethod
     def from_dataframe(cls, df: pd.DataFrame, data_format="wide", **kwargs):
         """Create a new Pyradigm from a pandas dataframe.
