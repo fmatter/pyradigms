@@ -136,7 +136,7 @@ def test_missing_print():
             x=["Case"],
             y=["Number"],
             filters={"Lexeme": ["aestus"]},
-            print_column="Value",
+            print_columns="Value",
         )
         pyd.compose_paradigm()
 

@@ -100,17 +100,20 @@ class Pyradigm:
     row label.
     Subsequent items are only used when decomposing paradigms."""
     category_joiner = " / "
-    """The string used to concatenate labels of categories combined on an axis."""
-    print_column: str = "Form"
+    """The string(s) used to concatenate labels of categories combined on an axis."""
+    print_columns: List[str] = ["Form"]
     """The column in wide format which holds the values in the cells
-    (usually forms or IDs)"""
+    (usually forms, IDs, values...)"""
+    print_sep: str = " "
+    """The string used to combine columns to be printed in the cells"""
     output_folder = None
     """The folder into which generated paradigms will be written."""
 
     @property
     def _parameters(self):
         parlist = list(self.entries.columns)
-        parlist.remove(self.print_column)
+        for col in self.print_columns:
+            parlist.remove(col)
         return parlist
 
     @property
@@ -282,11 +285,14 @@ class Pyradigm:
         if "ID" not in self.entries.columns:
             self.entries[  # pylint: disable=unsupported-assignment-operation
                 "ID"
-            ] = self.entries.apply(lambda x: f"{x.name}-{x[self.print_column]}", axis=1)
+            ] = self.entries.apply(
+                lambda x: f"{x.name}-{self.print_sep.join([x[col] for col in self.print_columns])}",
+                axis=1,
+            )
         return pd.melt(
             self.entries,
             id_vars="ID",
-            value_vars=self._parameters + [self.print_column],
+            value_vars=self._parameters + self.print_columns,
             var_name="Parameter",
             value_name="Value",
         )
@@ -320,12 +326,13 @@ class Pyradigm:
         ignore = _listify(kwargs.get("ignore", self.ignore))
         separators = kwargs.get("separators", self.separators)
         category_joiner = kwargs.get("category_joiner", self.category_joiner)
-        print_column = kwargs.get("print_column", self.print_column)
+        print_columns = _listify(kwargs.get("print_columns", self.print_columns))
         sort_orders = kwargs.get("sort_orders", self.sort_orders)
         output_folder = kwargs.get("output_folder", self.output_folder)
         decorate_x = kwargs.get("decorate_x", lambda x: x)
         decorate_y = kwargs.get("decorate_y", lambda y: y)
         decorate = kwargs.get("decorate", lambda x: x)
+        print_sep = kwargs.get("print_sep", self.print_sep)
         if output_folder:
             output_folder = Path(output_folder)
 
@@ -355,13 +362,14 @@ class Pyradigm:
                 sys.exit(1)
 
         # make sure that "Form" or whatever other column to print is present
-        if print_column not in df.columns:
-            log.error(f"'{print_column}' not found in dataframe columns")
-            sys.exit(1)
+        for print_col in print_columns:
+            if print_col not in df.columns:
+                log.error(f"'{print_col}' not found in dataframe columns")
+                sys.exit(1)
 
         # inform user if there are columns they did not give directions for
         leftover_columns = (
-            set(df.columns) - set(x + y + z + [print_column]) - set(ignore)
+            set(df.columns) - set(x + y + z + print_columns) - set(ignore)
         )
         if len(leftover_columns) > 0:
             log.info(
@@ -412,12 +420,17 @@ class Pyradigm:
         pd.set_option("display.max_rows", None, "display.max_columns", None)
         for z_key, df in z_dict.items():
             log.debug(
-                f"Creating pivot table for x={x}, y={y}, cell values: {print_column}"
+                f"Creating pivot table for x={x}, y={y}, cell values: {print_columns}"
             )
-            df[print_column] = df[print_column].map(decorate)
+            if len(df) == 0:
+                continue
+            df["pyradigms_cell"] = df.apply(
+                lambda x: print_sep.join(x[col] for col in print_columns), axis=1
+            )
+            df["pyradigms_cell"] = df["pyradigms_cell"].map(decorate)
             out = pd.pivot_table(
                 df,
-                values=print_column,
+                values="pyradigms_cell",
                 index=y,
                 columns=x,
                 aggfunc=lambda x: self._print_cell_string(x, category_joiner),
@@ -439,7 +452,7 @@ class Pyradigm:
             for parameter in out.index.names + out.columns.names:
                 df_sort = get_sort_order(parameter)
                 if parameter not in sort_orders:
-                    log.info(f"Guessing order {df_sort} for parameter {parameter}")
+                    # log.info(f"Guessing order {df_sort} for parameter {parameter}")
                     sort_orders[parameter] = df_sort
                 elif set(df_sort) - set(sort_orders[parameter]) != set():
                     log.warning(
@@ -523,4 +536,6 @@ class Pyradigm:
 
         if len(constructed_paradigms) == 1:
             return list(constructed_paradigms.values())[0]
+        elif len(constructed_paradigms) == 0:
+            return None
         return constructed_paradigms
