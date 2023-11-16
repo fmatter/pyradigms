@@ -10,12 +10,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * `update` function
 * allow multiple values in cells
 
-### Removed
-
-### Changed
-
-### Fixed
-
 ## [0.1.0] -- 2022-10-30
 
 ### Changed

@@ -142,6 +142,12 @@ class Pyradigm:
             out.columns.name = None
             return cls(entries=out, **kwargs)
         if data_format == "paradigm":
+            if "x" not in kwargs:
+                log.error("Specify what values are on the x axis")
+                sys.exit()
+            if "y" not in kwargs:
+                log.error("Specify what values are on the y axis")
+                sys.exit()
             return cls(entries=cls.decompose_paradigm(cls, paradigm=df, **kwargs))
         log.error(f"Invalid format: {data_format}")
         sys.exit(1)
@@ -169,6 +175,20 @@ class Pyradigm:
             log.error(f"Invalid format: {data_format}")
             sys.exit(1)
         return cls.from_dataframe(df, data_format=data_format, **kwargs)
+
+
+    @classmethod
+    def from_dict(cls, records):
+        """Create a new Pyradigm object from a list of dicts (records)
+
+        Args:
+            records (list): a list containing dicts representing the data in wide format
+
+        Returns:
+            a :class:`.Pyradigm` object
+        """
+        df = pd.DataFrame.from_dict(records)
+        return cls(df)
 
     @classmethod
     def from_text(cls, text, x_sep=",", y_sep="\n"):
@@ -209,14 +229,20 @@ class Pyradigm:
         """
         x = _listify(kwargs.get("x", self.x))
         y = _listify(kwargs.get("y", self.y))
-        z = _listify(kwargs.get("z", self.z))
+        if "z" in kwargs:
+            z = _listify(kwargs["z"])
+        else:
+            z = None
         separators = kwargs.get("separators", self.separators)
         print_column = kwargs.get("print_column", "Form")
         z_value = z_value or paradigm.index.name
 
         # gather all parameter names from the defined axes
         # + the name of what's in the cells
-        entries = pd.DataFrame(columns=z + x + y + [print_column])
+        if z:
+            entries = pd.DataFrame(columns=z + x + y + [print_column])
+        else:
+            entries = pd.DataFrame(columns=x + y + [print_column])
 
         for i, (x_string, col) in enumerate(paradigm.items()):
             for y_string, form in col.items():
@@ -484,7 +510,7 @@ class Pyradigm:
                 )
             out.columns = new_columns
             out.sort_index(
-                level=[c for c in sort_orders if c in x], inplace=True, axis=1
+                level=reversed([c for c in sort_orders if c in x]), inplace=True, axis=1
             )
 
             if not with_multi_index:
@@ -513,7 +539,7 @@ class Pyradigm:
 
             constructed_paradigms[z_key] = out
 
-        if csv_output:
+        if csv_output is not None:
             log.debug(f"Writing to {csv_output}")
             output = []
             for z_key, df in constructed_paradigms.items():
