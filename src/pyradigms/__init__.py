@@ -262,6 +262,7 @@ class Pyradigm:
                     ]
                 )
 
+
         entries.dropna(subset=[print_column], inplace=True)  # …drop rows with no form
         entries.reset_index(drop=True, inplace=True)  # reset index
         entries.fillna("", inplace=True)
@@ -357,6 +358,7 @@ class Pyradigm:
         output_folder = kwargs.get("output_folder", self.output_folder)
         decorate_x = kwargs.get("decorate_x", lambda x: x)
         decorate_y = kwargs.get("decorate_y", lambda y: y)
+        drop_empty = kwargs.get("drop_empty", True)
         decorate = kwargs.get("decorate", lambda x: x)
         print_sep = kwargs.get("print_sep", self.print_sep)
         if output_folder:
@@ -536,6 +538,12 @@ class Pyradigm:
                     for col in out.index.values
                 ]
                 out.index.name = new_index_name
+
+                if drop_empty:
+                    out = out[out.apply(lambda x: "".join(x) != "", axis=1)]
+                    dropcols = [col for col in  out.columns if "".join(out[col]) != ""]
+                    out = out[dropcols]
+
 
             constructed_paradigms[z_key] = out
 
