@@ -12,6 +12,7 @@ import pandas as pd
 from attrs import Factory
 from attrs import define
 
+import itertools
 
 __author__ = "Florian Matter"
 __email__ = "florianmatter@gmail.com"
@@ -59,12 +60,12 @@ def _get_parameter_values(string, parameters, separators):
             new_parameter_list.append(param)
     parameter_list = new_parameter_list
     if len(parameter_list) < len(parameters):
-        log.warning(f"Fewer values ({parameter_list}) than specified: {parameters}")
+        print(f"Fewer values ({parameter_list}) than specified: {parameters}")
         for i in range(0, len(parameters) - len(parameter_list)):
             del i
             parameter_list.append(None)
     elif len(parameter_list) > len(parameters):
-        log.error(f"More values than specified: {parameters} {parameter_list}")
+        print(f"More values than specified: {parameters} {parameter_list}")
         sys.exit(1)
     return parameter_list
 
@@ -143,13 +144,13 @@ class Pyradigm:
             return cls(entries=out, **kwargs)
         if data_format == "paradigm":
             if "x" not in kwargs:
-                log.error("Specify what values are on the x axis")
+                print("Specify what values are on the x axis")
                 sys.exit()
             if "y" not in kwargs:
-                log.error("Specify what values are on the y axis")
+                print("Specify what values are on the y axis")
                 sys.exit()
             return cls(entries=cls.decompose_paradigm(cls, paradigm=df, **kwargs))
-        log.error(f"Invalid format: {data_format}")
+        print(f"Invalid format: {data_format}")
         sys.exit(1)
 
     @classmethod
@@ -172,7 +173,7 @@ class Pyradigm:
         elif data_format == "paradigm":
             df = pd.read_csv(path, keep_default_na=False, dtype=str, index_col=0)
         else:
-            log.error(f"Invalid format: {data_format}")
+            print(f"Invalid format: {data_format}")
             sys.exit(1)
         return cls.from_dataframe(df, data_format=data_format, **kwargs)
 
@@ -299,7 +300,7 @@ class Pyradigm:
                 return "\n\n".join(mds)
         if data_format == "wide":
             return self.entries.to_markdown(index=False, **kwargs)
-        log.error(f"Unknown format '{data_format}'.")
+        print(f"Unknown format '{data_format}'.")
         sys.exit(1)
 
     def to_long(self):
@@ -386,13 +387,13 @@ class Pyradigm:
             remainders = set(v) - set(df.columns)
             if len(remainders) > 0:
                 rstring = ", ".join(remainders)
-                log.error(f"{k} axis contains inexistent parameter(s): {rstring}")
+                print(f"{k} axis contains inexistent parameter(s): {rstring}")
                 sys.exit(1)
 
         # make sure that "Form" or whatever other column to print is present
         for print_col in print_columns:
             if print_col not in df.columns:
-                log.error(f"'{print_col}' not found in dataframe columns")
+                print(f"'{print_col}' not found in dataframe columns")
                 sys.exit(1)
 
         # inform user if there are columns they did not give directions for
@@ -436,19 +437,29 @@ class Pyradigm:
             )
 
         new_z_id = separators[0].join(z)
+        z_sort = []
+        for z_dim in z:
+            if z_dim in sort_orders:
+                z_sort.append(sort_orders[z_dim])
+            else:
+                z_sort.append(get_sort_order(z_dim))
+        z_sort = list(itertools.product(*z_sort))
+        z_sort = [separators[0].join(x) for x in z_sort]
+
         if len(z) > 1:
             df[new_z_id] = df.apply(concat_values, values=z, axis=1)
 
         if len(z) > 0:
             z_dict = dict(tuple(df.groupby(new_z_id)))
+            z_dict = dict(sorted(z_dict.items(), key=lambda x: z_sort.index(x[0])))
         else:
             z_dict = {"z": df}
 
         constructed_paradigms = {}
         pd.set_option("display.max_rows", None, "display.max_columns", None)
         for z_key, df in z_dict.items():
-            log.debug(
-                f"Creating pivot table for x={x}, y={y}, cell values: {print_columns}"
+            print(
+                f"Creating pivot table for x={x}, y={y}, z={z_key}, cell values: {print_columns}"
             )
             if len(df) == 0:
                 continue
@@ -463,7 +474,6 @@ class Pyradigm:
                 columns=x,
                 aggfunc=lambda x: self._print_cell_string(x, category_joiner),
             )
-
             # drop empty rows
             idx_name = out.index.names
             out.reset_index(inplace=True)  # use index as column
@@ -480,14 +490,14 @@ class Pyradigm:
             for parameter in out.index.names + out.columns.names:
                 df_sort = get_sort_order(parameter)
                 if parameter not in sort_orders:
-                    # log.info(f"Guessing order {df_sort} for parameter {parameter}")
+                    print(f"Guessing order {df_sort} for parameter {parameter}")
                     sort_orders[parameter] = df_sort
                 elif set(df_sort) - set(sort_orders[parameter]) != set():
-                    log.warning(
+                    print(
                         f"Specified order {sort_orders[parameter]} for parameter "
                         f"'{parameter}' does not cover all values: {set(df_sort) - set(sort_orders[parameter])}."
                     )
-                    log.info(f"Guessing order {df_sort} for parameter {parameter}")
+                    print(f"Guessing order {df_sort} for parameter {parameter}")
                     sort_orders[parameter] = df_sort
 
             # sort x and y axis
