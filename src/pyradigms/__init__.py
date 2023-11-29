@@ -266,6 +266,7 @@ class Pyradigm:
 
         entries.dropna(subset=[print_column], inplace=True)  # …drop rows with no form
         entries.reset_index(drop=True, inplace=True)  # reset index
+        entries = entries[entries[print_column] != ""]
         entries.fillna("", inplace=True)
         return entries
 
