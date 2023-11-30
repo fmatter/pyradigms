@@ -16,7 +16,7 @@ import itertools
 
 __author__ = "Florian Matter"
 __email__ = "florianmatter@gmail.com"
-__version__ = "0.1.1.dev"
+__version__ = "0.1.1"
 
 
 handler = colorlog.StreamHandler(None)
