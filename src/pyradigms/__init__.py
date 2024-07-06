@@ -45,17 +45,18 @@ def _listify(var):
     return var
 
 
-def _get_parameter_values(string, parameters, separators):
+def _get_parameter_values(string, parameters, separators, parse_persons=False):
     parameter_list = re.split("|".join(map(re.escape, separators)), string)
     parameter_list = [x for x in parameter_list if x]  # Remove leftovers of separation
     new_parameter_list = []
     for param in parameter_list:
         p_hit = False
-        for p_v in sorted(person_values, key=len, reverse=True):
-            if param.startswith(p_v):
-                new_parameter_list += list(filter(None, list(param.partition(p_v))))
-                p_hit = True
-                break
+        if parse_persons:
+            for p_v in sorted(person_values, key=len, reverse=True):
+                if param.startswith(p_v):
+                    new_parameter_list += list(filter(None, list(param.partition(p_v))))
+                    p_hit = True
+                    break
         if not p_hit:
             new_parameter_list.append(param)
     parameter_list = new_parameter_list
@@ -109,6 +110,7 @@ class Pyradigm:
     """The string used to combine columns to be printed in the cells"""
     output_folder = None
     """The folder into which generated paradigms will be written."""
+    parse_persons= False
 
     @property
     def _parameters(self):
@@ -177,7 +179,6 @@ class Pyradigm:
             sys.exit(1)
         return cls.from_dataframe(df, data_format=data_format, **kwargs)
 
-
     @classmethod
     def from_dict(cls, records):
         """Create a new Pyradigm object from a list of dicts (records)
@@ -230,6 +231,7 @@ class Pyradigm:
         """
         x = _listify(kwargs.get("x", self.x))
         y = _listify(kwargs.get("y", self.y))
+        parse_persons = kwargs.get("parse_persons", self.parse_persons)
         if "z" in kwargs:
             z = _listify(kwargs["z"])
         else:
@@ -247,8 +249,8 @@ class Pyradigm:
 
         for i, (x_string, col) in enumerate(paradigm.items()):
             for y_string, form in col.items():
-                x_values = _get_parameter_values(x_string, x, separators)
-                y_values = _get_parameter_values(y_string, y, separators)
+                x_values = _get_parameter_values(x_string, x, separators, parse_persons=parse_persons)
+                y_values = _get_parameter_values(y_string, y, separators, parse_persons=parse_persons)
                 param_list = x + y  # List of parameter names
                 value_list = x_values + y_values  # List of parameter values
                 if z:
