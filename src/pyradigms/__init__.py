@@ -1,4 +1,5 @@
 """This is the main pyradigms module"""
+import itertools
 import logging
 import re
 import sys
@@ -12,7 +13,6 @@ import pandas as pd
 from attrs import Factory
 from attrs import define
 
-import itertools
 
 __author__ = "Florian Matter"
 __email__ = "florianmatter@gmail.com"
@@ -110,7 +110,7 @@ class Pyradigm:
     """The string used to combine columns to be printed in the cells"""
     output_folder = None
     """The folder into which generated paradigms will be written."""
-    parse_persons= False
+    parse_persons = False
 
     @property
     def _parameters(self):
@@ -249,8 +249,12 @@ class Pyradigm:
 
         for i, (x_string, col) in enumerate(paradigm.items()):
             for y_string, form in col.items():
-                x_values = _get_parameter_values(x_string, x, separators, parse_persons=parse_persons)
-                y_values = _get_parameter_values(y_string, y, separators, parse_persons=parse_persons)
+                x_values = _get_parameter_values(
+                    x_string, x, separators, parse_persons=parse_persons
+                )
+                y_values = _get_parameter_values(
+                    y_string, y, separators, parse_persons=parse_persons
+                )
                 param_list = x + y  # List of parameter names
                 value_list = x_values + y_values  # List of parameter values
                 if z:
@@ -264,7 +268,6 @@ class Pyradigm:
                         pd.DataFrame(dict(zip(param_list, value_list)), index=[i]),
                     ]
                 )
-
 
         entries.dropna(subset=[print_column], inplace=True)  # …drop rows with no form
         entries.reset_index(drop=True, inplace=True)  # reset index
@@ -396,7 +399,7 @@ class Pyradigm:
         # make sure that "Form" or whatever other column to print is present
         for print_col in print_columns:
             if print_col not in df.columns:
-                print(f"'{print_col}' not found in dataframe columns")
+                log.warning(f"'{print_col}' not found in dataframe columns")
                 sys.exit(1)
 
         # inform user if there are columns they did not give directions for
@@ -404,7 +407,7 @@ class Pyradigm:
             set(df.columns) - set(x + y + z + print_columns) - set(ignore)
         )
         if len(leftover_columns) > 0:
-            log.info(
+            log.debug(
                 "You did not specify what should happen"
                 " to the following columns/fields/parameters: %s",
                 ", ".join(leftover_columns),
@@ -461,7 +464,7 @@ class Pyradigm:
         constructed_paradigms = {}
         pd.set_option("display.max_rows", None, "display.max_columns", None)
         for z_key, df in z_dict.items():
-            print(
+            log.debug(
                 f"Creating pivot table for x={x}, y={y}, z={z_key}, cell values: {print_columns}"
             )
             if len(df) == 0:
@@ -480,27 +483,27 @@ class Pyradigm:
             # drop empty rows
             idx_name = out.index.names
             out.reset_index(inplace=True)  # use index as column
-            out.replace(
-                "", np.nan, inplace=True
-            )  # replace all empty strings with NaN, so we can…
+            with pd.option_context("future.no_silent_downcasting", True):
+                replace_dict = {"": np.nan}
+                out = out.replace(
+                    replace_dict
+                )  # replace all empty strings with NaN, so we can…
             out.dropna(how="all", inplace=True)  # …drop rows with no content whatsoever
-            out.fillna(
-                "", inplace=True
-            )  # then add back the empty strings for exporting
+            out = out.fillna("")  # then add back the empty strings for exporting
             out.set_index(idx_name, drop=True, inplace=True)  # then add back the index
 
             # for those parameters lacking a specified sort order, establish a default
             for parameter in out.index.names + out.columns.names:
                 df_sort = get_sort_order(parameter)
                 if parameter not in sort_orders:
-                    print(f"Guessing order {df_sort} for parameter {parameter}")
+                    log.debug(f"Guessing order {df_sort} for parameter {parameter}")
                     sort_orders[parameter] = df_sort
                 elif set(df_sort) - set(sort_orders[parameter]) != set():
-                    print(
+                    log.warning(
                         f"Specified order {sort_orders[parameter]} for parameter "
                         f"'{parameter}' does not cover all values: {set(df_sort) - set(sort_orders[parameter])}."
                     )
-                    print(f"Guessing order {df_sort} for parameter {parameter}")
+                    log.debug(f"Guessing order {df_sort} for parameter {parameter}")
                     sort_orders[parameter] = df_sort
 
             # sort x and y axis
@@ -554,9 +557,8 @@ class Pyradigm:
 
                 if drop_empty:
                     out = out[out.apply(lambda x: "".join(x) != "", axis=1)]
-                    dropcols = [col for col in  out.columns if "".join(out[col]) != ""]
+                    dropcols = [col for col in out.columns if "".join(out[col]) != ""]
                     out = out[dropcols]
-
 
             constructed_paradigms[z_key] = out
 
