@@ -483,11 +483,10 @@ class Pyradigm:
             # drop empty rows
             idx_name = out.index.names
             out.reset_index(inplace=True)  # use index as column
-            with pd.option_context("future.no_silent_downcasting", True):
-                replace_dict = {"": np.nan}
-                out = out.replace(
-                    replace_dict
-                )  # replace all empty strings with NaN, so we can…
+            replace_dict = {"": np.nan}
+            out = out.replace(
+                replace_dict
+            )  # replace all empty strings with NaN, so we can…
             out.dropna(how="all", inplace=True)  # …drop rows with no content whatsoever
             out = out.fillna("")  # then add back the empty strings for exporting
             out.set_index(idx_name, drop=True, inplace=True)  # then add back the index
