@@ -15,8 +15,8 @@ from attrs import define
 
 
 __author__ = "Florian Matter"
-__email__ = "florianmatter@gmail.com"
-__version__ = "0.1.1"
+__email__ = "flmt@mailbox.org"
+__version__ = "0.1.1.dev"
 
 
 handler = colorlog.StreamHandler(None)
@@ -66,8 +66,7 @@ def _get_parameter_values(string, parameters, separators, parse_persons=False):
             del i
             parameter_list.append(None)
     elif len(parameter_list) > len(parameters):
-        print(f"More values than specified: {parameters} {parameter_list}")
-        sys.exit(1)
+        raise ValueError(f"More values than specified: {parameters} {parameter_list}")
     return parameter_list
 
 
@@ -146,14 +145,11 @@ class Pyradigm:
             return cls(entries=out, **kwargs)
         if data_format == "paradigm":
             if "x" not in kwargs:
-                print("Specify what values are on the x axis")
-                sys.exit()
+                raise ValueError("Specify what values are on the x axis")
             if "y" not in kwargs:
-                print("Specify what values are on the y axis")
-                sys.exit()
+                raise ValueError("Specify what values are on the y axis")
             return cls(entries=cls.decompose_paradigm(cls, paradigm=df, **kwargs))
-        print(f"Invalid format: {data_format}")
-        sys.exit(1)
+        raise ValueError(f"Unknown data format: {data_format}")
 
     @classmethod
     def from_csv(cls, path, data_format="wide", **kwargs):
@@ -175,8 +171,7 @@ class Pyradigm:
         elif data_format == "paradigm":
             df = pd.read_csv(path, keep_default_na=False, dtype=str, index_col=0)
         else:
-            print(f"Invalid format: {data_format}")
-            sys.exit(1)
+            raise ValueError(f"Unknown data format: {data_format}")
         return cls.from_dataframe(df, data_format=data_format, **kwargs)
 
     @classmethod
@@ -306,8 +301,7 @@ class Pyradigm:
                 return "\n\n".join(mds)
         if data_format == "wide":
             return self.entries.to_markdown(index=False, **kwargs)
-        print(f"Unknown format '{data_format}'.")
-        sys.exit(1)
+        raise ValueError(f"Unknown data format: {data_format}")
 
     def to_long(self):
         """Arrange the entries in\
@@ -393,14 +387,12 @@ class Pyradigm:
             remainders = set(v) - set(df.columns)
             if len(remainders) > 0:
                 rstring = ", ".join(remainders)
-                print(f"{k} axis contains inexistent parameter(s): {rstring}")
-                sys.exit(1)
+                raise ValueError(f"{k} axis contains inexistent parameter(s): {rstring}")
 
         # make sure that "Form" or whatever other column to print is present
         for print_col in print_columns:
             if print_col not in df.columns:
-                log.warning(f"'{print_col}' not found in dataframe columns")
-                sys.exit(1)
+                raise ValueError(f"'{print_col}' not found in dataframe columns")
 
         # inform user if there are columns they did not give directions for
         leftover_columns = (
